@@ -1,6 +1,4 @@
 import de.bezier.data.sql.*;
-//SQLite db;
-//SQLite db2;
 MySQL db;
 MySQL db2;
 ParticleSystem ps;

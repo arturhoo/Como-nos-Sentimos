@@ -16,7 +16,7 @@ def carregaDicio (dbCursor):
     dbCursor.execute(''' select re, id from feelings''')
     dicionario = {}
     for row in dbCursor:
-        dicionario[r"\b"+row[0]] = row[1]
+        dicionario[r"\b"+row[0].encode('utf-8')] = row[1]
 
     return dicionario
 
@@ -121,7 +121,7 @@ def processaData(date_time):
 ########################################################################
 
 # Abrindo banco de dados MySQL
-conn = MySQLdb.connect(host=host, user=user, passwd=passwd, db=db, init_command='SET NAMES utf8')
+conn = MySQLdb.connect(host=host, user=user, passwd=passwd, db=db, charset='utf8', use_unicode=True, init_command='SET NAMES utf8')
 print conn.character_set_name()
 c = conn.cursor()
 f = open('garbage', 'w')

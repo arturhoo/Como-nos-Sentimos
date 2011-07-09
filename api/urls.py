@@ -1,10 +1,11 @@
 from django.conf.urls.defaults import *
 from tastypie.api import Api
-from backend.api import StatesResource, FeelingsResource, UsersResource, TweetsResource
+from backend.api import StatesResource, FeelingsResource, SimpleFeelingsResource, UsersResource, TweetsResource
 
 v1_api = Api(api_name='v1')
 v1_api.register(StatesResource())
 v1_api.register(FeelingsResource())
+v1_api.register(SimpleFeelingsResource())
 v1_api.register(UsersResource())
 v1_api.register(TweetsResource())
 

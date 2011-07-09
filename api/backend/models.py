@@ -44,17 +44,21 @@ class Tweets(models.Model):
     sentimento = models.ForeignKey(Feelings, null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     time = models.TimeField(blank=True)
+    def __unicode__(self):
+        return self.text
     class Meta:
         db_table = u'tweets'
 
 class Users(models.Model):
-    screen_name = models.CharField(max_length=60, primary_key=True)
+    screen_name = models.CharField(primary_key=True, max_length=60)
     name = models.TextField(blank=True)
     location = models.TextField(blank=True)
     description = models.TextField(blank=True)
     city = models.TextField(blank=True)
-    state = models.ForeignKey(States, null=True, db_column='state', blank=True)
+    state = models.CharField(max_length=6, null=True, blank=True)
     location_status = models.IntegerField(null=True, blank=True)
+    def __unicode__(self):
+        return self.screen_name
     class Meta:
         db_table = u'users'
 

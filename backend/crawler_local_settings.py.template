@@ -1,0 +1,11 @@
+# Twiter API Settings
+CONSUMER_KEY = ''
+CONSUMER_SECRET = ''
+TOKEN_KEY = ''
+TOKEN_SECRET = ''
+
+#MySQL Settings
+host = 'localhost'
+user = 'root'
+passwd = ''
+db = ''

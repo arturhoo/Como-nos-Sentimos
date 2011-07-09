@@ -46,7 +46,7 @@ def defineState(c, state_long):
             return row[0]
 
 def searchLocation(c, location):
-    t = (string.lower(location.decode('utf-8')),)
+    t = (string.lower(location),)
     try:
         c.execute('''select structured
         from locations
@@ -72,7 +72,7 @@ def insertLocation(c, location, geolocation):
         conn.commit()
 
 db_filename = 'twitter.db'
-conn = MySQLdb.connect(host, user, passwd, db=db, init_command='SET NAMES utf8')
+conn = MySQLdb.connect(host, user, passwd, db=db, charset='utf8', use_unicode=True, init_command='SET NAMES utf8')
 c1 = conn.cursor()
 c2 = conn.cursor()
 g = geocoders.Google()
@@ -95,7 +95,7 @@ for row in c1:
     try:
         if place is None:
             print 'NAO ACHEI NO DB'
-            places= g.geocode(location, exactly_one=False)
+            places= g.geocode(location.encode('utf-8'), exactly_one=False)
             place = places[0][0]
             cache = True
         else:

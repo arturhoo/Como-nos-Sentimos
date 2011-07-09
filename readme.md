@@ -22,6 +22,9 @@ get the idea anyways.
 System Configuration
 --------------------
 
+These instructions and the project itself were tested on Ubuntu Server
+10.04.2 LTS
+
 To start off, setup your basic dev system environment
 
     $ sudo apt-get install mysql-server python-setuptools subversion python-svn mercurial git-core python-git bzr python-dev libmysqlclient-dev python-mysqldb
@@ -84,7 +87,7 @@ Fetch sentimetal data from Twitter and get the locations of its authors!
 Processing Configuration
 ------------------------
 
-This is Processing code, and should run on major operating systems. To
+The Processing code is located on the `processing` folder, and should run on major operating systems. To
 download the Processing Sandbox please go to http://www.processing.org .
 
 The visualization gets its data from a MySQL database. More information
@@ -95,7 +98,7 @@ instructions on the same website.
 You need to configure the file `mysql_settings.txt.template` to match
 your database's configuration. Then simply rename the file:
 
-    mv mysql_settings.txt.template mysql_settings.txt
+    $ mv mysql_settings.txt.template mysql_settings.txt
 
 
 [youtubelink]:http://www.youtube.com/watch?v=aKFtpb5e0ks

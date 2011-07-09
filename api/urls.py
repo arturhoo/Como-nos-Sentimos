@@ -1,10 +1,16 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls.defaults import *
+from tastypie.api import Api
+from backend.api import FeelingsResource
+
+v1_api = Api(api_name='v1')
+v1_api.register(FeelingsResource())
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^api/', include(v1_api.urls)),
     # Examples:
     # url(r'^$', 'frontend.views.home', name='home'),
     # url(r'^frontend/', include('frontend.foo.urls')),

@@ -12,6 +12,12 @@ here is the source code just for the visualization.
 The whole project was heavily inspired by http://wefeelfine.org by
 Jonathan Harris and Sep Kamvar.
 
+Video Demo
+----------
+
+There is a video [live][youtubelink]. It is in Portuguese but you might
+get the idea anyways.
+
 
 System Configuration
 --------------------
@@ -20,7 +26,7 @@ To start off, setup your basic dev system environment
 
     $ sudo apt-get install mysql-server python-setuptools subversion python-svn mercurial git-core python-git bzr python-dev libmysqlclient-dev python-mysqldb
 
-Instal virtualenv and setup a clen environment
+Instal virtualenv and setup a clean environment
 
     $ sudo easy_intall virtualenv
     $ virtualenv --no-site-packages cns
@@ -36,6 +42,14 @@ Create a new database on MySQL
     mysql> create database twitter;
 
 
+Time to create the necessary tables for the Como nos Sentimos project. Make sure
+you follow the on-screen instructions
+
+    $ mysql -uroot -p <name_of_the_db_you_created> < helpfiles/twitter.sql
+    $ mysql -uroot -p <name_of_the_db_you_created> < helpfiles/feelings.sql
+    $ mysql -uroot -p <name_of_the_db_you_created> < helpfiles/states.sql
+
+
 API Configuration
 -----------------
 
@@ -44,13 +58,8 @@ according to your configurations
 
     $ cp local_settings.py.template local_settings.py
 
-Time to create the necessary tables for the Django project. Make sure
-you follow the on-screen instructions
+Make sure the Django Project sets itself on the DB
 
-    $ mysql -uroot -p <name_of_the_db_you_created> <
-helpfiles/twitter.sql
-    $ mysql -uroot -p <name_of_the_db_you_created> < feelings.sql
-    $ mysql -uroot -p <name_of_the_db_you_created> < states.sql
     $ ./manage.py syncdb
 
 Finally, run the development server to see the API live!
@@ -70,3 +79,25 @@ Fetch sentimetal data from Twitter and get the locations of its authors!
 
     $ python crawler.py
     $ python geocoder.py
+
+
+Processing Configuration
+------------------------
+
+This is Processing code, and should run on major operating systems. To
+download the Processing Sandbox please go to http://www.processing.org .
+
+The visualization gets its data from a MySQL database. More information
+on that is yet to come. Therefore, you need to download the SQLibrary by
+Florian Jenett at [this link][sqlibrary] and follow the
+instructions on the same website.
+
+You need to configure the file `mysql_settings.txt.template` to match
+your database's configuration. Then simply rename the file:
+
+    mv mysql_settings.txt.template mysql_settings.txt
+
+
+[youtubelink]:http://www.youtube.com/watch?v=aKFtpb5e0ks
+[sqlibrary]:http://bezier.de/processing/libs/sql/
+

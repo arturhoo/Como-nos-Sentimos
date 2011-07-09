@@ -1,13 +1,15 @@
 from django.conf.urls.defaults import *
 from tastypie.api import Api
-from backend.api import FeelingsResource
+from backend.api import FeelingsResource, UsersResource, TweetsResource
 
 v1_api = Api(api_name='v1')
 v1_api.register(FeelingsResource())
+v1_api.register(UsersResource())
+v1_api.register(TweetsResource())
 
 # Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+from django.contrib import admin
+admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^api/', include(v1_api.urls)),
@@ -19,5 +21,5 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
 )

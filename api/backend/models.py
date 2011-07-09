@@ -19,6 +19,8 @@ class Feelings(models.Model):
     feeling = models.CharField(unique=True, max_length=60, blank=True)
     re = models.CharField(max_length=180, blank=True)
     rgb = models.TextField(blank=True)
+    def __unicode__(self):
+        return self.feeling
     class Meta:
         db_table = u'feelings'
 

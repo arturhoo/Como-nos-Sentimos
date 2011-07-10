@@ -25,7 +25,7 @@ System Configuration
 These instructions and the project itself were tested on Ubuntu Server
 10.04.2 LTS
 
-To start off, setup your basic dev system environment
+To start off, setup your basic dev system environment. Make sure you follow the on-screen instructions
 
     $ sudo apt-get install mysql-server python-setuptools subversion python-svn mercurial git-core python-git bzr python-dev libmysqlclient-dev python-mysqldb
 
@@ -42,15 +42,15 @@ Install the necessary python packages
 Create a new database on MySQL
 
     $ mysql -uroot -p
-    mysql> create database twitter;
+    mysql> create database <name_of_the_db>;
 
 
-Time to create the necessary tables for the Como nos Sentimos project. Make sure
-you follow the on-screen instructions
+Time to create the necessary tables for the Como nos Sentimos project and fill them with the necessary data.
 
     $ mysql -uroot -p <name_of_the_db_you_created> < helpfiles/twitter.sql
     $ mysql -uroot -p <name_of_the_db_you_created> < helpfiles/feelings.sql
     $ mysql -uroot -p <name_of_the_db_you_created> < helpfiles/states.sql
+    $ mysql -uroot -p <name_of_the_db_you_created> < helpfiles/locations.sql
 
 
 API Configuration
@@ -90,15 +90,13 @@ Processing Configuration
 The Processing code is located on the `processing` folder, and should run on major operating systems. To
 download the Processing Sandbox please go to http://www.processing.org .
 
-The visualization gets its data from a MySQL database. More information
-on that is yet to come. Therefore, you need to download the SQLibrary by
-Florian Jenett at [this link][sqlibrary] and follow the
+You need to download the SQLibrary by Florian Jenett at [this link][sqlibrary] and follow the
 instructions on the same website.
 
 You need to configure the file `mysql_settings.txt.template` to match
 your database's configuration. Then simply rename the file:
 
-    $ mv mysql_settings.txt.template mysql_settings.txt
+    $ cp mysql_settings.txt.template mysql_settings.txt
 
 
 [youtubelink]:http://www.youtube.com/watch?v=aKFtpb5e0ks

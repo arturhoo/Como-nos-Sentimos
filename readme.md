@@ -4,8 +4,8 @@ Como nos Sentimos
 This is a project made for the Data Visualization class at Universidade
 Federal de Minas Gerais, thought by Raquel Cardoso de Melo Minardi.
 
-It consists of a system that colects tweets filled with feelings in the
-Portuguese language, proccesses them, store and visualize the result in
+It consists of a system that collects tweets filled with feelings in the
+Portuguese language, processes them, store and visualize the result in
 a joyful but yet informative and relevant visualization. What you see
 here is the source code just for the visualization.
 

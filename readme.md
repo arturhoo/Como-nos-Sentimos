@@ -6,8 +6,7 @@ Federal de Minas Gerais, thought by Raquel Cardoso de Melo Minardi.
 
 It consists of a system that collects tweets filled with feelings in the
 Portuguese language, processes them, store and visualize the result in
-a joyful but yet informative and relevant visualization. What you see
-here is the source code just for the visualization.
+a joyful but yet informative and relevant visualization.
 
 The whole project was heavily inspired by http://wefeelfine.org by
 Jonathan Harris and Sep Kamvar.

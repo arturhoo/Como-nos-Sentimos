@@ -1,0 +1,7 @@
+*.DS_Store
+*.pyc
+mysql_settings.txt
+backend/crawler_local_settings.py
+backend/geocoder_local_settings.py
+backend/garbage
+api/local_settings.py

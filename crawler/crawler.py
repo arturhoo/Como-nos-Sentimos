@@ -5,6 +5,8 @@ from tweepy.streaming import Stream
 import sys
 from pprint import pprint
 from sentiment_filter import identify_feeling
+from pymongo import Connection
+from datetime import datetime
 
 
 try:
@@ -15,6 +17,10 @@ except ImportError:
 auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(TOKEN_KEY, TOKEN_SECRET)
 
+connection = Connection()
+db = connection.cns
+tweets = db.tweets
+
 
 class CustomStreamListener(StreamListener):
     def on_status(self, status):
@@ -22,23 +28,21 @@ class CustomStreamListener(StreamListener):
             with open('stream.log', 'a') as f:
                 pprint(status.__dict__, f)
 
-            # print "%s\n" % (status.created_at)
-
-            # for att in status.__dict__.keys():
-            #     print att + ': ' + unicode(status.__getattribute__(att)).encode('utf-8')
-
-            # if status.author:
-            #     user = status.author
-            #     pprint(user.__dict__)
-
-            # if status.geo:
-            #     pprint(status.geo)
-
             feeling = identify_feeling('feelings.txt', status.text)
             if feeling:
-                print feeling
+                print str(datetime.now()) + ': ' + feeling
+                tweet = {'feeling': feeling,
+                         'author': {
+                            'screen_name': status.author.screen_name,
+                            'location': status.author.location
+                         },
+                         'text': status.text,
+                         'created_at': status.created_at}
+                if status.geo:
+                    tweet['geo'] = status.geo
+                    tweet['place'] = status.place
 
-                # sys.exit()
+                tweets.insert(tweet)
 
         except Exception, e:
             print >> sys.stderr, 'Encountered Exception:', e

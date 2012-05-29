@@ -17,9 +17,11 @@ auth.set_access_token(TOKEN_KEY, TOKEN_SECRET)
 
 
 class CustomStreamListener(StreamListener):
-
     def on_status(self, status):
         try:
+            with open('stream.log', 'a') as f:
+                pprint(status.__dict__, f)
+
             # print "%s\n" % (status.created_at)
 
             # for att in status.__dict__.keys():
@@ -50,7 +52,8 @@ class CustomStreamListener(StreamListener):
         print >> sys.stderr, 'Timeout...'
         return True  # Don't kill the stream
 
-query = ['eu to', 'me sentindo', 'estou']
 
-streaming_api = Stream(auth, CustomStreamListener(), timeout=60)
-streaming_api.filter(track=query)
+if __name__ == '__main__':
+    query = ['eu to', 'me sentindo', 'estou']
+    streaming_api = Stream(auth, CustomStreamListener(), timeout=60)
+    streaming_api.filter(track=query)

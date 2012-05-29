@@ -45,13 +45,15 @@ def check_full_query(query, text):
 def insert_tweet(tweets_collection, status, feeling):
     tweet = {'feeling': feeling,
              'author': {
-                'screen_name': status.author.screen_name,
-                'location': status.author.location
+                'screen_name': status.author.screen_name
              },
              'text': status.text,
              'created_at': status.created_at}
+    if status.author.location:
+        tweet['author']['location'] = status.author.location
     if status.geo:
         tweet['geo'] = status.geo
+    if status.place and status.place['full_name']:
         tweet['place'] = status.place
     try:
         tweets_collection.insert(tweet)

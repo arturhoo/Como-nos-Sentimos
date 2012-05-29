@@ -43,3 +43,7 @@ nosetests.xml
 
 # Local settings
 crawler/local_settings.py
+
+# Sublime project files
+*.sublime-project
+*.sublime-workspace

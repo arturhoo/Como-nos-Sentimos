@@ -40,3 +40,6 @@ nosetests.xml
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+# Local settings
+crawler/local_settings.py

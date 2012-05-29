@@ -1,0 +1,5 @@
+# Twiter API Settings
+CONSUMER_KEY = ''
+CONSUMER_SECRET = ''
+TOKEN_KEY = ''
+TOKEN_SECRET = ''

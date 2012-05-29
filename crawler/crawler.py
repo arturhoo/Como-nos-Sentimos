@@ -7,6 +7,8 @@ from pprint import pprint
 from sentiment_filter import identify_feeling
 from pymongo import Connection
 from datetime import datetime
+from textwrap import TextWrapper
+import re
 
 
 try:
@@ -21,6 +23,43 @@ connection = Connection()
 db = connection.cns
 tweets = db.tweets
 
+query = [u'eu to'.encode('utf-8'),
+         u'eu tô'.encode('utf-8'),
+         u'me sentindo'.encode('utf-8'),
+         u'me sinto'.encode('utf-8'),
+         u'estou'.encode('utf-8')]
+
+
+def check_full_query(query, text):
+    regex_str = ur'.*' + '('
+    for (idx, value) in enumerate(query):
+        if idx + 1 != len(query):
+            regex_str += value.decode('utf-8') + '|'
+        else:
+            regex_str += value.decode('utf-8')
+    regex_str += ')' + r'.*'
+    regex = re.compile(regex_str, re.UNICODE)
+    return regex.match(text)
+
+
+def insert_tweet(tweets_collection, status, feeling):
+    tweet = {'feeling': feeling,
+             'author': {
+                'screen_name': status.author.screen_name,
+                'location': status.author.location
+             },
+             'text': status.text,
+             'created_at': status.created_at}
+    if status.geo:
+        tweet['geo'] = status.geo
+        tweet['place'] = status.place
+    try:
+        tweets_collection.insert(tweet)
+        return True
+    except Exception, e:
+        print >> sys.stderr, 'Encountered Exception:', e
+        return false
+
 
 class CustomStreamListener(StreamListener):
     def on_status(self, status):
@@ -28,21 +67,15 @@ class CustomStreamListener(StreamListener):
             with open('stream.log', 'a') as f:
                 pprint(status.__dict__, f)
 
-            feeling = identify_feeling('feelings.txt', status.text)
-            if feeling:
-                print str(datetime.now()) + ': ' + feeling
-                tweet = {'feeling': feeling,
-                         'author': {
-                            'screen_name': status.author.screen_name,
-                            'location': status.author.location
-                         },
-                         'text': status.text,
-                         'created_at': status.created_at}
-                if status.geo:
-                    tweet['geo'] = status.geo
-                    tweet['place'] = status.place
-
-                tweets.insert(tweet)
+            if check_full_query(query, status.text):
+                feeling = identify_feeling('feelings.txt', status.text)
+                if feeling:
+                    text_wrapper = TextWrapper(width=60,
+                                               initial_indent='    ',
+                                               subsequent_indent='    ')
+                    print str(datetime.now()) + ': ' + feeling
+                    print text_wrapper.fill(status.text)
+                    insert_tweet(tweets, status, feeling)
 
         except Exception, e:
             print >> sys.stderr, 'Encountered Exception:', e
@@ -58,6 +91,5 @@ class CustomStreamListener(StreamListener):
 
 
 if __name__ == '__main__':
-    query = ['eu to', 'me sentindo', 'estou']
     streaming_api = Stream(auth, CustomStreamListener(), timeout=60)
     streaming_api.filter(track=query)

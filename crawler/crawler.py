@@ -3,6 +3,8 @@
 from tweepy import OAuthHandler, StreamListener
 from tweepy.streaming import Stream
 import sys
+from pprint import pprint
+from sentiment_filter import identify_feeling
 
 
 try:
@@ -18,10 +20,24 @@ class CustomStreamListener(StreamListener):
 
     def on_status(self, status):
         try:
-            print "%s\t%s\t%s\t%s" % (status.text,
-                                      status.author.screen_name,
-                                      status.created_at,
-                                      status.source,)
+            # print "%s\n" % (status.created_at)
+
+            # for att in status.__dict__.keys():
+            #     print att + ': ' + unicode(status.__getattribute__(att)).encode('utf-8')
+
+            # if status.author:
+            #     user = status.author
+            #     pprint(user.__dict__)
+
+            # if status.geo:
+            #     pprint(status.geo)
+
+            feeling = identify_feeling('feelings.txt', status.text)
+            if feeling:
+                print feeling
+
+                # sys.exit()
+
         except Exception, e:
             print >> sys.stderr, 'Encountered Exception:', e
             pass
@@ -34,7 +50,7 @@ class CustomStreamListener(StreamListener):
         print >> sys.stderr, 'Timeout...'
         return True  # Don't kill the stream
 
-query = ['brasil']
+query = ['eu to', 'me sentindo', 'estou']
 
 streaming_api = Stream(auth, CustomStreamListener(), timeout=60)
 streaming_api.filter(track=query)

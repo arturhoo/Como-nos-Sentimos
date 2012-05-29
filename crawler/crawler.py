@@ -27,7 +27,8 @@ query = [u'eu to'.encode('utf-8'),
          u'eu tô'.encode('utf-8'),
          u'me sentindo'.encode('utf-8'),
          u'me sinto'.encode('utf-8'),
-         u'estou'.encode('utf-8')]
+         u'estou'.encode('utf-8'),
+         u'fico'.encode('utf-8')]
 
 
 def check_full_query(query, text):
@@ -58,6 +59,7 @@ def insert_tweet(tweets_collection, status, feeling):
     try:
         tweets_collection.insert(tweet)
         return True
+
     except Exception, e:
         print >> sys.stderr, 'Encountered Exception:', e
         return false

@@ -3,6 +3,7 @@ from tastypie.authorization import Authorization
 from tastypie.fields import DictField, CharField
 from tastypie.bundle import Bundle
 from pymongo import Connection
+from copy import copy
 
 
 class TweetObject(object):
@@ -21,6 +22,19 @@ class TweetsResource(Resource):
         limit = 30
         max_limit = None
 
+    def dehydrate(self, bundle):
+        return bundle.data['tweet']
+
+    def alter_list_data_to_serialize(self, request, data_dict):
+        if isinstance(data_dict, dict):
+            if 'meta' in data_dict:
+                # Get rid of the "meta".
+                del(data_dict['meta'])
+                data_dict['tweets'] = copy(data_dict['objects'])
+                del(data_dict['objects'])
+
+        return data_dict
+
     def _connection(self):
             return Connection()
 
@@ -35,6 +49,16 @@ class TweetsResource(Resource):
 
         return self._build_reverse_url("api_dispatch_detail", kwargs=kwargs)
 
+    def custom_get_object_list(self, request, **kwargs):
+        collection = self._collection()
+        query = collection.find({'feeling': kwargs['filters']['feeling']})
+        results = []
+        for result in query:
+            new_obj = TweetObject(result)
+            results.append(new_obj)
+
+        return results
+
     def get_object_list(self, request):
         collection = self._collection()
         query = collection.find()
@@ -46,8 +70,17 @@ class TweetsResource(Resource):
         return results
 
     def obj_get_list(self, request=None, **kwargs):
-        # Filtering disabled for brevity...
-        return self.get_object_list(request)
+        filters = {}
+        if hasattr(request, 'GET'):
+            # Grab a mutable copy.
+            filters = request.GET.copy()
+        # Update with the provided kwargs.
+        filters.update(kwargs)
+        print filters
+        if filters.get('feeling'):
+            return self.custom_get_object_list(request, filters=filters)
+        else:
+            return self.get_object_list(request)
 
     def obj_get(self, request=None, **kwargs):
         return self.get_object_list(request)

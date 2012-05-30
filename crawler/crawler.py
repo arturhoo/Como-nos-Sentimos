@@ -28,6 +28,7 @@ query = [u'eu to'.encode('utf-8'),
          u'me sentindo'.encode('utf-8'),
          u'me sinto'.encode('utf-8'),
          u'estou'.encode('utf-8'),
+         u'fiquei'.encode('utf-8'),
          u'fico'.encode('utf-8')]
 
 

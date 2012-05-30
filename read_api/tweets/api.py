@@ -5,7 +5,6 @@ from tastypie.bundle import Bundle
 from pymongo import Connection
 from copy import copy
 
-
 class TweetObject(object):
     def __init__(self, tweet):
         self.tweet = tweet
@@ -36,11 +35,11 @@ class TweetsResource(Resource):
         return data_dict
 
     def _connection(self):
-            return Connection()
+        return Connection()
 
     def _collection(self):
-            connection = self._connection()
-            return connection.cns.tweets
+        connection = self._connection()
+        return connection.cns.tweets
 
     def get_resource_uri(self, bundle_or_obj):
         kwargs = {
@@ -76,7 +75,6 @@ class TweetsResource(Resource):
             filters = request.GET.copy()
         # Update with the provided kwargs.
         filters.update(kwargs)
-        print filters
         if filters.get('feeling'):
             return self.custom_get_object_list(request, filters=filters)
         else:

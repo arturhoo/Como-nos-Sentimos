@@ -7,6 +7,11 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
+try:
+    from local_settings import *
+except ImportError:
+    pass
+
 MANAGERS = ADMINS
 
 DATABASES = {

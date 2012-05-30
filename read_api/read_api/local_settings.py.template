@@ -1,0 +1,6 @@
+MONGO_DATABASES = {
+    'default': {
+        'HOST': '',
+        'PORT': '',
+    }
+}

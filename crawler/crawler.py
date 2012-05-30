@@ -52,8 +52,8 @@ def insert_tweet(tweets_collection, status, feeling):
              'created_at': status.created_at}
     if status.author.location:
         tweet['author']['location'] = status.author.location
-    if status.geo:
-        tweet['geo'] = status.geo
+    if status.coordinates:
+        tweet['coordinates'] = status.coordinates
     if status.place and status.place['full_name']:
         tweet['place'] = status.place
     try:

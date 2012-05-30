@@ -74,11 +74,11 @@ class CustomStreamListener(StreamListener):
             if check_full_query(query, status.text):
                 feeling = identify_feeling('feelings.txt', status.text)
                 if feeling:
-                    text_wrapper = TextWrapper(width=60,
-                                               initial_indent='    ',
-                                               subsequent_indent='    ')
-                    print str(datetime.now()) + ': ' + feeling
-                    print text_wrapper.fill(status.text)
+                    # text_wrapper = TextWrapper(width=60,
+                    #                            initial_indent='    ',
+                    #                            subsequent_indent='    ')
+                    # print str(datetime.now()) + ': ' + feeling
+                    # print text_wrapper.fill(status.text)
                     insert_tweet(tweets, status, feeling)
 
         except Exception, e:

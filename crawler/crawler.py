@@ -68,8 +68,8 @@ def insert_tweet(tweets_collection, status, feeling):
 class CustomStreamListener(StreamListener):
     def on_status(self, status):
         try:
-            with open('stream.log', 'a') as f:
-                pprint(status.__dict__, f)
+            # with open('stream.log', 'a') as f:
+            #     pprint(status.__dict__, f)
 
             if check_full_query(query, status.text):
                 feeling = identify_feeling('feelings.txt', status.text)

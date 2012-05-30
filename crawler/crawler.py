@@ -19,9 +19,7 @@ except ImportError:
 auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(TOKEN_KEY, TOKEN_SECRET)
 
-connection = Connection()
-db = connection.cns
-tweets = db.tweets
+collection = Connection()[MONGO_DB][MONGO_COLLECTION]
 
 query = [u'eu to'.encode('utf-8'),
          u'eu tô'.encode('utf-8'),
@@ -44,13 +42,16 @@ def check_full_query(query, text):
     return regex.match(text)
 
 
-def insert_tweet(tweets_collection, status, feeling):
-    tweet = {'feeling': feeling,
+def insert_tweet(collection, status, feelings):
+    tweet = {'feelings': feelings,
+             'feelings_size': len(feelings),
              'author': {
                 'screen_name': status.author.screen_name
              },
              'text': status.text,
              'created_at': status.created_at}
+    if status.author.name:
+        tweet['author']['name'] = status.author.name
     if status.author.location:
         tweet['author']['location'] = status.author.location
     if status.coordinates:
@@ -58,7 +59,7 @@ def insert_tweet(tweets_collection, status, feeling):
     if status.place and status.place['full_name']:
         tweet['place'] = status.place
     try:
-        tweets_collection.insert(tweet)
+        collection.insert(tweet)
         return True
 
     except Exception, e:
@@ -69,18 +70,10 @@ def insert_tweet(tweets_collection, status, feeling):
 class CustomStreamListener(StreamListener):
     def on_status(self, status):
         try:
-            # with open('stream.log', 'a') as f:
-            #     pprint(status.__dict__, f)
-
             if check_full_query(query, status.text):
-                feeling = identify_feeling('feelings.txt', status.text)
-                if feeling:
-                    # text_wrapper = TextWrapper(width=60,
-                    #                            initial_indent='    ',
-                    #                            subsequent_indent='    ')
-                    # print str(datetime.now()) + ': ' + feeling
-                    # print text_wrapper.fill(status.text)
-                    insert_tweet(tweets, status, feeling)
+                feelings = identify_feeling('feelings.txt', status.text)
+                if feelings:
+                    insert_tweet(collection, status, feelings)
 
         except Exception, e:
             print >> sys.stderr, 'Encountered Exception:', e

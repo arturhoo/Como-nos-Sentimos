@@ -1,9 +1,10 @@
+from read_api import settings
 from tastypie.resources import Resource
 from tastypie.authorization import Authorization
-from tastypie.fields import DictField, CharField
-from tastypie.bundle import Bundle
+from tastypie.fields import DictField
 from pymongo import Connection
 from copy import copy
+
 
 class TweetObject(object):
     def __init__(self, tweet):
@@ -38,8 +39,10 @@ class TweetsResource(Resource):
         return Connection()
 
     def _collection(self):
+        db = settings.MONGO_DATABASES['default']['DATABASE']
+        collection = settings.MONGO_DATABASES['default']['COLLECTION']
         connection = self._connection()
-        return connection.cns.tweets
+        return connection[db][collection]
 
     def get_resource_uri(self, bundle_or_obj):
         kwargs = {
@@ -50,7 +53,7 @@ class TweetsResource(Resource):
 
     def custom_get_object_list(self, request, **kwargs):
         collection = self._collection()
-        query = collection.find({'feeling': kwargs['filters']['feeling']})
+        query = collection.find({'feelings': kwargs['filters']['feeling']})
         results = []
         for result in query:
             new_obj = TweetObject(result)

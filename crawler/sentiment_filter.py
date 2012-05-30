@@ -15,11 +15,13 @@ def load_feelings(file_name):
 
 
 def identify_feeling(file_name, text):
+    feelings = []
     feelings_dic = load_feelings(file_name)
     for (feeling, feeling_dic) in feelings_dic.items():
         regex = re.compile(r'.* ' + feeling_dic['re'] + r' .*')
         if regex.match(text):
-            return feeling
+            feelings.append(feeling)
+    return feelings
 
 if __name__ == '__main__':
     f = identify_feeling('feelings.txt', 'estou muito cansado')

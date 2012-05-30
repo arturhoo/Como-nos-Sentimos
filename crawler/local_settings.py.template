@@ -3,3 +3,6 @@ CONSUMER_KEY = ''
 CONSUMER_SECRET = ''
 TOKEN_KEY = ''
 TOKEN_SECRET = ''
+# MongoDB Settings
+MONGO_DB = ''
+MONGO_COLLECTION = ''

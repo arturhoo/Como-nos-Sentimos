@@ -4,7 +4,7 @@ from tweepy import OAuthHandler, StreamListener
 from tweepy.streaming import Stream
 import sys
 from pprint import pprint
-from sentiment_filter import identify_feeling
+from sentiment_filter import identify_feelings
 from pymongo import Connection
 from datetime import datetime
 from textwrap import TextWrapper
@@ -71,7 +71,7 @@ class CustomStreamListener(StreamListener):
     def on_status(self, status):
         try:
             if check_full_query(query, status.text):
-                feelings = identify_feeling('feelings.txt', status.text)
+                feelings = identify_feelings('feelings.txt', status.text)
                 if feelings:
                     insert_tweet(collection, status, feelings)
 

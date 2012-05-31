@@ -14,7 +14,7 @@ def load_feelings(file_name):
     return feelings_dic
 
 
-def identify_feeling(file_name, text):
+def identify_feelings(file_name, text):
     feelings = []
     feelings_dic = load_feelings(file_name)
     for (feeling, feeling_dic) in feelings_dic.items():
@@ -24,6 +24,6 @@ def identify_feeling(file_name, text):
     return feelings
 
 if __name__ == '__main__':
-    f = identify_feeling('feelings.txt', 'estou muito cansado')
+    f = identify_feelings('feelings.txt', 'estou muito cansado')
     if f:
         print f

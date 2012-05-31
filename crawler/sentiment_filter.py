@@ -18,7 +18,7 @@ def identify_feeling(file_name, text):
     feelings = []
     feelings_dic = load_feelings(file_name)
     for (feeling, feeling_dic) in feelings_dic.items():
-        regex = re.compile(r'(^|.* )' + feeling_dic['re'] + r'($| .*)', re.UNICODE | re.IGNORECASE)
+        regex = re.compile(r'(^|.* )' + feeling_dic['re'] + r'.*', re.UNICODE | re.IGNORECASE)
         if regex.match(text):
             feelings.append(feeling)
     return feelings

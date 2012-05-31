@@ -26,7 +26,7 @@ livre;l+ivre+;126,195,27
 louco;lo+u+(c|k);243,2,109
 machucado;ma+(x+|ch)u+(c|k)a+d;35,92,147
 melhor;me+lho+r;141,186,50
-morto;mo+rt(a|o|i);200,0,39
+morto;mo+rt(a|o|i)+;200,0,39
 nervoso;ne+(r|l)vo+(s|z+);255,176,3
 ofendido;o+fe+ndi+d;8,72,146
 orgulhoso;o+rgu+lho+(s|z);255,179,0

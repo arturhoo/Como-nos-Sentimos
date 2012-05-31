@@ -31,14 +31,14 @@ query = [u'eu to'.encode('utf-8'),
 
 
 def check_full_query(query, text):
-    regex_str = ur'.*' + '('
+    regex_str = r'.*' + '('
     for (idx, value) in enumerate(query):
         if idx + 1 != len(query):
             regex_str += value.decode('utf-8') + '|'
         else:
             regex_str += value.decode('utf-8')
     regex_str += ')' + r'.*'
-    regex = re.compile(regex_str, re.UNICODE)
+    regex = re.compile(regex_str, re.UNICODE | re.IGNORECASE)
     return regex.match(text)
 
 

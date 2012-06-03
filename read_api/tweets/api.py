@@ -53,7 +53,9 @@ class TweetsResource(Resource):
 
     def custom_get_object_list(self, request, **kwargs):
         collection = self._collection()
-        query = collection.find(spec={'feelings': kwargs['filters']['feeling']}, limit=50)
+        query = collection.find(spec={'feelings': kwargs['filters']['feeling']},
+                                limit=50,
+                                sort={'created_at': -1})
         results = []
         for result in query:
             new_obj = TweetObject(result)
@@ -63,7 +65,7 @@ class TweetsResource(Resource):
 
     def get_object_list(self, request):
         collection = self._collection()
-        query = collection.find(limit=50)
+        query = collection.find(limit=50, sort={'created_at': -1})
         results = []
         for result in query:
             new_obj = TweetObject(result)

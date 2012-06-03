@@ -65,7 +65,7 @@ class TweetsResource(Resource):
 
     def get_object_list(self, request):
         collection = self._collection()
-        query = collection.find(limit=50, sort={'created_at': -1})
+        query = collection.find(limit=50, sort=[('created_at', -1)])
         results = []
         for result in query:
             new_obj = TweetObject(result)

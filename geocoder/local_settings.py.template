@@ -1,0 +1,3 @@
+# MongoDB Settings
+MONGO_DB = ''
+MONGO_COLLECTION = ''

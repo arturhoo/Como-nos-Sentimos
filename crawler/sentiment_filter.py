@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+from utils import load_query_terms
 
 
 def load_feelings(file_name):
@@ -17,13 +18,25 @@ def load_feelings(file_name):
 def identify_feelings(file_name, text):
     feelings = []
     feelings_dic = load_feelings(file_name)
+    query_list = load_query_terms('query_terms.txt')
+    regex_query_string = '('
+    for (idx, query) in enumerate(query_list):
+        regex_query_string += query
+        if idx + 1 != len(query_list):
+            regex_query_string += '|'
+    regex_query_string += ')'
+
     for (feeling, feeling_dic) in feelings_dic.items():
-        regex = re.compile(r'(^|.* )' + feeling_dic['re'] + r'.*', re.UNICODE | re.IGNORECASE)
+        regex = re.compile(r'(^|.* )' + \
+                           regex_query_string + \
+                           r'.* ' + \
+                           feeling_dic['re'] + \
+                           r'.*', re.UNICODE | re.IGNORECASE)
         if regex.match(text):
             feelings.append(feeling)
     return feelings
 
 if __name__ == '__main__':
-    f = identify_feelings('feelings.txt', 'estou muito cansado')
+    f = identify_feelings('feelings.txt', u'eu tô muito cansado'.encode('utf-8'))
     if f:
         print f

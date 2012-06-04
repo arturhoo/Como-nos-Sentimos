@@ -2,10 +2,11 @@
 
 from tweepy import OAuthHandler, StreamListener
 from tweepy.streaming import Stream
-import sys
 from sentiment_filter import identify_feelings
+from utils import load_query_terms
 from pymongo import Connection
 import re
+import sys
 
 
 try:
@@ -17,14 +18,6 @@ auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(TOKEN_KEY, TOKEN_SECRET)
 
 collection = Connection()[MONGO_DB][MONGO_COLLECTION]
-
-query = [u'eu to'.encode('utf-8'),
-         u'eu tô'.encode('utf-8'),
-         u'me sentindo'.encode('utf-8'),
-         u'me sinto'.encode('utf-8'),
-         u'estou'.encode('utf-8'),
-         u'fiquei'.encode('utf-8'),
-         u'fico'.encode('utf-8')]
 
 
 def check_full_query(query, text):
@@ -86,5 +79,6 @@ class CustomStreamListener(StreamListener):
 
 
 if __name__ == '__main__':
+    query = load_query_terms('query_terms.txt')
     streaming_api = Stream(auth, CustomStreamListener(), timeout=60)
     streaming_api.filter(track=query)

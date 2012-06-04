@@ -3,11 +3,8 @@
 from tweepy import OAuthHandler, StreamListener
 from tweepy.streaming import Stream
 import sys
-from pprint import pprint
 from sentiment_filter import identify_feelings
 from pymongo import Connection
-from datetime import datetime
-from textwrap import TextWrapper
 import re
 
 

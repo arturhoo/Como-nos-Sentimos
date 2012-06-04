@@ -1,4 +1,0 @@
-# MongoDB Settings
-MONGO_DB = 'cns'
-MONGO_GEO_COLLECTION = 'geodev01'
-MONGO_CRAWLER_COLLECTION = 'dev01'

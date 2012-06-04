@@ -44,3 +44,4 @@ sozinho;so+(z+|s)i+nh;150,173,198
 tenso;te+n(c|ç|sc|s);0,115,78
 triste;tri+st;4,63,105
 velho;ve+lh(a|o)+;53,44,101
+vivo;vi+v(a|o)+;100,184,34

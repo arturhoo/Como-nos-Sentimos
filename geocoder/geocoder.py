@@ -53,12 +53,12 @@ def search_db(user_location):
 
 
 def validate_returned_location(place):
-    regex = re.compile(r'^(.+) - (.*), Brazil$', re.UNICODE | re.IGNORECASE)
+    regex = re.compile(r'^([^-,]+) - ([^-,]+), Brazil$', re.UNICODE | re.IGNORECASE)
     match = regex.match(place)
     if match:
         return match
     else:
-        regex = re.compile(r'^(.*), Brazil$', re.UNICODE | re.IGNORECASE)
+        regex = re.compile(r'^([^-,]+), Brazil$', re.UNICODE | re.IGNORECASE)
         return regex.match(place)
 
 

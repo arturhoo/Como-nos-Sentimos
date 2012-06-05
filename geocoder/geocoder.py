@@ -62,6 +62,7 @@ def search_geocoder(user_location):
     try:
         places = g.geocode(query, exactly_one=False)
     except Exception:
+        print >> sys.stderr, 'Encountered error with status code:', status_code
         return None
 
     place = places[0][0]

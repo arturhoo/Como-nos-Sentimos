@@ -82,6 +82,8 @@ if __name__ == '__main__':
     while True:
         job = beanstalk.reserve()
         item = crawler_collection.find_one({'_id': ObjectId(job.body)})
+        if not item:
+            continue
         user_location = item['author']['location']
         search_db_result = search_db(user_location)
         if search_db_result:

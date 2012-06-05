@@ -16,10 +16,8 @@ crawler_collection = Connection()[MONGO_DB][MONGO_CRAWLER_COLLECTION]
 
 
 def get_relevant_items():
-    return crawler_collection.find({'cns_location': {'$exists': False},
-                                    'no_location': {'$exists': False},
-                                    'author.location': {'$exists': True},
-                                    'place': {'$exists': False}})
+    return crawler_collection.find({'location': {'$exists': False},
+                                    'author.location': {'$exists': True}})
 
 
 def insert_into_db(user_location, location_dic):
@@ -86,13 +84,10 @@ if __name__ == '__main__':
         search_db_result = search_db(user_location)
         if search_db_result:
             crawler_collection.update({'_id': item_id},
-                                      {'$set': {'user_location': search_db_result}})
+                                      {'$set': {'location': search_db_result}})
         else:
             result_dic = search_geocoder(user_location)
             if result_dic:
                 insert_into_db(user_location, result_dic)
                 crawler_collection.update({'_id': item_id},
-                                          {'$set': {'user_location': result_dic}})
-            else:
-                crawler_collection.update({'_id': item_id},
-                                           {'$set': {'no_location': True}})
+                                          {'$set': {'location': result_dic}})

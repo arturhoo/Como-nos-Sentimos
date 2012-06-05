@@ -5,6 +5,7 @@ from tweepy.streaming import Stream
 from sentiment_filter import identify_feelings
 from utils import load_query_terms
 from pymongo import Connection
+from datetime import timedelta
 import re
 import sys
 
@@ -32,6 +33,22 @@ def check_full_query(query, text):
     return regex.match(text)
 
 
+def structure_location(place):
+    if place['country_code'] == 'BR':
+        regex = re.compile(r'^(.+), (.+)$')
+        match = regex.match(place['full_name'])
+        dic = {}
+        if place['place_type'] == 'admin':
+            dic['state'] = match.groups()[0]
+            return dic
+        elif place['place_type'] == 'city':
+            dic['city'] = match.groups()[0]
+            dic['state'] = match.groups()[1]
+            return dic
+        return None
+    return None
+
+
 def insert_tweet(collection, status, feelings):
     tweet = {'feelings': feelings,
              'feelings_size': len(feelings),
@@ -40,14 +57,18 @@ def insert_tweet(collection, status, feelings):
              },
              'text': status.text,
              'created_at': status.created_at}
+    if status.author.utc_offset:
+        offset = timedelta(seconds=status.author.utc_offset)
+        tweet['created_at_local'] = status.created_at + offset
+    else:
+        offset = timedelta(seconds=-10800)
+        tweet['created_at_local'] = status.created_at + offset
     if status.author.name:
         tweet['author']['name'] = status.author.name
     if status.author.location:
         tweet['author']['location'] = status.author.location
-    if status.coordinates:
-        tweet['coordinates'] = status.coordinates
     if status.place and status.place['full_name']:
-        tweet['place'] = status.place
+        tweet['location'] = structure_location(status.place)
     try:
         collection.insert(tweet)
         return True

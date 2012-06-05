@@ -12,8 +12,8 @@ except ImportError:
     sys.exit("No Crawler Local Settings found!")
 
 
-geo_collection = Connection()[MONGO_DB][MONGO_GEO_COLLECTION]
-crawler_collection = Connection()[MONGO_DB][MONGO_CRAWLER_COLLECTION]
+geo_collection = Connection(host='192.168.33.1')[MONGO_DB][MONGO_GEO_COLLECTION]
+crawler_collection = Connection(host='192.168.33.1')[MONGO_DB][MONGO_CRAWLER_COLLECTION]
 
 
 def get_relevant_items():

@@ -1,5 +1,8 @@
 Django==1.4
+PyYAML==3.10
 Pygments==1.5
+argparse==1.2.1
+beanstalkc==0.2.0
 django-tastypie==0.9.11
 geopy==0.94.2
 ipython==0.12.1

@@ -6,6 +6,7 @@ from sentiment_filter import identify_feelings
 from utils import load_query_terms
 from pymongo import Connection
 from datetime import timedelta
+import beanstalkc
 import re
 import sys
 
@@ -18,7 +19,9 @@ except ImportError:
 auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(TOKEN_KEY, TOKEN_SECRET)
 
-collection = Connection()[MONGO_DB][MONGO_COLLECTION]
+collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_COLLECTION]
+beanstalk = beanstalkc.Connection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
+beanstalk.use(BEANSTALKD_TUBE)
 
 
 def check_full_query(query, text):
@@ -50,6 +53,7 @@ def structure_location(place):
 
 
 def insert_tweet(collection, status, feelings):
+    tweet_id = 0
     tweet = {'feelings': feelings,
              'feelings_size': len(feelings),
              'author': {
@@ -70,12 +74,17 @@ def insert_tweet(collection, status, feelings):
     if status.place and status.place['full_name']:
         tweet['location'] = structure_location(status.place)
     try:
-        collection.insert(tweet)
-        return True
+        tweet_id = collection.insert(tweet)
 
     except Exception, e:
-        print >> sys.stderr, 'Encountered Exception:', e
-        return false
+        print >> sys.stderr, 'Encountered exception trying to insert tweet:', e
+
+    if (status.author.location) and ('location' not in tweet):
+        try:
+            beanstalk.put(str(tweet_id))
+        except Exception, e:
+            print >> sys.stderr, 'Encountered exception ' + \
+                                 'trying to insert job:', e
 
 
 class CustomStreamListener(StreamListener):

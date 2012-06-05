@@ -2,6 +2,8 @@
 from geopy import geocoders
 from pymongo import Connection
 from utils import remove_accents
+from bson import ObjectId
+import beanstalkc
 import re
 import sys
 
@@ -12,13 +14,11 @@ except ImportError:
     sys.exit("No Crawler Local Settings found!")
 
 
-geo_collection = Connection(host='192.168.33.1')[MONGO_DB][MONGO_GEO_COLLECTION]
-crawler_collection = Connection(host='192.168.33.1')[MONGO_DB][MONGO_CRAWLER_COLLECTION]
-
-
-def get_relevant_items():
-    return crawler_collection.find({'location': {'$exists': False},
-                                    'author.location': {'$exists': True}})
+geo_collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_GEO_COLLECTION]
+crawler_collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_CRAWLER_COLLECTION]
+beanstalk = beanstalkc.Connection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
+beanstalk.watch(BEANSTALKD_TUBE)
+beanstalk.ignore('default')
 
 
 def insert_into_db(user_location, location_dic):
@@ -41,7 +41,7 @@ def search_db(user_location):
     if result.count() > 0:
         dic = {}
         for key, value in result[0].items():
-            if (key != 'user_location') & (key != '_id'):
+            if (key != 'user_location') and (key != '_id'):
                 dic[key] = value
         return dic
 
@@ -63,7 +63,7 @@ def search_geocoder(user_location):
     try:
         places = g.geocode(query, exactly_one=False)
     except Exception, e:
-        print >> sys.stderr, 'Encountered Exception:', e
+        # print >> sys.stderr, 'Encountered Exception:', e
         return None
 
     place = places[0][0]
@@ -79,19 +79,20 @@ def search_geocoder(user_location):
 
 
 if __name__ == '__main__':
-    relevant_items = get_relevant_items()
-    for item in relevant_items:
-        item_id = item['_id']
+    while True:
+        job = beanstalk.reserve()
+        item = crawler_collection.find_one({'_id': ObjectId(job.body)})
         user_location = item['author']['location']
         search_db_result = search_db(user_location)
         if search_db_result:
             print 'Hit DB: ' + user_location
-            crawler_collection.update({'_id': item_id},
+            crawler_collection.update({'_id': job.body},
                                       {'$set': {'location': search_db_result}})
         else:
             result_dic = search_geocoder(user_location)
             if result_dic:
                 print 'Hit GEO: ' + user_location
                 insert_into_db(user_location, result_dic)
-                crawler_collection.update({'_id': item_id},
+                crawler_collection.update({'_id': job.body},
                                           {'$set': {'location': result_dic}})
+        job.delete()

@@ -4,5 +4,10 @@ CONSUMER_SECRET = ''
 TOKEN_KEY = ''
 TOKEN_SECRET = ''
 # MongoDB Settings
+MONGO_HOST = ''
 MONGO_DB = ''
 MONGO_COLLECTION = ''
+# Beanstalkd Settings
+BEANSTALKD_HOST = ''
+BEANSTALKD_PORT = 
+BEANSTALKD_TUBE = ''

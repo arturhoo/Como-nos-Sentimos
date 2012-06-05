@@ -3,6 +3,7 @@ from geopy import geocoders
 from pymongo import Connection
 from utils import remove_accents
 import re
+import sys
 
 
 try:
@@ -61,8 +62,8 @@ def search_geocoder(user_location):
 
     try:
         places = g.geocode(query, exactly_one=False)
-    except Exception:
-        print >> sys.stderr, 'Encountered error with status code:', status_code
+    except Exception, e:
+        print >> sys.stderr, 'Encountered Exception:', e
         return None
 
     place = places[0][0]
@@ -84,11 +85,13 @@ if __name__ == '__main__':
         user_location = item['author']['location']
         search_db_result = search_db(user_location)
         if search_db_result:
+            print 'Hit DB: ' + user_location
             crawler_collection.update({'_id': item_id},
                                       {'$set': {'location': search_db_result}})
         else:
             result_dic = search_geocoder(user_location)
             if result_dic:
+                print 'Hit GEO: ' + user_location
                 insert_into_db(user_location, result_dic)
                 crawler_collection.update({'_id': item_id},
                                           {'$set': {'location': result_dic}})

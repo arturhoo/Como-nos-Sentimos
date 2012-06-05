@@ -86,13 +86,13 @@ if __name__ == '__main__':
         search_db_result = search_db(user_location)
         if search_db_result:
             # print 'Hit DB: ' + user_location
-            crawler_collection.update({'_id': job.body},
+            crawler_collection.update({'_id': ObjectId(job.body)},
                                       {'$set': {'location': search_db_result}})
         else:
             result_dic = search_geocoder(user_location)
             if result_dic:
                 # print 'Hit GEO: ' + user_location
                 insert_into_db(user_location, result_dic)
-                crawler_collection.update({'_id': job.body},
+                crawler_collection.update({'_id': ObjectId(job.body)},
                                           {'$set': {'location': result_dic}})
         job.delete()

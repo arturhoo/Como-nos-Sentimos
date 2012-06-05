@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-from utils import load_query_terms
+from utils import load_query_terms, remove_accents
 
 
 def load_feelings(file_name):
@@ -16,6 +16,7 @@ def load_feelings(file_name):
 
 
 def identify_feelings(file_name, text):
+    clean_text = remove_accents(text)
     feelings = []
     feelings_dic = load_feelings(file_name)
     query_list = load_query_terms('query_terms.txt')
@@ -32,7 +33,7 @@ def identify_feelings(file_name, text):
                            r'.* ' + \
                            feeling_dic['re'] + \
                            r'.*', re.UNICODE | re.IGNORECASE)
-        if regex.match(text):
+        if regex.match(clean_text):
             feelings.append(feeling)
     return feelings
 

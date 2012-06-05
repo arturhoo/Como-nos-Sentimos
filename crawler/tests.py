@@ -22,12 +22,12 @@ class TestSentimentFilter(TestCase):
         self.assertNotIn(u'cansado', result)
 
     def testFeelingUnicode(self):
-        text = u'estou confortável'.encode('utf-8')
+        text = u'estou confortável'
         result = identify_feelings(self.file_name, text)
         self.assertIn(u'confortável'.encode('utf-8'), result)
 
     def testQueryUnicode(self):
-        text = u'eu tô cansado'.encode('utf-8')
+        text = u'eu tô cansado'
         result = identify_feelings(self.file_name, text)
         self.assertIn(u'cansado'.encode('utf-8'), result)
 
@@ -40,6 +40,11 @@ class TestSentimentFilter(TestCase):
         text = u'estou esfomeado demais'
         result = identify_feelings(self.file_name, text)
         self.assertNotIn(u'fome', result)
+
+    def testAccents(self):
+        text = u'estou mórtooooóó'
+        result = identify_feelings(self.file_name, text)
+        self.assertIn(u'morto', result)
 
     def testMultipleFeelings(self):
         text = 'estou muito cansada e feliz'

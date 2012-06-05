@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from geopy import geocoders
 from pymongo import Connection
-import unicodedata
+from utils import remove_accents
 import re
 
 
@@ -13,11 +13,6 @@ except ImportError:
 
 geo_collection = Connection()[MONGO_DB][MONGO_GEO_COLLECTION]
 crawler_collection = Connection()[MONGO_DB][MONGO_CRAWLER_COLLECTION]
-
-
-def remove_accents(input_str):
-    nkfd_form = unicodedata.normalize('NFKD', unicode(input_str))
-    return u"".join([c for c in nkfd_form if not unicodedata.combining(c)])
 
 
 def get_relevant_items():

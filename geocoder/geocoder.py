@@ -3,6 +3,7 @@ from geopy import geocoders
 from pymongo import Connection
 from utils import remove_accents
 from bson import ObjectId
+from pywapi import get_weather_from_google
 import beanstalkc
 import re
 import sys
@@ -80,6 +81,7 @@ def search_geocoder(user_location):
 
 if __name__ == '__main__':
     while True:
+        location = {}
         job = beanstalk.reserve()
         item = crawler_collection.find_one({'_id': ObjectId(job.body)})
         if not item:
@@ -90,6 +92,7 @@ if __name__ == '__main__':
             # print 'Hit DB: ' + user_location
             crawler_collection.update({'_id': ObjectId(job.body)},
                                       {'$set': {'location': search_db_result}})
+            location = search_db_result
         else:
             result_dic = search_geocoder(user_location)
             if result_dic:
@@ -97,4 +100,18 @@ if __name__ == '__main__':
                 insert_into_db(user_location, result_dic)
                 crawler_collection.update({'_id': ObjectId(job.body)},
                                           {'$set': {'location': result_dic}})
+                location = result_dic
+
+        if 'city' in location:
+            query = location['city'] + ' - ' + location['state'] + ', brasil'
+            query = query.encode('utf-8')
+            google_result = get_weather_from_google(query)
+            if google_result['current_conditions'] and \
+               google_result['current_conditions']['condition'] and \
+               google_result['current_conditions']['temp_c']:
+                condition = google_result['current_conditions']['condition']
+                temp = int(google_result['current_conditions']['temp_c'])
+                weather = {'condition': condition, 'temp': temp}
+                crawler_collection.update({'_id': ObjectId(job.body)},
+                                          {'$set': {'location.weather': weather}})
         job.delete()

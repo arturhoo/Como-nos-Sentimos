@@ -15,7 +15,8 @@ app.debug = True
 @app.route("/")
 def hello():
     tweets = g.coll.find(sort=[('created_at', -1)], limit=10)
-    return render_template('test.html', tweets=tweets)
+    tweet = g.coll.find_one()
+    return render_template('test.html', tweet=tweet)
 
 if __name__ == "__main__":
     app.run()

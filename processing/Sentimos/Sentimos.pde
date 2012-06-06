@@ -25,9 +25,20 @@ void draw() {
     text(frameRate,20,20);
     if(tweet != null) {
         text(tweet.text, 50, 100);
+        js.setFromProcessing(tweet.text);
     }
 }
 
 void setTweet(String text) {
     tweet = new Tweet(text=text);
+}
+
+interface JavaScriptInterface {
+    void setFromProcessing(String text);
+}
+
+JavaScriptInterface js;
+
+void setInterfaceLink (JavaScriptInterface jsin) {
+    js = jsin;
 }

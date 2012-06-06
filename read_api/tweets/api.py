@@ -36,7 +36,7 @@ class TweetsResource(Resource):
         return data_dict
 
     def _connection(self):
-        return Connection()
+        return Connection(host=settings.MONGO_DATABASES['default']['HOST'])
 
     def _collection(self):
         db = settings.MONGO_DATABASES['default']['DATABASE']

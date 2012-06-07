@@ -9,14 +9,11 @@
   </head>
   <body>
     <div id="div1">
-      <canvas id="Sentimos" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde"></canvas>
+      <canvas id="Sentimos" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Feeling.pde"></canvas>
     </div>
 
     <div id="feelings">
-      {% for feeling in feelings %}
-      Feeling: {{ feeling[0] }}, Color: {{ feeling[1] }}
-      <br>
-      {% endfor %}
+      
     </div>
 
     <!-- If JSON was used -->
@@ -75,12 +72,34 @@
       pParticle.tweet = tweet;
       particles.add(pParticle);
     }
+
+    function loadFeelings() {
+      {% for feeling in feelings %}
+        var feeling = "{{ feeling[0] }}";
+        var frgb = "{{ feeling[1] }}";
+        frgb = frgb.split(',');
+        for (var i = frgb.length - 1; i >= 0; i--) {
+          frgb[i] = parseInt(frgb[i]);
+        }
+        var pFeeling = new pjs.Feeling(feeling, frgb);
+        pjsAddFeeling(pFeeling);
+      {% endfor %}
+    }
+
+    function pjsAddFeeling(feeling) {
+      var feelings = pjs.getFeelings();
+      feelings.add(feeling)
+    }
     </script>
     
     <!-- Processing to HTML -->
     <script type="text/javascript">
     function setFromProcessing(text) {
       $("#fromProcessing").append(text + "<br>");
+    }
+
+    function setFeelings(text) {
+      $("#feelings").append(text + "<br>");
     }
     </script>
     
@@ -96,6 +115,7 @@
       // pjsSetTweet();
       // pjsAddTweet({{ tweet }});
       loadTweets();
+      loadFeelings();
     }
 
     function makeTheLink() {

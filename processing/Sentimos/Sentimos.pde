@@ -1,4 +1,5 @@
 ArrayList<Particle> particles;
+ArrayList<Feeling> feelings;
 Tweet tweet = null;
 PFont font;
 boolean written = false;
@@ -7,6 +8,7 @@ void setup() {
     size(640, 360);
     smooth();
     particles = new ArrayList<Particle>();
+    feelings = new ArrayList<Feeling>();
     font = createFont("Arial Bold",48);
     // frameRate(30);
     // for(int i=0; i<100; i++) {
@@ -26,25 +28,12 @@ void draw() {
     text(frameRate,20,20);
     if(written == false && particles.size() >= 10) {
         for(int i=0; i<particles.size(); i++)
-            setFromProcessing(particles.get(i).tweet.text);
+            //setFromProcessing(particles.get(i).tweet.text);
         written = true;
+
+        for(int i=0; i<feelings.size(); i++)
+            setFeelings(feelings.get(i).feeling);
     }
 }
 
-ArrayList<Particle> getParticles() {
-    return particles;
-}
 
-void setTweet(String text) {
-    tweet = new Tweet(text=text);
-}
-
-interface JavaScriptInterface {
-    void setFromProcessing(String text);
-}
-
-JavaScriptInterface js;
-
-void setInterfaceLink (JavaScriptInterface jsin) {
-    js = jsin;
-}

@@ -61,7 +61,7 @@ def load_feelings(file_name):
     with open(file_name) as f:
         for line in f.readlines():
             line_list = line.split(';')
-            feelings_dic[line_list[0].decode('utf-8')] = line_list[2]
+            feelings_dic[line_list[0].decode('utf-8')] = line_list[2].rstrip()
     return feelings_dic
 
 

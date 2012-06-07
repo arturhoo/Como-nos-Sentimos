@@ -83,14 +83,15 @@ if __name__ == '__main__':
     while True:
         location = {}
         job = beanstalk.reserve()
-        item = crawler_collection.find_one({'_id': ObjectId(job.body)})
+        item = crawler_collection.find_one({'_id': int(job.body)})
         if not item:
+            job.delete()
             continue
         user_location = item['author']['location']
         search_db_result = search_db(user_location)
         if search_db_result:
             # print 'Hit DB: ' + user_location
-            crawler_collection.update({'_id': ObjectId(job.body)},
+            crawler_collection.update({'_id': int(job.body)},
                                       {'$set': {'location': search_db_result}})
             location = search_db_result
         else:
@@ -98,7 +99,7 @@ if __name__ == '__main__':
             if result_dic:
                 # print 'Hit GEO: ' + user_location
                 insert_into_db(user_location, result_dic)
-                crawler_collection.update({'_id': ObjectId(job.body)},
+                crawler_collection.update({'_id': int(job.body)},
                                           {'$set': {'location': result_dic}})
                 location = result_dic
 
@@ -112,6 +113,6 @@ if __name__ == '__main__':
                 condition = google_result['current_conditions']['condition']
                 temp = int(google_result['current_conditions']['temp_c'])
                 weather = {'condition': condition, 'temp': temp}
-                crawler_collection.update({'_id': ObjectId(job.body)},
+                crawler_collection.update({'_id': int(job.body)},
                                           {'$set': {'location.weather': weather}})
         job.delete()

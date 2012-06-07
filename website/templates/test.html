@@ -62,33 +62,21 @@
         pTweet.author = author;
         if(location != undefined)
           pTweet.location = location;
-        pjsAddTweet(pTweet);
+        pjs.addTweet(pTweet);
       {% endfor %}
-    }
-
-    function pjsAddTweet(tweet) {
-      var particles = pjs.getParticles();
-      var pParticle = new pjs.Particle(new pjs.PVector(50, 50, 0));
-      pParticle.tweet = tweet;
-      particles.add(pParticle);
     }
 
     function loadFeelings() {
       {% for feeling in feelings %}
-        var feeling = "{{ feeling[0] }}";
+        var text = "{{ feeling[0] }}";
         var frgb = "{{ feeling[1] }}";
         frgb = frgb.split(',');
         for (var i = frgb.length - 1; i >= 0; i--) {
           frgb[i] = parseInt(frgb[i]);
         }
-        var pFeeling = new pjs.Feeling(feeling, frgb);
-        pjsAddFeeling(pFeeling);
+        var pFeeling = new pjs.Feeling(text, frgb);
+        pjs.addFeeling(pFeeling);
       {% endfor %}
-    }
-
-    function pjsAddFeeling(feeling) {
-      var feelings = pjs.getFeelings();
-      feelings.add(feeling)
     }
     </script>
     
@@ -114,8 +102,8 @@
     function afterLoad() {
       // pjsSetTweet();
       // pjsAddTweet({{ tweet }});
-      loadTweets();
       loadFeelings();
+      loadTweets();
     }
 
     function makeTheLink() {
@@ -124,6 +112,7 @@
         setTimeout( makeTheLink, 200 );
         return;
       }
+      Processing.logger = console;
       pjs.setInterfaceLink(this);
       afterLoad();
     }

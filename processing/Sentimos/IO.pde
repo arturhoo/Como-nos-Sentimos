@@ -1,9 +1,23 @@
-ArrayList<Particle> getParticles() {
-    return particles;
+void addFeeling(Feeling pFeeling) {
+    feelingsOccurrence.put(pFeeling.text, 0);
+    feelingsRGB.put(pFeeling.text, pFeeling.frgb);
+    feelings.add(pFeeling);
 }
 
-ArrayList<Feeling> getFeelings() {
-    return feelings;
+void addTweet(Tweet tweet) {
+    String sFeeling = tweet.feelings[0];
+
+    // Setting the RGB of the tweet based on its feeling
+    tweet.frgb = feelingsRGB.get(sFeeling);
+
+    // Updating the occurrence of the feeling
+    int occurrence = (Integer) feelingsOccurrence.get(sFeeling);
+    feelingsOccurrence.put(sFeeling, occurrence+1);
+
+    // Creating a particle for the tweet and adding to the array
+    Particle particle = new Particle(new PVector(int(width/2), int(height/2), 0));
+    particle.tweet = tweet;
+    particles.add(particle);
 }
 
 interface JavaScriptInterface {

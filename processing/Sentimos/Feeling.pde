@@ -1,10 +1,10 @@
 class Feeling {
-    String feeling;
+    String text;
     int[] frgb;
     int count = 0;
   
-    Feeling (String feeling, int[] frgb) {
-        this.feeling = feeling;
+    Feeling (String text, int[] frgb) {
+        this.text = text;
         this.frgb = frgb;
     }
 }

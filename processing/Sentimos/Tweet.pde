@@ -16,21 +16,8 @@ class Tweet {
     String created_at;
     String created_at_local;
     String[] feelings;
+    int[] frgb;
 
     Tweet() {
-    }
-
-    Tweet(String text) {
-        this.text = text;
-    }
-
-    Tweet(Author author, Location location, String text, String created_at,
-          String created_at_local, String[] feelings) {
-        this.author           = author;
-        this.location         = location;
-        this.text             = text;
-        this.created_at       = created_at;
-        this.created_at_local = created_at_local;
-        this.feelings         = feelings;
     }
 }

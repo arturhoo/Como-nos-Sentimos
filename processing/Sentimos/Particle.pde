@@ -16,17 +16,25 @@ class Particle{
     }
 
     void update() {
-        acc.set(random(-0.08, 0.08), random(-0.08, 0.08), 0);
+        // Sets the new, random, acceleration
+        float randomLimit = 0.32;
+        float randomAcc = random(-randomLimit, randomLimit);
+        acc.set(randomAcc, randomAcc, 0);
         vel.add(acc);
         loc.add(vel);
         if (loc.x > width || loc.x < 0) vel.x *= -1;
         if (loc.y > height || loc.y < 0) vel.y *= -1;
+
+        // Prevent the particle from going too fast
+        if (abs(vel.x) > randomLimit*20 || abs(vel.y) > randomLimit*20) {
+            vel.mult(0.5);
+        }
     }
 
     void render() {
         ellipseMode(CENTER);
         stroke(255, 255, 255);
-        fill(100);
+        fill(tweet.frgb[0], tweet.frgb[1], tweet.frgb[2]);
         ellipse(loc.x, loc.y, r, r);
     }
 }

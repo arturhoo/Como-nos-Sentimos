@@ -22,7 +22,7 @@ beanstalk.watch(BEANSTALKD_TUBE)
 beanstalk.ignore('default')
 
 
-def insert_into_db(user_location, location_dic):
+def insert_into_db_hit(user_location, location_dic):
     clean_user_location = remove_accents(user_location).lower()
     dic = {'user_location': clean_user_location}
     for key, value in location_dic.items():
@@ -30,7 +30,17 @@ def insert_into_db(user_location, location_dic):
     try:
         geo_collection.insert(dic)
         return True
+    except Exception, e:
+        print >> sys.stderr, 'Encountered Exception:', e
+        return false
 
+
+def insert_into_db_miss(user_location):
+    clean_user_location = remove_accents(user_location).lower()
+    dic = {'user_location': clean_user_location, 'miss': True}
+    try:
+        geo_collection.insert(dic)
+        return True
     except Exception, e:
         print >> sys.stderr, 'Encountered Exception:', e
         return false
@@ -91,17 +101,23 @@ if __name__ == '__main__':
         search_db_result = search_db(user_location)
         if search_db_result:
             # print 'Hit DB: ' + user_location
-            crawler_collection.update({'_id': int(job.body)},
-                                      {'$set': {'location': search_db_result}})
-            location = search_db_result
+            if 'miss' in search_db_result:
+                job.delete()
+                continue
+            else:
+                crawler_collection.update({'_id': int(job.body)},
+                                          {'$set': {'location': search_db_result}})
+                location = search_db_result
         else:
             result_dic = search_geocoder(user_location)
             if result_dic:
                 # print 'Hit GEO: ' + user_location
-                insert_into_db(user_location, result_dic)
+                insert_into_db_hit(user_location, result_dic)
                 crawler_collection.update({'_id': int(job.body)},
                                           {'$set': {'location': result_dic}})
                 location = result_dic
+            else:
+                insert_into_db_miss(user_location)
 
         if 'city' in location:
             query = location['city'] + ' - ' + location['state'] + ', brasil'

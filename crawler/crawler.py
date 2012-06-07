@@ -55,6 +55,7 @@ def structure_location(place):
 def insert_tweet(collection, status, feelings):
     tweet_id = 0
     tweet = {'feelings': feelings,
+             '_id': status.id,
              'feelings_size': len(feelings),
              'author': {
                 'screen_name': status.author.screen_name

@@ -56,15 +56,25 @@ def tweetFromDictToObject(tweet):
     return new_tweet
 
 
+def load_feelings(file_name):
+    feelings_dic = {}
+    with open(file_name) as f:
+        for line in f.readlines():
+            line_list = line.split(';')
+            feelings_dic[line_list[0].decode('utf-8')] = line_list[2]
+    return feelings_dic
+
+
 @app.route("/")
 def hello():
+    feelings = load_feelings('../crawler/feelings.txt')
     db_tweets = g.coll.find(sort=[('created_at', -1)], limit=10)
     tweets = []
     for db_tweet in db_tweets:
         tweets.append(tweetFromDictToObject(db_tweet))
     # tweet = g.coll.find_one()
     # new_tweet = tweetFromDictToObject(tweet)
-    return render_template('test.html', tweets=tweets)
+    return render_template('test.html', tweets=tweets, feelings=feelings.items())
 
 if __name__ == "__main__":
     app.run()

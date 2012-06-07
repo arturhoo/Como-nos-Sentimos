@@ -17,6 +17,9 @@ class Tweet {
     String created_at_local;
     String[] feelings;
 
+    Tweet() {
+    }
+
     Tweet(String text) {
         this.text = text;
     }

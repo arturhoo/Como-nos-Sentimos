@@ -12,11 +12,59 @@ app = Flask(__name__)
 app.debug = True
 
 
+class Author(object):
+    def __init__(self, screen_name):
+        self.screen_name = screen_name
+
+
+class Location(object):
+    def __init__(self, state):
+        self.state = state
+
+
+class Tweet(object):
+    def __init__(self, author, text, created_at, created_at_local, feelings):
+        self.author = author
+        self.text = text
+        self.created_at = created_at
+        self.created_at_local = created_at_local
+        self.feelings = feelings
+
+
+def tweetFromDictToObject(tweet):
+    author = Author(tweet['author']['screen_name'])
+    if 'name' in tweet['author']:
+        author.name = tweet['author']['name']
+    if 'location' in tweet['author']:
+        author.location = tweet['author']['location']
+
+    location = None
+    if 'location' in tweet:
+        location = Location(tweet['location']['state'])
+        if 'city' in tweet['location']['state']:
+            location.city = tweet['location']['state']
+
+    new_tweet = Tweet(author,
+                      tweet['text'],
+                      tweet['created_at'],
+                      tweet['created_at_local'],
+                      tweet['feelings'])
+
+    if location is not None:
+        new_tweet.location = location
+
+    return new_tweet
+
+
 @app.route("/")
 def hello():
-    tweets = g.coll.find(sort=[('created_at', -1)], limit=10)
-    tweet = g.coll.find_one()
-    return render_template('test.html', tweet=tweet)
+    db_tweets = g.coll.find(sort=[('created_at', -1)], limit=10)
+    tweets = []
+    for db_tweet in db_tweets:
+        tweets.append(tweetFromDictToObject(db_tweet))
+    # tweet = g.coll.find_one()
+    # new_tweet = tweetFromDictToObject(tweet)
+    return render_template('test.html', tweets=tweets)
 
 if __name__ == "__main__":
     app.run()

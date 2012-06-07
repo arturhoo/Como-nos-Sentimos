@@ -10,28 +10,70 @@
   <body>
     <div id="div1">
       <canvas id="Sentimos" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde"></canvas>
-    </div>    
-    <div id="fromProcessing">
     </div>
-    <!-- Tweets:
-    <br>
-    {% for tweet in tweets %}
-      {{ tweet }}
-      <br><br>
-    {% endfor %} -->
+
+    <!-- If JSON was used -->
+    <div id="fromProcessing">
+      <script type="text/javascript">
+        // var my_json;
+        // $.getJSON("http://cns.com/read_api/api/v1/tweets/", function(json) {
+        //   my_json = json;
+        //   for (var i in my_json.tweets) {
+        //     $("#fromProcessing").append(my_json.tweets[i].text + "<br>");
+        //   }
+        // });
+      </script>
+    </div>
 
     <!-- HTML to Processing -->
     <script type="text/javascript">
-    function pjsSetTweet() {
-      var text = "{{ tweet['text'] }}";
-      pjs.setTweet(text);
+    function loadTweets() {
+      {% for tweet in tweets %}
+        var author = new pjs.Author();
+        author.screen_name = "{{ tweet.author.screen_name }}";
+        {% if tweet.author.name %}
+          author.name = "{{ tweet.author.name }}";
+        {% endif %}
+
+        {% if tweet.author.location %}
+          author.location = "{{ tweet.author.location }}";
+        {% endif %}
+
+        var location = undefined;
+        {% if tweet.location %}
+          var tempLocation = new pjs.Location();
+          tempLocation.state = "{{ tweet.location.state }}";
+          {% if tweet.location.city %}
+            location.city = "{{ tweet.location.city }}";
+          {% endif %}
+          location = tempLocation;
+        {% endif %}
+
+        var pTweet = new pjs.Tweet();
+        pTweet.text = "{{ tweet.text }}";
+        pTweet.feelings = [];
+        {% for feeling in tweet.feelings %}
+          pTweet.feelings.push("{{ feeling }}")
+        {% endfor %}
+        pTweet.author = author;
+        if(location != undefined)
+          pTweet.location = location;
+        pjsAddTweet(pTweet);
+      {% endfor %}
+    }
+
+    function pjsAddTweet(tweet) {
+      var particles = pjs.getParticles();
+      var pParticle = new pjs.Particle(new pjs.PVector(50, 50, 0));
+      pParticle.tweet = tweet;
+      particles.add(pParticle);
     }
     </script>
     
     <!-- Processing to HTML -->
     <script type="text/javascript">
     function setFromProcessing(text) {
-      document.getElementById('fromProcessing').innerHTML = text;
+      $("#fromProcessing").append(text + "<br>");
     }
     </script>
     
@@ -41,10 +83,14 @@
       var pjs;
       makeTheLink();
     }
+
     // afterLoad is used to load initial functions
     function afterLoad() {
-      pjsSetTweet();
+      // pjsSetTweet();
+      // pjsAddTweet({{ tweet }});
+      loadTweets();
     }
+    
     function makeTheLink() {
       pjs = Processing.getInstanceById("Sentimos");
       if(pjs == undefined) {

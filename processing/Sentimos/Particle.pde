@@ -25,8 +25,9 @@ class Particle{
         
 
         // Bounce on the walls
-        if (loc.x > width || loc.x < 0) vel.x *= -1;
-        if (loc.y > height || loc.y < 0) vel.y *= -1;
+        this.bounceOffWalls();
+        // if (loc.x > width || loc.x < 0) vel.x *= -1;
+        // if (loc.y > height || loc.y < 0) vel.y *= -1;
 
         // Prevent the particle from going too fast
         if (abs(vel.x) > randomLimit*20 || abs(vel.y) > randomLimit*20) {
@@ -52,6 +53,32 @@ class Particle{
         // Updates speed and location
         vel.add(acc);
         loc.add(vel);
+    }
+
+    void bounceOffWalls() {
+        // bounce off bottom
+        if (loc.y > height - r) {
+            vel.y = -abs(vel.y) * 0.9;
+            loc.y = height - r;
+        }
+ 
+        // bounce off ceiling
+        if (loc.y < r) {
+            vel.y = abs(vel.y) * 0.9;
+            loc.y = r;
+        }
+ 
+        // bounce off left border
+        if (loc.x < r) {
+            vel.x = abs(vel.x) * 0.9;
+            loc.x = r;
+        }
+ 
+        // bounce off right border
+        if (loc.x > width - r) {
+            vel.x = -abs(vel.x) * 0.9;
+            loc.x = width - r;
+        }
     }
 
     void render() {

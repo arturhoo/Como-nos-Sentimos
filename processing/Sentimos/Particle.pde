@@ -40,8 +40,12 @@ class Particle{
         }
 
         // If mouse is over
-        if (this.isIn(mouseX, mouseY)) {
+        if (this.isIn(mouseX, mouseY) && aFocusedTweet == false) {
             r = 14.0;
+            textFont(font, 12);
+            fill(255,255);
+            text(tweet.feelings[0], loc.x+12, loc.y+12);
+            aFocusedTweet = true;
         }
         else r = defaultRadius;
 

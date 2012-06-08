@@ -25,6 +25,7 @@ void addTweet(Tweet tweet) {
 interface JavaScriptInterface {
     void setTweetsText(String text);
     void setFeeling(String text);
+    void setTweetText(String text);
 }
 
 JavaScriptInterface js;

@@ -7,20 +7,39 @@
     <title>Particle System</title>
     <style type="text/css">
     body {
-      background: #1E1E1E;
-      color: #FFFFFF;
+      background: #474747 url(static/images/bg.png);
+      color: #999;
       max-width: 800px;
       margin: auto;
       padding: 0;
+      font: 14px Helvetica, Arial, Sans-Serif;
+    }
+
+    header {
+      text-align: center;
+      font: 30px Tahoma, Helvetica, Arial, Sans-Serif;
+      margin-top: -5px;
+      color: #999;
+      text-shadow: 0px 3px 8px #2A2A2A;
     }
 
     footer {
-      margin: 20px 0px 40px 0px;
+      margin: 20px 0px 20px 0px;
+    }
+
+    #tweetText {
+      display: block;
+      height: 70px;
+      background: #282828;
+      padding-top: 10px;
+      padding-left: 10px;
+      margin-top: -15px;
     }
     
     #Sentimos {
+      outline: 0;
       display: block;
-      margin-top: 20px;
+      margin-top: 10px;
       margin-left: auto;
       margin-right: auto;
     }
@@ -36,6 +55,12 @@
     </style>
   </head>
   <body>
+    <header>
+      <p>COMO NOS SENTIMOS</p>
+    </header>
+    <div id="tweetText">
+    </div>
+
     <div id="pjscanvas">
       <canvas id="Sentimos" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Feeling.pde"></canvas>
     </div>
@@ -60,7 +85,7 @@
     </div>
 
     <footer>
-      Como nos Sentimos
+      Como nos Sentimos - Artur Rodrigues
     </footer>
 
     <!-- HTML to Processing -->
@@ -122,6 +147,10 @@
 
     function setFeelings(text) {
       $("#feelings").append(text + "<br>");
+    }
+
+    function setTweetText(text) {
+      $("#tweetText").html(text);
     }
     </script>
     

@@ -5,8 +5,9 @@ Particle[] particles = new Particle[MAX_NUM_PARTICLES];
 ArrayList<Feeling> feelings;
 HashMap feelingsOccurrence;
 HashMap feelignsRGB;
-Tweet tweet = null;
+
 PFont font;
+boolean aFocusedTweet;
 boolean written = false;
 
 void setup() {
@@ -16,7 +17,7 @@ void setup() {
     feelings = new ArrayList<Feeling>();
     feelingsOccurrence = new HashMap();
     feelingsRGB = new HashMap();
-    font = createFont("Arial Bold",48);
+    font = createFont("static/fonts/LucidaGrande-24.vlw");
     frameRate(30);
     // for(int i=0; i<100; i++) {
     //     Particle p = new Particle(new PVector(width/2, height/2, 0));
@@ -27,27 +28,38 @@ void setup() {
 void draw() {
     background(40, 40, 40);
     textFont(font,12);
+
+    aFocusedTweet = false;
     for (int i=NUM_PARTICLES-1; i >= 0; i--) {
         particles[i].run();
     }
     fill(255);
     textAlign(LEFT);
     text(frameRate,20,20);
-    if(written == false && NUM_PARTICLES >= 20) {
-        for(int i=0; i<NUM_PARTICLES; i++) {
-            String text = particles[i].tweet.text;
-            String frgb =  (String) particles[i].tweet.frgb;
-            setTweetsText(text + ": " + frgb);
-        }
+    // if(written == false && NUM_PARTICLES >= 20) {
+    //     for(int i=0; i<NUM_PARTICLES; i++) {
+    //         String text = particles[i].tweet.text;
+    //         String frgb =  (String) particles[i].tweet.frgb;
+    //         setTweetsText(text + ": " + frgb);
+    //     }
             
-        written = true;
+    //     written = true;
 
-        for(int i=0; i<feelings.size(); i++) {
-            int occurrence = feelingsOccurrence.get(feelings.get(i).text);
-            String text = feelings.get(i).text;
-            if(occurrence > 0) {
-                setFeelings(text + ": " + occurrence);
-            }
+    //     for(int i=0; i<feelings.size(); i++) {
+    //         int occurrence = feelingsOccurrence.get(feelings.get(i).text);
+    //         String text = feelings.get(i).text;
+    //         if(occurrence > 0) {
+    //             setFeelings(text + ": " + occurrence);
+    //         }
+    //     }
+    // }
+}
+
+void mouseClicked() {
+    for (int i=NUM_PARTICLES-1; i >= 0; i--) {
+        if(particles[i].isIn(mouseX, mouseY)) {
+            String text = particles[i].tweet.text;
+            setTweetText(text);
         }
     }
 }

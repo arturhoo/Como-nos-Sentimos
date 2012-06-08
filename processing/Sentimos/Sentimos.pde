@@ -10,7 +10,7 @@ PFont font;
 boolean written = false;
 
 void setup() {
-    size(640, 360);
+    size(800, 460);
     smooth();
     // particlesList = new ArrayList<Particle>();
     feelings = new ArrayList<Feeling>();
@@ -37,7 +37,7 @@ void draw() {
         for(int i=0; i<NUM_PARTICLES; i++) {
             String text = particles[i].tweet.text;
             String frgb =  (String) particles[i].tweet.frgb;
-            setFromProcessing(text + ": " + frgb);
+            setTweetsText(text + ": " + frgb);
         }
             
         written = true;

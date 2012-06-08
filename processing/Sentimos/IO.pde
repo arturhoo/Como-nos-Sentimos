@@ -23,7 +23,7 @@ void addTweet(Tweet tweet) {
 }
 
 interface JavaScriptInterface {
-    void setFromProcessing(String text);
+    void setTweetsText(String text);
     void setFeeling(String text);
 }
 

@@ -17,7 +17,7 @@ void setup() {
     feelings = new ArrayList<Feeling>();
     feelingsOccurrence = new HashMap();
     feelingsRGB = new HashMap();
-    font = createFont("static/fonts/LucidaGrande-24.vlw");
+    font = createFont("Helvetica-Bold", 24);
     frameRate(30);
     // for(int i=0; i<100; i++) {
     //     Particle p = new Particle(new PVector(width/2, height/2, 0));

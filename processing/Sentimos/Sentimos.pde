@@ -1,4 +1,7 @@
-ArrayList<Particle> particles;
+// ArrayList<Particle> particlesList;
+static final int MAX_NUM_PARTICLES = 1000;
+static int NUM_PARTICLES = 0;
+Particle[] particles = new Particle[MAX_NUM_PARTICLES];
 ArrayList<Feeling> feelings;
 HashMap feelingsOccurrence;
 HashMap feelignsRGB;
@@ -9,7 +12,7 @@ boolean written = false;
 void setup() {
     size(640, 360);
     smooth();
-    particles = new ArrayList<Particle>();
+    // particlesList = new ArrayList<Particle>();
     feelings = new ArrayList<Feeling>();
     feelingsOccurrence = new HashMap();
     feelingsRGB = new HashMap();
@@ -22,18 +25,18 @@ void setup() {
 }
 
 void draw() {
-    background(30, 30, 30);
+    background(40, 40, 40);
     textFont(font,12);
-    for (int i=particles.size()-1; i >= 0; i--) {
-        particles.get(i).run();
+    for (int i=NUM_PARTICLES-1; i >= 0; i--) {
+        particles[i].run();
     }
     fill(255);
     textAlign(LEFT);
     text(frameRate,20,20);
-    if(written == false && particles.size() >= 10) {
-        for(int i=0; i<particles.size(); i++) {
-            String text = particles.get(i).tweet.text;
-            String frgb =  (String) particles.get(i).tweet.frgb;
+    if(written == false && NUM_PARTICLES >= 20) {
+        for(int i=0; i<NUM_PARTICLES; i++) {
+            String text = particles[i].tweet.text;
+            String frgb =  (String) particles[i].tweet.frgb;
             setFromProcessing(text + ": " + frgb);
         }
             

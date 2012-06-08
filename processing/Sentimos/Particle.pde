@@ -18,10 +18,13 @@ class Particle{
     void update() {
         // Sets the new, random, acceleration
         float randomLimit = 0.32;
-        float randomAcc = random(-randomLimit, randomLimit);
-        acc.set(randomAcc, randomAcc, 0);
+        float randomAcc1 = random(-randomLimit, randomLimit);
+        float randomAcc2 = random(-randomLimit, randomLimit);
+        acc.set(randomAcc1, randomAcc2, 0);
         vel.add(acc);
         loc.add(vel);
+
+        // Bounce on the walls
         if (loc.x > width || loc.x < 0) vel.x *= -1;
         if (loc.y > height || loc.y < 0) vel.y *= -1;
 

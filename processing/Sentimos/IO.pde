@@ -17,7 +17,9 @@ void addTweet(Tweet tweet) {
     // Creating a particle for the tweet and adding to the array
     Particle particle = new Particle(new PVector(int(width/2), int(height/2), 0));
     particle.tweet = tweet;
-    particles.add(particle);
+    particles[NUM_PARTICLES] = particle;
+    NUM_PARTICLES++;
+    // particlesList.add(particle);
 }
 
 interface JavaScriptInterface {

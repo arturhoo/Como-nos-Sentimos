@@ -31,6 +31,12 @@ class Tweet(object):
         self.feelings = feelings
 
 
+def prepareStringForJavaScript(string):
+    new_string = string.replace('\n', '')
+    new_string = new_string.replace('\\', '\\\\')
+    return new_string
+
+
 def tweetFromDictToObject(tweet):
     author = Author(tweet['author']['screen_name'])
     if 'name' in tweet['author']:
@@ -45,7 +51,7 @@ def tweetFromDictToObject(tweet):
             location.city = tweet['location']['state']
 
     new_tweet = Tweet(author,
-                      tweet['text'],
+                      prepareStringForJavaScript(tweet['text']),
                       tweet['created_at'],
                       tweet['created_at_local'],
                       tweet['feelings'])
@@ -68,7 +74,7 @@ def load_feelings(file_name):
 @app.route("/")
 def hello():
     feelings = load_feelings('../crawler/feelings.txt')
-    db_tweets = g.coll.find(sort=[('created_at', -1)], limit=10)
+    db_tweets = g.coll.find(sort=[('created_at', -1)], limit=20)
     tweets = []
     for db_tweet in db_tweets:
         tweets.append(tweetFromDictToObject(db_tweet))

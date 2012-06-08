@@ -28,7 +28,7 @@ def identify_feelings(file_name, text):
     regex_query_string += ')'
 
     for (feeling, feeling_dic) in feelings_dic.items():
-        regex = re.compile(r'(^|.* )' + \
+        regex = re.compile(r'(^|(?!RT).* )' + \
                            regex_query_string + \
                            r'.* ' + \
                            feeling_dic['re'] + \

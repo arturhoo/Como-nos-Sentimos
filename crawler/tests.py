@@ -52,6 +52,11 @@ class TestSentimentFilter(TestCase):
         self.assertIn(u'feliz', result)
         self.assertIn(u'cansado', result)
 
+    def testRT(self):
+        text = 'RT estou muito cansada'
+        result = identify_feelings(self.file_name, text)
+        self.assertNotIn(u'cansado', result)
+
 
 if __name__ == '__main__':
     unittestMain()

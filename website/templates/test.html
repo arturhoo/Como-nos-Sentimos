@@ -188,23 +188,23 @@
 
     function setTweetMeta(id, text, name, screen_name, location, created_at) {
       var html_str = '<span style="font-weight: bolder;">' +
-        '<a href="http://twitter.com/' + screen_name + '">' + name + '</a> - ' +
+        '<a target="_blank" href="http://twitter.com/' + screen_name + '">' + name + '</a> - ' +
         '</span>' +        
         '<span class="screen_nameLink" style="font-size: 12px; color: inherit;">' +
-        '<a href="http://twitter.com/' + screen_name + '">@' + screen_name + '</a>' +
+        '<a target="_blank" href="http://twitter.com/' + screen_name + '">@' + screen_name + '</a>' +
         '</span>' +
         '<p style="margin: 2px; font-size: 13px;">' +
         text +
         '</p>' +         
         '<span style="font-size: 11px; position: absolute; bottom: 5px;">' +
         '<span class="screen_nameLink">' +
-        '<a href="http://twitter.com/' + screen_name + '/status/' + id + '">' +
+        '<a target="_blank" href="http://twitter.com/' + screen_name + '/status/' + id + '">' +
         created_at +
         ', de ' +
         location +
         '</a>' +        
         '</span> - ' +
-        '<a href="http://twitter.com/' + screen_name + '/status/' + id + '">' +
+        '<a target="_blank" href="http://twitter.com/' + screen_name + '/status/' + id + '">' +
         'veja no twitter' +
         '</a>'
         '</span>'

@@ -7,6 +7,7 @@ HashMap feelignsRGB;
 
 PFont font;
 boolean aFocusedTweet;
+Particle pFocusedTweet;
 boolean written = false;
 
 void setup() {
@@ -24,6 +25,7 @@ void draw() {
     textFont(font,12);
 
     aFocusedTweet = false;
+    pFocusedTweet = null;
     for (int i=NUM_PARTICLES-1; i >= 0; i--) {
         particles[i].run();
     }

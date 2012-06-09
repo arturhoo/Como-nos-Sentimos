@@ -11,6 +11,15 @@ class Particle{
         this.r = this.defaultRadius;
     }
 
+    float getVelocity() {
+        return sqrt(vel.x * vel.x + vel.y * vel.y);
+    }
+ 
+    float getMotionDirection() {
+        return atan2(vel.x, vel.y);
+    }
+
+
     void run() {
         update();
         render();
@@ -24,13 +33,16 @@ class Particle{
         acc.set(randomAcc1, randomAcc2, 0);
         
 
-        // Bounce on the walls
+        // Bounce off the walls
         this.bounceOffWalls();
-        // if (loc.x > width || loc.x < 0) vel.x *= -1;
-        // if (loc.y > height || loc.y < 0) vel.y *= -1;
+
+        // Bounce off each other
+        // for (int i=NUM_PARTICLES-1; i >= 0; i--) {
+        //     bounce(this, particles[i]);
+        // }
 
         // Prevent the particle from going too fast
-        if (abs(vel.x) > randomLimit*20 || abs(vel.y) > randomLimit*20) {
+        if (abs(vel.x) > randomLimit*15 || abs(vel.y) > randomLimit*15) {
             vel.mult(0.5);
         }
 
@@ -47,6 +59,7 @@ class Particle{
             fill(#F6E6CC);
             text(tweet.feelings[0], loc.x+12, loc.y+12);
             aFocusedTweet = true;
+            pFocusedTweet = this;
         }
         else r = defaultRadius;
 
@@ -57,29 +70,26 @@ class Particle{
 
     void bounceOffWalls() {
         // bounce off bottom
-        if (loc.y > height - r) {
+        if (loc.y > height - r*0.5) {
             vel.y = -abs(vel.y) * 0.9;
-            loc.y = height - r;
         }
  
         // bounce off ceiling
-        if (loc.y < r) {
+        if (loc.y < r*0.5) {
             vel.y = abs(vel.y) * 0.9;
-            loc.y = r;
         }
  
         // bounce off left border
-        if (loc.x < r) {
+        if (loc.x < r*0.5) {
             vel.x = abs(vel.x) * 0.9;
-            loc.x = r;
         }
  
         // bounce off right border
-        if (loc.x > width - r) {
+        if (loc.x > width - r*0.5) {
             vel.x = -abs(vel.x) * 0.9;
-            loc.x = width - r;
         }
     }
+     
 
     void render() {
         ellipseMode(CENTER);
@@ -93,4 +103,33 @@ class Particle{
         return true;
     else return false;
   }
+}
+
+void bounce(Particle a, Particle b) {
+    if (sqrt(pow(a.loc.x - b.loc.x, 2) + pow(a.loc.y - b.loc.y, 2)) < (a.r + b.r)*0.5) {
+        if (sqrt(pow(a.loc.x - b.loc.x, 2) + pow(a.loc.y - b.loc.y, 2)) > sqrt(pow(
+                a.loc.x + a.vel.x - b.loc.x - b.vel.x, 2)
+                + pow(a.loc.y + a.vel.y - b.loc.y - b.vel.y, 2))) {
+ 
+            float commonTangentAngle = atan2(b.loc.x - a.loc.x, b.loc.y
+                    - a.loc.y)
+                    + asin(1);
+ 
+            float v1 = a.getVelocity();
+            float v2 = b.getVelocity();
+            float w1 = a.getMotionDirection();
+            float w2 = b.getMotionDirection();
+ 
+            a.vel.x = sin(commonTangentAngle) * v1 * cos(w1 - commonTangentAngle) + cos(commonTangentAngle) * v2 * sin(w2 - commonTangentAngle);
+            a.vel.y = cos(commonTangentAngle) * v1 * cos(w1 - commonTangentAngle) - sin(commonTangentAngle) * v2 * sin(w2 - commonTangentAngle);
+            b.vel.x = sin(commonTangentAngle) * v2 * cos(w2 - commonTangentAngle) + cos(commonTangentAngle) * v1 * sin(w1 - commonTangentAngle);
+            b.vel.y = cos(commonTangentAngle) * v2 * cos(w2 - commonTangentAngle) - sin(commonTangentAngle) * v1 * sin(w1 - commonTangentAngle);
+ 
+            a.vel.x *= (0.9);
+            a.vel.y *= (0.9);
+            b.vel.x *= (0.9);
+            b.vel.y *= (0.9);
+ 
+        }
+    }
 }

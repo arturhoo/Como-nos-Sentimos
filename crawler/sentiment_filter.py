@@ -15,17 +15,22 @@ def load_feelings(file_name):
     return feelings_dic
 
 
-def identify_feelings(file_name, text):
-    clean_text = remove_accents(text)
-    feelings = []
-    feelings_dic = load_feelings(file_name)
-    query_list = load_query_terms('query_terms.txt')
+def make_regex_query_groups(query_list):
     regex_query_string = '('
     for (idx, query) in enumerate(query_list):
         regex_query_string += query
         if idx + 1 != len(query_list):
             regex_query_string += '|'
     regex_query_string += ')'
+    return regex_query_string
+
+
+def identify_feelings(file_name, text):
+    clean_text = remove_accents(text)
+    feelings = []
+    feelings_dic = load_feelings(file_name)
+    query_list = load_query_terms('query_terms.txt')
+    regex_query_string = make_regex_query_groups(query_list)
 
     for (feeling, feeling_dic) in feelings_dic.items():
         regex = re.compile(r'(^|(?!RT).* )' + \

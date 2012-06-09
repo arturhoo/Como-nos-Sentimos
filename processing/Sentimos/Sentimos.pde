@@ -60,6 +60,7 @@ void mouseClicked() {
         if(particles[i].isIn(mouseX, mouseY)) {
             String text = particles[i].tweet.text;
             String screen_name = particles[i].tweet.author.screen_name;
+            String name = particles[i].tweet.author.name;
             String location = "algum lugar";
             if(particles[i].tweet.location != null) {
                 location = "";
@@ -69,8 +70,8 @@ void mouseClicked() {
             }
             String created_at = particles[i].tweet.created_at;
             // console.log(created_at_local);
-            setTweetText(text);
-            setTweetMeta(screen_name, location, created_at);
+            // setTweetText(text);
+            setTweetMeta(text, name, screen_name, location, created_at);
         }
     }
 }

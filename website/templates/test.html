@@ -11,7 +11,7 @@
     ::-moz-selection { background: #745626; }
 
     body {
-      background: #27221A url(static/images/bg-homebrew.png);
+      background: #474747 url(static/images/bg.png);
       color: #F6E6CC;
       max-width: 800px;
       margin: auto;
@@ -23,7 +23,7 @@
       text-align: center;
       font-size: 30px;
       margin-top: -5px;
-      color: #D7AF72;
+      /*color: #CACACA;*/
       font-family: 'Oleo Script', cursive;
     }
 
@@ -39,9 +39,9 @@
     .screen_nameLink a:hover {text-decoration: none;}
 
     .boxShadow {
-      -moz-box-shadow: 0px 0px 15px #4A3818;
-      -webkit-box-shadow: 0px 0px 15px #4A3818;
-      box-shadow: 0px 0px 15px #4A3818;
+      -moz-box-shadow: 0px 0px 15px #8B8B8B;
+      -webkit-box-shadow: 0px 0px 15px #8B8B8B;
+      box-shadow: 0px 0px 15px #8B8B8B;
     }
 
     #tweetMeta {
@@ -185,13 +185,13 @@
     }
 
     function setTweetMeta(text, name, screen_name, location, created_at) {
-      var html_str = '<span style="font-weight: bold;">' +
-        '<a href="http://twitter.com/' + screen_name + '">' + name + '</a>' +
+      var html_str = '<span style="font-weight: bolder;">' +
+        '<a href="http://twitter.com/' + screen_name + '">' + name + '</a> - ' +
         '</span>' +        
-        '<span class="screen_nameLink" style="font-size: 12px; color: #FEF7F6;"> ' +
+        '<span class="screen_nameLink" style="font-size: 12px; color: inherit;">' +
         '<a href="http://twitter.com/' + screen_name + '">@' + screen_name + '</a>' +
         '</span>' +
-        '<p style="margin: 2px;">' +
+        '<p style="margin: 2px; font-size: 13px;">' +
         text +
         '</p>' +         
         '<span style="font-size: 11px; position: absolute; bottom: 5px;">' +

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, g
 from pymongo import Connection
+import hashlib
 
 
 try:
@@ -23,7 +24,8 @@ class Location(object):
 
 
 class Tweet(object):
-    def __init__(self, author, text, created_at, created_at_local, feelings):
+    def __init__(self, tid, author, text, created_at, created_at_local, feelings):
+        self.id = tid
         self.author = author
         self.text = text
         self.created_at = created_at
@@ -50,7 +52,8 @@ def tweetFromDictToObject(tweet):
         if 'city' in tweet['location']:
             location.city = tweet['location']['city']
 
-    new_tweet = Tweet(author,
+    new_tweet = Tweet(tweet['_id'],
+                      author,
                       prepareStringForJavaScript(tweet['text']),
                       tweet['created_at'],
                       tweet['created_at_local'],
@@ -74,13 +77,16 @@ def load_feelings(file_name):
 @app.route("/")
 def hello():
     feelings = load_feelings('../crawler/feelings.txt')
-    db_tweets = g.coll.find({'location.city': {'$exists': True}}, sort=[('created_at', -1)], limit=50)
+    db_tweets = g.coll.find(sort=[('created_at', -1)], limit=50)
     tweets = []
+    string_md5 = ''
     for db_tweet in db_tweets:
+        string_md5 += str(db_tweet['_id'])
         tweets.append(tweetFromDictToObject(db_tweet))
     # tweet = g.coll.find_one()
     # new_tweet = tweetFromDictToObject(tweet)
-    return render_template('test.html', tweets=tweets, feelings=feelings.items())
+    data_md5 = hashlib.md5(string_md5).hexdigest()
+    return render_template('test.html', tweets=tweets, feelings=feelings.items(), data_md5=data_md5)
 
 if __name__ == "__main__":
     app.run()

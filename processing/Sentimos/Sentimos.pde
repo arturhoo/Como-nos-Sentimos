@@ -67,10 +67,10 @@ void mouseClicked() {
                     location = particles[i].tweet.location.city + ", ";
                 location += particles[i].tweet.location.state;
             }
-            String created_at_local = particles[i].tweet.created_at_local;
+            String created_at = particles[i].tweet.created_at;
             // console.log(created_at_local);
             setTweetText(text);
-            setTweetMeta(screen_name, location, created_at_local);
+            setTweetMeta(screen_name, location, created_at);
         }
     }
 }

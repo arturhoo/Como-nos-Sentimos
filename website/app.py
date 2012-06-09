@@ -77,7 +77,7 @@ def load_feelings(file_name):
 @app.route("/")
 def hello():
     feelings = load_feelings('../crawler/feelings.txt')
-    db_tweets = g.coll.find(sort=[('created_at', -1)], limit=50)
+    db_tweets = g.coll.find(sort=[('created_at', -1)], limit=100)
     tweets = []
     string_md5 = ''
     for db_tweet in db_tweets:

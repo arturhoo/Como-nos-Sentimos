@@ -18,6 +18,7 @@ class Location {
 class Tweet {
     Author author;
     Location location;
+    long id;
     String text;
     String created_at;
     String created_at_local;

@@ -143,6 +143,7 @@
         {% endif %}
 
         var pTweet = new pjs.Tweet();
+        pTweet.id = "{{ tweet.id }}"
         pTweet.text = "{{ tweet.text }}";
         pTweet.feelings = [];
         pTweet.created_at = "{{ tweet.created_at.strftime('as %H:%M do dia %d/%m') }}"
@@ -185,7 +186,7 @@
       $("#tweetText").html(text);
     }
 
-    function setTweetMeta(text, name, screen_name, location, created_at) {
+    function setTweetMeta(id, text, name, screen_name, location, created_at) {
       var html_str = '<span style="font-weight: bolder;">' +
         '<a href="http://twitter.com/' + screen_name + '">' + name + '</a> - ' +
         '</span>' +        
@@ -196,9 +197,16 @@
         text +
         '</p>' +         
         '<span style="font-size: 11px; position: absolute; bottom: 5px;">' +
+        '<span class="screen_nameLink">' +
+        '<a href="http://twitter.com/' + screen_name + '/status/' + id + '">' +
         created_at +
         ', de ' +
-        location +        
+        location +
+        '</a>' +        
+        '</span> - ' +
+        '<a href="http://twitter.com/' + screen_name + '/status/' + id + '">' +
+        'veja no twitter' +
+        '</a>'
         '</span>'
       $("#tweetMeta").html(html_str);
     }
@@ -229,6 +237,7 @@
       pjs.setInterfaceLink(this);
       afterLoad();
     }
+
     </script>
 
   </body>

@@ -47,8 +47,8 @@ def tweetFromDictToObject(tweet):
     location = None
     if 'location' in tweet:
         location = Location(tweet['location']['state'])
-        if 'city' in tweet['location']['state']:
-            location.city = tweet['location']['state']
+        if 'city' in tweet['location']:
+            location.city = tweet['location']['city']
 
     new_tweet = Tweet(author,
                       prepareStringForJavaScript(tweet['text']),
@@ -74,7 +74,7 @@ def load_feelings(file_name):
 @app.route("/")
 def hello():
     feelings = load_feelings('../crawler/feelings.txt')
-    db_tweets = g.coll.find(sort=[('created_at', -1)], limit=50)
+    db_tweets = g.coll.find({'location.city': {'$exists': True}}, sort=[('created_at', -1)], limit=50)
     tweets = []
     for db_tweet in db_tweets:
         tweets.append(tweetFromDictToObject(db_tweet))

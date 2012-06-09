@@ -2,11 +2,17 @@ class Author {
     String location;
     String screen_name;
     String name;
+
+    Author() {
+    }
 }
 
 class Location {
     String city;
     String state;
+
+    Location() {
+    }
 }
 
 class Tweet {
@@ -19,5 +25,6 @@ class Tweet {
     int[] frgb;
 
     Tweet() {
+        this.location = null;
     }
 }

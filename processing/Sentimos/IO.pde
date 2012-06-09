@@ -26,6 +26,7 @@ interface JavaScriptInterface {
     void setTweetsText(String text);
     void setFeeling(String text);
     void setTweetText(String text);
+    void setTweetMeta(String screen_name, String location, String created_at_local);
 }
 
 JavaScriptInterface js;

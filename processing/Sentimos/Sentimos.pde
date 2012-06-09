@@ -26,7 +26,7 @@ void setup() {
 }
 
 void draw() {
-    background(40, 40, 40);
+    background(#1A1711);
     textFont(font,12);
 
     aFocusedTweet = false;
@@ -59,7 +59,18 @@ void mouseClicked() {
     for (int i=NUM_PARTICLES-1; i >= 0; i--) {
         if(particles[i].isIn(mouseX, mouseY)) {
             String text = particles[i].tweet.text;
+            String screen_name = particles[i].tweet.author.screen_name;
+            String location = "algum lugar";
+            if(particles[i].tweet.location != null) {
+                location = "";
+                if(particles[i].tweet.location.city != null)
+                    location = particles[i].tweet.location.city + ", ";
+                location += particles[i].tweet.location.state;
+            }
+            String created_at_local = particles[i].tweet.created_at_local;
+            // console.log(created_at_local);
             setTweetText(text);
+            setTweetMeta(screen_name, location, created_at_local);
         }
     }
 }

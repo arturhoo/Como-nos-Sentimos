@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, request
 from pymongo import Connection
 import hashlib
 
@@ -76,8 +76,18 @@ def load_feelings(file_name):
 
 @app.route("/")
 def hello():
+    if 'selected-feelings' in request.args:
+        feelings_query_list = []
+        for feeling in request.args.getlist('selected-feelings'):
+            feelings_query_list.append({'feelings': feeling})
+        db_tweets = g.coll.find({'$or': feelings_query_list,
+                                'feelings_size': 1}, \
+                                sort=[('created_at', -1)], \
+                                limit=100)
+
+    else:
+        db_tweets = g.coll.find(sort=[('created_at', -1)], limit=100)
     feelings = load_feelings('../crawler/feelings.txt')
-    db_tweets = g.coll.find(sort=[('created_at', -1)], limit=100)
     tweets = []
     string_md5 = ''
     for db_tweet in db_tweets:
@@ -86,7 +96,7 @@ def hello():
     # tweet = g.coll.find_one()
     # new_tweet = tweetFromDictToObject(tweet)
     data_md5 = hashlib.md5(string_md5).hexdigest()
-    return render_template('test.html', tweets=tweets, feelings=feelings.items(), data_md5=data_md5)
+    return render_template('test.html', tweets=tweets, feelings=sorted(feelings.items()), data_md5=data_md5)
 
 if __name__ == "__main__":
     app.run()

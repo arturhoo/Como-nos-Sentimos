@@ -5,30 +5,35 @@
     <link href='http://fonts.googleapis.com/css?family=Oleo+Script:700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="static/chosen/chosen.css" />
     <style type="text/css">
-    ::selection { background: #906B2D; }
-    ::-moz-selection { background: #906B2D; }
+    /*::selection { background: #906B2D; }
+    ::-moz-selection { background: #906B2D; } */
 
     body {
-      background: #474747 url(static/images/bg.png);
-      color: #F6E6CC;
-      max-width: 800px;
-      margin: auto;
-      padding: 0;
-      font: 14px Helvetica, Arial, Sans-Serif;
-      font-weight: normal;
-      -webkit-font-smoothing: antialiased;
+      /*background: #474747 url(static/images/bg.png);*/
+      background: #F3F3F3;
+      color: #000000;
+      font-family: Helvetica, Arial, Sans-Serif;
+      border-width: 0px;
+      margin: 0px;
+      width: 100%;
+      height: 100%;
     }
 
     header {
       text-align: center;
       font-size: 30px;
       margin-top: -5px;
-      /*color: #CACACA;*/
-      font-family: 'Oleo Script', cursive;
+      color: #282828;
+      /*font-family: 'Oleo Script', cursive;*/
     }
 
     footer {
-      margin: 20px 0px 20px 0px;
+      background: #282828;
+      color: #fff;
+      min-width: 100%;
+      min-height: 200px;
+      padding: 20px 0px 0px 0px;
+      /*margin: 20px 0px 20px 0px;*/
     }
 
     a:link {text-decoration: none; color:inherit}
@@ -44,9 +49,16 @@
       box-shadow: 0px 0px 15px #8B8B8B;
     }
 
+    .centered-content {
+      max-width: 800px;
+      margin: auto;
+      padding: 0;
+    }
+
     #tweetMeta {
       height: 70px;
-      background: #1A1711;
+      background: #282828;
+      color: #FFFFFF;
       padding-top: 10px;
       padding-left: 10px;
       position: relative;
@@ -64,6 +76,9 @@
     
     #Sentimos {
       outline: 0;
+      background: #282828;
+      height: 460px;
+      width: 800px;
       margin-left: auto;
       margin-right: auto;
     }
@@ -99,46 +114,54 @@
       <p>COMO NOS SENTIMOS</p>
     </header>
 
-    <div class="search-feelings-div">
-      <form action="{{url_for('hello')}}" method="get">
-        <select name="selected-feelings" data-placeholder="Escolha sentimentos..." class="chzn-select" multiple style="width:350px;" tabindex="4">
-          {% for feeling in feelings %}
-            <option value="{{ feeling[0] }}">{{ feeling[0] }}</option>;
-          {% endfor %}
-        </select>
-        <div>
-          <input type="submit" value="Carregar">
+    <div class="centered-content">
+      <div id="tweet">
+        <div id="tweetMeta" class="boxShadow">
+          Sample text  
         </div>
-      </form>
-      <br> <br>
-    </div>
-
-    <div id="tweet">
-      <div id="tweetMeta" class="boxShadow">      
       </div>
-    </div>
-    <br>
-    <div id="pjscanvas">
-      <canvas id="Sentimos" class="boxShadow" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Feeling.pde"></canvas>
+      <br>
+      <div id="pjscanvas">
+        <canvas id="Sentimos" class="boxShadow" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Feeling.pde"></canvas>
+        <!-- <canvas id="Sentimos" class="boxShadow"></canvas> -->
+      </div>
+
+      <p style="text-align: right; font-size: 11px;">Hash da visualização: {{ data_md5 }}</p>
+
+      <!-- If JSON was used -->
+      <div id="fromProcessing">
+        <script type="text/javascript">
+          // var my_json;
+          // $.getJSON("http://cns.com/read_api/api/v1/tweets/", function(json) {
+          //   my_json = json;
+          //   for (var i in my_json.tweets) {
+          //     $("#fromProcessing").append(my_json.tweets[i].text + "<br>");
+          //   }
+          // });
+        </script>
+      </div>
+
+      <div class="search-feelings-div">
+        <form action="{{url_for('hello')}}" method="get">
+          <select name="selected-feelings" data-placeholder="Escolha sentimentos..." class="chzn-select" multiple style="width:350px;" tabindex="4">
+            {% for feeling in feelings %}
+              <option value="{{ feeling[0] }}">{{ feeling[0] }}</option>;
+            {% endfor %}
+          </select>
+          <div>
+            <input type="submit" value="Carregar">
+          </div>
+        </form>
+      </div>
+
+      <div style="height: 300px;"></div>
+
     </div>
 
-    <p style="text-align: right; font-size: 11px;">Hash da visualização: {{ data_md5 }}</p>
-
-    <!-- If JSON was used -->
-    <div id="fromProcessing">
-      <script type="text/javascript">
-        // var my_json;
-        // $.getJSON("http://cns.com/read_api/api/v1/tweets/", function(json) {
-        //   my_json = json;
-        //   for (var i in my_json.tweets) {
-        //     $("#fromProcessing").append(my_json.tweets[i].text + "<br>");
-        //   }
-        // });
-      </script>
-    </div>
-
-    <footer>
-      Como nos Sentimos - Artur Rodrigues
+    <footer class="boxShadow">
+      <div class="centered-content">
+        Como nos Sentimos - Artur Rodrigues
+      </div>
     </footer>
 
     <!-- HTML to Processing -->

@@ -12,16 +12,17 @@ boolean written = false;
 
 void setup() {
     size(800, 460);
-    smooth();
+    // smooth();
     feelings = new ArrayList<Feeling>();
     feelingsOccurrence = new HashMap();
     feelingsRGB = new HashMap();
-    font = createFont("Helvetica-Bold", 24);
+    font = loadFont("Helvetica", 24);
     frameRate(30);
 }
 
 void draw() {
-    background(#1A1711);
+    // background(#1A1711);
+    background(40, 40, 40);
     textFont(font,12);
 
     aFocusedTweet = false;

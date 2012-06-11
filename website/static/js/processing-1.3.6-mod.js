@@ -4637,9 +4637,7 @@
           var ctxNames = ["experimental-webgl", "webgl", "webkit-3d"],
             gl;
           for (var i = 0, l = ctxNames.length; i < l; i++) {
-            gl = canvas.getContext(ctxNames[i], {
-              antialias: false
-            });
+            gl = canvas.getContext(ctxNames[i]);
             if (gl) break
           }
           return gl

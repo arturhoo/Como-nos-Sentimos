@@ -56,7 +56,7 @@ class Particle{
         if (this.isIn(mouseX, mouseY) && aFocusedTweet == false) {
             r = 14.0;
             textFont(font, 12);
-            fill(#F6E6CC);
+            fill(255);
             text(tweet.feelings[0], loc.x+12, loc.y+12);
             aFocusedTweet = true;
             pFocusedTweet = this;

@@ -18,6 +18,7 @@
       padding: 0;
       font: 14px Helvetica, Arial, Sans-Serif;
       font-weight: normal;
+      -webkit-font-smoothing: antialiased;
     }
 
     header {
@@ -230,12 +231,12 @@
     function makeTheLink() {
       pjs = Processing.getInstanceById("Sentimos");
       if(pjs == undefined) {
-        setTimeout( makeTheLink, 200 );
+        setTimeout(makeTheLink, 200);
         return;
       }
       Processing.logger = console;
       pjs.setInterfaceLink(this);
-      afterLoad();
+      setTimeout(afterLoad, 200);
     }
 
     </script>

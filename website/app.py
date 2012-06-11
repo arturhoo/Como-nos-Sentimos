@@ -47,10 +47,14 @@ def tweetFromDictToObject(tweet):
         author.location = tweet['author']['location']
 
     location = None
-    if 'location' in tweet:
-        location = Location(tweet['location']['state'])
-        if 'city' in tweet['location']:
-            location.city = tweet['location']['city']
+    if 'location' in tweet and tweet['location'] != None:
+        try:
+            location = Location(tweet['location']['state'])
+            if 'city' in tweet['location']:
+                location.city = tweet['location']['city']
+        except TypeError, e:
+            print tweet['location']
+            print >> sys.stderr, e
 
     new_tweet = Tweet(tweet['_id'],
                       author,
@@ -83,10 +87,10 @@ def hello():
         db_tweets = g.coll.find({'$or': feelings_query_list,
                                 'feelings_size': 1}, \
                                 sort=[('created_at', -1)], \
-                                limit=100)
+                                limit=70)
 
     else:
-        db_tweets = g.coll.find(sort=[('created_at', -1)], limit=100)
+        db_tweets = g.coll.find(sort=[('created_at', -1)], limit=70)
     feelings = load_feelings('../crawler/feelings.txt')
     tweets = []
     string_md5 = ''

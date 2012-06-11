@@ -4,6 +4,13 @@ void addFeeling(Feeling pFeeling) {
     feelings.add(pFeeling);
 }
 
+void addWeather(Weather pWeather) {
+    weatherOccurrence.put(pWeather.condition, 0);
+    weatherTranslations.put(pWeather.condition, pWeather.translation);
+    console.log(weatherTranslations.get(pWeather.condition))
+    weatherList.add(pWeather);
+}
+
 void addTweet(Tweet tweet) {
     String sFeeling = tweet.feelings[0];
 
@@ -13,6 +20,15 @@ void addTweet(Tweet tweet) {
     // Updating the occurrence of the feeling
     int occurrence = (Integer) feelingsOccurrence.get(sFeeling);
     feelingsOccurrence.put(sFeeling, occurrence+1);
+
+    if(tweet.location != null) {
+        // Updating the occurrence of the weather, if present
+        if(tweet.location.weather != null) {
+            sCondition = tweet.location.weather;
+            int occurrence = (Integer) weatherOccurrence.get(sCondition);
+            weatherOccurrence.put(sCondition, occurrence+1);
+        }
+    }
 
     // Creating a particle for the tweet and adding to the array
     Particle particle = new Particle(new PVector(int(width/2), int(height/2), 0));

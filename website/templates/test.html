@@ -122,7 +122,7 @@
       </div>
       <br>
       <div id="pjscanvas">
-        <canvas id="Sentimos" class="boxShadow" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Feeling.pde"></canvas>
+        <canvas id="Sentimos" class="boxShadow" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Feeling.pde processing/Sentimos/Weather.pde"></canvas>
         <!-- <canvas id="Sentimos" class="boxShadow"></canvas> -->
       </div>
 
@@ -185,6 +185,9 @@
             {% if tweet.location.city %}
               tempLocation.city = "{{ tweet.location.city }}";
             {% endif %}
+            {% if tweet.location.weather %}
+              tempLocation.weather = "{{ tweet.location.weather }}"
+            {% endif %}
             location = tempLocation;
           {% endif %}
 
@@ -214,6 +217,15 @@
           }
           var pFeeling = new pjs.Feeling(text, frgb);
           pjs.addFeeling(pFeeling);
+        {% endfor %}
+      }
+
+      function loadWeatherTranslations() {
+        {% for translation in weather_translations %}
+          var condition = "{{ translation[0] }}";
+          var translation = "{{ translation[1] }}";
+          var pWeather = new pjs.Weather(condition, translation);
+          pjs.addWeather(pWeather);
         {% endfor %}
       }
     </script>
@@ -270,6 +282,7 @@
         // pjsSetTweet();
         // pjsAddTweet({{ tweet }});
         loadFeelings();
+        loadWeatherTranslations();
         loadTweets();
       }
 

@@ -10,6 +10,7 @@ class Author {
 class Location {
     String city;
     String state;
+    String weather;
 
     Location() {
     }

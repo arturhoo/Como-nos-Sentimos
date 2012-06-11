@@ -3,7 +3,10 @@ static int NUM_PARTICLES = 0;
 Particle[] particles = new Particle[MAX_NUM_PARTICLES];
 ArrayList<Feeling> feelings;
 HashMap feelingsOccurrence;
-HashMap feelignsRGB;
+HashMap feelingsRGB;
+ArrayList<Weather> weatherList;
+HashMap weatherOccurrence;
+HashMap weatherTranslations;
 
 PFont font;
 boolean aFocusedTweet;
@@ -16,6 +19,11 @@ void setup() {
     feelings = new ArrayList<Feeling>();
     feelingsOccurrence = new HashMap();
     feelingsRGB = new HashMap();
+
+    weatherList = new ArrayList<Weather>();
+    weatherOccurrence = new HashMap();
+    weatherTranslations = new HashMap();
+
     font = loadFont("Helvetica", 24);
     frameRate(30);
 }
@@ -48,6 +56,8 @@ void mouseClicked() {
                 if(particles[i].tweet.location.city != null)
                     location = particles[i].tweet.location.city + ", ";
                 location += particles[i].tweet.location.state;
+                if(particles[i].tweet.location.weather != null)
+                    location += ", quando estava " + weatherTranslations.get(particles[i].tweet.location.weather);
             }
             String created_at = particles[i].tweet.created_at;
             // console.log(created_at_local);

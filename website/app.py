@@ -52,6 +52,9 @@ def tweetFromDictToObject(tweet):
             location = Location(tweet['location']['state'])
             if 'city' in tweet['location']:
                 location.city = tweet['location']['city']
+                if 'weather' in tweet['location']:
+                    location.weather = tweet['location']['weather']['condition']
+
         except TypeError, e:
             print tweet['location']
             print >> sys.stderr, e
@@ -78,6 +81,15 @@ def load_feelings(file_name):
     return feelings_dic
 
 
+def load_weather_translations(file_name):
+    weather_translations_dic = {}
+    with open(file_name) as f:
+        for line in f.readlines():
+            line_list = line.split(';')
+            weather_translations_dic[line_list[0].decode('utf-8')] = line_list[1].rstrip()
+    return weather_translations_dic
+
+
 @app.route("/")
 def hello():
     if 'selected-feelings' in request.args:
@@ -92,15 +104,18 @@ def hello():
     else:
         db_tweets = g.coll.find(sort=[('created_at', -1)], limit=70)
     feelings = load_feelings('../crawler/feelings.txt')
+    weather_translations = load_weather_translations('../crawler/weather_translations.txt')
     tweets = []
     string_md5 = ''
     for db_tweet in db_tweets:
         string_md5 += str(db_tweet['_id'])
         tweets.append(tweetFromDictToObject(db_tweet))
-    # tweet = g.coll.find_one()
-    # new_tweet = tweetFromDictToObject(tweet)
     data_md5 = hashlib.md5(string_md5).hexdigest()
-    return render_template('test.html', tweets=tweets, feelings=sorted(feelings.items()), data_md5=data_md5)
+    return render_template('test.html',
+                           tweets=tweets,
+                           feelings=sorted(feelings.items()),
+                           weather_translations=sorted(weather_translations.items()),
+                           data_md5=data_md5)
 
 if __name__ == "__main__":
     app.run()

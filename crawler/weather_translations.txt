@@ -2,7 +2,7 @@ Light rain;chuviscando
 Cloudy;nublado
 Drizzle;com garoa
 Mostly Cloudy;nublado
-Clear;ensolarado
+Clear;com céu aberto
 Overcast;com tempo fechado
 Partly Cloudy;parcialmente nublado
 Rain;chovendo

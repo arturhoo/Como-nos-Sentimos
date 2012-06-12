@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, g, request
 from pymongo import Connection
+from datetime import timedelta
 import hashlib
 
 
@@ -24,11 +25,12 @@ class Location(object):
 
 
 class Tweet(object):
-    def __init__(self, tid, author, text, created_at, created_at_local, feelings):
+    def __init__(self, tid, author, text, created_at, created_at_bsb, created_at_local, feelings):
         self.id = tid
         self.author = author
         self.text = text
         self.created_at = created_at
+        self.created_at_bsb = created_at_bsb
         self.created_at_local = created_at_local
         self.feelings = feelings
 
@@ -63,6 +65,7 @@ def tweetFromDictToObject(tweet):
                       author,
                       prepareStringForJavaScript(tweet['text']),
                       tweet['created_at'],
+                      tweet['created_at'] + timedelta(seconds=-10800),
                       tweet['created_at_local'],
                       tweet['feelings'])
 
@@ -86,7 +89,7 @@ def load_weather_translations(file_name):
     with open(file_name) as f:
         for line in f.readlines():
             line_list = line.split(';')
-            weather_translations_dic[line_list[0].decode('utf-8')] = line_list[1].rstrip()
+            weather_translations_dic[line_list[0]] = line_list[1].decode('utf-8').rstrip()
     return weather_translations_dic
 
 

@@ -59,10 +59,10 @@ void mouseClicked() {
                 if(particles[i].tweet.location.weather != null)
                     location += ", quando estava " + weatherTranslations.get(particles[i].tweet.location.weather);
             }
-            String created_at = particles[i].tweet.created_at;
+            String created_at_bsb = particles[i].tweet.created_at_bsb;
             // console.log(created_at_local);
             // setTweetText(text);
-            setTweetMeta(id, text, name, screen_name, location, created_at);
+            setTweetMeta(id, text, name, screen_name, location, created_at_bsb);
         }
     }
 }

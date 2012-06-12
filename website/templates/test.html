@@ -196,6 +196,7 @@
           pTweet.text = "{{ tweet.text }}";
           pTweet.feelings = [];
           pTweet.created_at = "{{ tweet.created_at.strftime('as %H:%M do dia %d/%m') }}"
+          pTweet.created_at_bsb = "{{ tweet.created_at_bsb.strftime('as %H:%M do dia %d/%m') }}"
           pTweet.created_at_local = "{{ tweet.created_at_local.strftime('as %H:%M do dia %d/%m') }}"
           {% for feeling in tweet.feelings %}
             pTweet.feelings.push("{{ feeling }}")
@@ -244,7 +245,7 @@
         $("#tweetText").html(text);
       }
 
-      function setTweetMeta(id, text, name, screen_name, location, created_at) {
+      function setTweetMeta(id, text, name, screen_name, location, created_at_bsb) {
         var html_str = '<span style="font-weight: bolder;">' +
           '<a target="_blank" href="http://twitter.com/' + screen_name + '">' + name + '</a> - ' +
           '</span>' +        
@@ -257,7 +258,7 @@
           '<span style="font-size: 11px; position: absolute; bottom: 5px;">' +
           '<span class="screen_nameLink">' +
           '<a target="_blank" href="http://twitter.com/' + screen_name + '/status/' + id + '">' +
-          created_at +
+          created_at_bsb +
           ', de ' +
           location +
           '</a>' +        

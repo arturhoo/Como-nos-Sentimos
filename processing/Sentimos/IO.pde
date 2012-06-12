@@ -7,7 +7,6 @@ void addFeeling(Feeling pFeeling) {
 void addWeather(Weather pWeather) {
     weatherOccurrence.put(pWeather.condition, 0);
     weatherTranslations.put(pWeather.condition, pWeather.translation);
-    console.log(weatherTranslations.get(pWeather.condition))
     weatherList.add(pWeather);
 }
 
@@ -42,7 +41,7 @@ interface JavaScriptInterface {
     void setTweetsText(String text);
     void setFeeling(String text);
     void setTweetText(String text);
-    void setTweetMeta(long id, String text, String name, String screen_name, String location, String created_at);
+    void setTweetMeta(long id, String text, String name, String screen_name, String location, String created_at_bsb);
 }
 
 JavaScriptInterface js;

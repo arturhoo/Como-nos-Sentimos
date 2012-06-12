@@ -53,28 +53,7 @@ void draw() {
 void mouseClicked() {
     for (int i=NUM_PARTICLES-1; i >= 0; i--) {
         if(particles[i].isIn(mouseX, mouseY)) {
-            long id = particles[i].tweet.id;
-            String text = particles[i].tweet.text;
-            String screen_name = particles[i].tweet.author.screen_name;
-            String name = particles[i].tweet.author.name;
-            String location = "algum lugar";
-            if(particles[i].tweet.location != null) {
-                location = "";
-                if(particles[i].tweet.location.city != null)
-                    location = particles[i].tweet.location.city + ", ";
-                String state = particles[i].tweet.location.state;
-                location += stateAbbreviation.get(state).toUpperCase();
-                if(particles[i].tweet.location.weather != null && 
-                   particles[i].tweet.location.city != null) {
-                    String weather = particles[i].tweet.location.weather;
-                    location += ", quando estava ";
-                    location += weatherTranslations.get(weather);
-                }
-            }
-            String created_at_bsb = particles[i].tweet.created_at_bsb;
-            // console.log(created_at_local);
-            // setTweetText(text);
-            setTweetMeta(id, text, name, screen_name, location, created_at_bsb);
+            particles[i].tweet.showTweet();
         }
     }
 }

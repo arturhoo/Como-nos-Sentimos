@@ -64,10 +64,12 @@ void mouseClicked() {
                     location = particles[i].tweet.location.city + ", ";
                 String state = particles[i].tweet.location.state;
                 location += stateAbbreviation.get(state).toUpperCase();
-                if(particles[i].tweet.location.weather != null)
+                if(particles[i].tweet.location.weather != null && 
+                   particles[i].tweet.location.city != null) {
                     String weather = particles[i].tweet.location.weather;
                     location += ", quando estava ";
                     location += weatherTranslations.get(weather);
+                }
             }
             String created_at_bsb = particles[i].tweet.created_at_bsb;
             // console.log(created_at_local);

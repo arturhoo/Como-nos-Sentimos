@@ -1,7 +1,7 @@
 void addFeeling(Feeling pFeeling) {
-    feelingsOccurrence.put(pFeeling.text, 0);
-    feelingsRGB.put(pFeeling.text, pFeeling.frgb);
-    feelings.add(pFeeling);
+    feelingOccurrence.put(pFeeling.text, 0);
+    feelingRGB.put(pFeeling.text, pFeeling.frgb);
+    feelingList.add(pFeeling);
 }
 
 void addWeather(Weather pWeather) {
@@ -20,11 +20,11 @@ void addTweet(Tweet tweet) {
     String sFeeling = tweet.feelings[0];
 
     // Setting the RGB of the tweet based on its feeling
-    tweet.frgb = feelingsRGB.get(sFeeling);
+    tweet.frgb = feelingRGB.get(sFeeling);
 
     // Updating the occurrence of the feeling
-    int occurrence = (Integer) feelingsOccurrence.get(sFeeling);
-    feelingsOccurrence.put(sFeeling, occurrence+1);
+    int occurrence = (Integer) feelingOccurrence.get(sFeeling);
+    feelingOccurrence.put(sFeeling, occurrence+1);
 
     if(tweet.location != null) {
         // Updating the occurrence of the weather, if present

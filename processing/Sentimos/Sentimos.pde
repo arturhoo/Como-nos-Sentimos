@@ -1,9 +1,9 @@
 static final int MAX_NUM_PARTICLES = 1000;
 static int NUM_PARTICLES = 0;
 Particle[] particles = new Particle[MAX_NUM_PARTICLES];
-ArrayList<Feeling> feelings;
-HashMap feelingsOccurrence;
-HashMap feelingsRGB;
+ArrayList<Feeling> feelingList;
+HashMap feelingOccurrence;
+HashMap feelingRGB;
 ArrayList<Weather> weatherList;
 HashMap weatherOccurrence;
 HashMap weatherTranslations;
@@ -19,9 +19,9 @@ boolean written = false;
 void setup() {
     size(800, 460);
     smooth();
-    feelings = new ArrayList<Feeling>();
-    feelingsOccurrence = new HashMap();
-    feelingsRGB = new HashMap();
+    feelingList = new ArrayList<Feeling>();
+    feelingOccurrence = new HashMap();
+    feelingRGB = new HashMap();
 
     weatherList = new ArrayList<Weather>();
     weatherOccurrence = new HashMap();

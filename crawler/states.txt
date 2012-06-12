@@ -1,0 +1,30 @@
+Acre;ac
+Alagoas;al
+Amapá;ap
+Amazonas;am
+Bahia;ba
+Barra Sul;sc
+Brazilian Federal District;df
+Ceará;ce
+Distrito Federal;df
+ES;es
+Espírito Santo;es
+Goiás;go
+Maranhão;ma
+Mato Grosso do Sul;ms
+Mato Grosso;mt
+Minas Gerais;mg
+Paraná;pr
+Paraíba;pb
+Pará;
+Pernambuco;pe
+Piauí;pi
+Rio Grande do Norte;rn
+Rio Grande do Sul;rs
+Rio de Janeiro;rj
+Rondônia;ro
+Roraima;rr
+Santa Catarina;sc
+Sergipe;se
+São Paulo;sp
+Tocantins;to

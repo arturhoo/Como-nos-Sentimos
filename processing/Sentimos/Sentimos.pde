@@ -7,6 +7,9 @@ HashMap feelingsRGB;
 ArrayList<Weather> weatherList;
 HashMap weatherOccurrence;
 HashMap weatherTranslations;
+ArrayList<State> stateList;
+HashMap stateOccurrence;
+HashMap stateAbbreviation;
 
 PFont font;
 boolean aFocusedTweet;
@@ -15,7 +18,7 @@ boolean written = false;
 
 void setup() {
     size(800, 460);
-    // smooth();
+    smooth();
     feelings = new ArrayList<Feeling>();
     feelingsOccurrence = new HashMap();
     feelingsRGB = new HashMap();
@@ -23,6 +26,10 @@ void setup() {
     weatherList = new ArrayList<Weather>();
     weatherOccurrence = new HashMap();
     weatherTranslations = new HashMap();
+
+    stateList = new ArrayList<State>();
+    stateOccurrence = new HashMap();
+    stateAbbreviation = new HashMap();
 
     font = loadFont("Helvetica", 24);
     frameRate(30);
@@ -55,9 +62,12 @@ void mouseClicked() {
                 location = "";
                 if(particles[i].tweet.location.city != null)
                     location = particles[i].tweet.location.city + ", ";
-                location += particles[i].tweet.location.state;
+                String state = particles[i].tweet.location.state;
+                location += stateAbbreviation.get(state).toUpperCase();
                 if(particles[i].tweet.location.weather != null)
-                    location += ", quando estava " + weatherTranslations.get(particles[i].tweet.location.weather);
+                    String weather = particles[i].tweet.location.weather;
+                    location += ", quando estava ";
+                    location += weatherTranslations.get(weather);
             }
             String created_at_bsb = particles[i].tweet.created_at_bsb;
             // console.log(created_at_local);

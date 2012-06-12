@@ -10,6 +10,12 @@ void addWeather(Weather pWeather) {
     weatherList.add(pWeather);
 }
 
+void addState(State pState) {
+    stateOccurrence.put(pState.abbreviation, 0);
+    stateAbbreviation.put(pState.text, pState.abbreviation);
+    stateList.add(pState);
+}
+
 void addTweet(Tweet tweet) {
     String sFeeling = tweet.feelings[0];
 
@@ -23,10 +29,15 @@ void addTweet(Tweet tweet) {
     if(tweet.location != null) {
         // Updating the occurrence of the weather, if present
         if(tweet.location.weather != null) {
-            sCondition = tweet.location.weather;
+            String sCondition = tweet.location.weather;
             int occurrence = (Integer) weatherOccurrence.get(sCondition);
             weatherOccurrence.put(sCondition, occurrence+1);
         }
+        // Updating the occurrence of the state
+        String abbreviation = stateAbbreviation.get(tweet.location.state);
+        int occurrence = (Integer) stateOccurrence.get(abbreviation);
+        stateOccurrence.put(abbreviation, occurrence+1);
+
     }
 
     // Creating a particle for the tweet and adding to the array
@@ -34,7 +45,6 @@ void addTweet(Tweet tweet) {
     particle.tweet = tweet;
     particles[NUM_PARTICLES] = particle;
     NUM_PARTICLES++;
-    // particlesList.add(particle);
 }
 
 interface JavaScriptInterface {

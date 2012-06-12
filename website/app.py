@@ -93,8 +93,20 @@ def load_weather_translations(file_name):
     return weather_translations_dic
 
 
+def load_states(file_name):
+    states_dic = {}
+    with open(file_name) as f:
+        for line in f.readlines():
+            line_list = line.split(';')
+            states_dic[line_list[0].decode('utf-8')] = line_list[1].rstrip()
+    return states_dic
+
+
 @app.route("/")
 def hello():
+    feelings = load_feelings('../crawler/feelings.txt')
+    weather_translations = load_weather_translations('../crawler/weather_translations.txt')
+    states = load_states('../crawler/states.txt')
     if 'selected-feelings' in request.args:
         feelings_query_list = []
         for feeling in request.args.getlist('selected-feelings'):
@@ -106,8 +118,6 @@ def hello():
 
     else:
         db_tweets = g.coll.find(sort=[('created_at', -1)], limit=70)
-    feelings = load_feelings('../crawler/feelings.txt')
-    weather_translations = load_weather_translations('../crawler/weather_translations.txt')
     tweets = []
     string_md5 = ''
     for db_tweet in db_tweets:
@@ -118,6 +128,7 @@ def hello():
                            tweets=tweets,
                            feelings=sorted(feelings.items()),
                            weather_translations=sorted(weather_translations.items()),
+                           states=sorted(states.items()),
                            data_md5=data_md5)
 
 if __name__ == "__main__":

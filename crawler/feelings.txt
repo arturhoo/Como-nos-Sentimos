@@ -40,7 +40,7 @@ realizado;re+a+li+(s|z)a+d;254,165,63
 relaxado;re+la+(ch|x)a+d;254,215,60
 revoltado;re+vo+(o|l)+t;200,0,39
 saudade;sa+u+da+d;1,91,92
-solitátio;so+li+ta*(a+|á)+ri+;8,70,143
+solitário;so+li+ta*(a+|á)+ri+;8,70,143
 sono;so+no+;113,62,243
 sortudo;so+rtu+d;254,215,60
 sozinho;so+(z+|s)i+nh;150,173,198

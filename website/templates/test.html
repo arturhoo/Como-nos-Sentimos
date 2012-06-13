@@ -190,14 +190,14 @@
           {% endif %}
 
           var pTweet = new pjs.Tweet();
-          pTweet.id = "{{ tweet.id }}"
+          pTweet.id = "{{ tweet.id }}";
           pTweet.text = "{{ tweet.text }}";
           pTweet.feelings = [];
-          pTweet.created_at = "{{ tweet.created_at.strftime('as %H:%M do dia %d/%m') }}"
-          pTweet.created_at_bsb = "{{ tweet.created_at_bsb.strftime('as %H:%M do dia %d/%m') }}"
-          pTweet.created_at_local = "{{ tweet.created_at_local.strftime('as %H:%M do dia %d/%m') }}"
+          pTweet.created_at = "às " + "{{ tweet.created_at.strftime('%H:%M do dia %d/%m') }}";
+          pTweet.created_at_bsb = "às " + "{{ tweet.created_at_bsb.strftime('%H:%M do dia %d/%m') }}";
+          pTweet.created_at_local = "às " + "{{ tweet.created_at_local.strftime('%H:%M do dia %d/%m') }}";
           {% for feeling in tweet.feelings %}
-            pTweet.feelings.push("{{ feeling }}")
+            pTweet.feelings.push("{{ feeling }}");
           {% endfor %}
           pTweet.author = author;
           if(location != undefined)

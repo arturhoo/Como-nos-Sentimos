@@ -36,7 +36,6 @@ void setup() {
 }
 
 void draw() {
-    // background(#1A1711);
     background(40, 40, 40);
     textFont(font,12);
 
@@ -56,9 +55,10 @@ void mouseClicked() {
             particles[i].tweet.showTweet();
         }
     }
-    sortFeelingList();
-    for (int i=0; i<feelingList.size(); i++)
-        println(feelingList.get(i).text + ": " + feelingList.get(i).occurrence);
+    // sortListThatHasTextAndOccurrenceFields(feelingList, feelingOccurrence);
+    // for (int i=0; i<feelingList.size(); i++)
+    //     println(feelingList.get(i).text + ": " + feelingList.get(i).occurrence);
+    // sortListThatHasTextAndOccurrenceFields(stateList, stateOccurrence);
+    // for (int i=0; i<stateList.size(); i++)
+    //     println(stateList.get(i).abbreviation + ": " + stateList.get(i).occurrence);
 }
-
-

@@ -16,7 +16,7 @@ Mato Grosso;mt
 Minas Gerais;mg
 Paraná;pr
 Paraíba;pb
-Pará;
+Pará;pa
 Pernambuco;pe
 Piauí;pi
 Rio Grande do Norte;rn

@@ -7,4 +7,16 @@ class Feeling {
         this.text = text;
         this.frgb = frgb;
     }
+
+    String getKeyAttribute() {
+        return this.text;
+    }
+
+    int getSortableAttribute() {
+        return this.occurrence;
+    }
+
+    void setSortableAttribute(int value) {
+        this.occurrence = value;
+    }
 }

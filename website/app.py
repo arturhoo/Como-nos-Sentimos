@@ -44,9 +44,9 @@ def prepareStringForJavaScript(string):
 def tweetFromDictToObject(tweet):
     author = Author(tweet['author']['screen_name'])
     if 'name' in tweet['author']:
-        author.name = tweet['author']['name']
+        author.name = prepareStringForJavaScript(tweet['author']['name'])
     if 'location' in tweet['author']:
-        author.location = tweet['author']['location']
+        author.location = prepareStringForJavaScript(tweet['author']['location'])
 
     location = None
     if 'location' in tweet and tweet['location'] != None:
@@ -104,6 +104,7 @@ def load_states(file_name):
 
 @app.route("/")
 def hello():
+    limit = 70
     feelings = load_feelings('../crawler/feelings.txt')
     weather_translations = load_weather_translations('../crawler/weather_translations.txt')
     states = load_states('../crawler/states.txt')
@@ -114,10 +115,10 @@ def hello():
         db_tweets = g.coll.find({'$or': feelings_query_list,
                                 'feelings_size': 1}, \
                                 sort=[('created_at', -1)], \
-                                limit=70)
+                                limit=limit)
 
     else:
-        db_tweets = g.coll.find(sort=[('created_at', -1)], limit=70)
+        db_tweets = g.coll.find(sort=[('created_at', -1)], limit=limit)
     tweets = []
     string_md5 = ''
     for db_tweet in db_tweets:

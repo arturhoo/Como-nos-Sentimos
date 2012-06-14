@@ -1,6 +1,6 @@
 void addFeeling(Feeling pFeeling) {
-    feelingOccurrence.put(pFeeling.text, 0);
-    feelingRGB.put(pFeeling.text, pFeeling.frgb);
+    feelingOccurrence.put(pFeeling.textString, 0);
+    feelingRGB.put(pFeeling.textString, pFeeling.frgb);
     feelingList.add(pFeeling);
 }
 
@@ -12,7 +12,7 @@ void addWeather(Weather pWeather) {
 
 void addState(State pState) {
     stateOccurrence.put(pState.abbreviation, 0);
-    stateAbbreviation.put(pState.text, pState.abbreviation);
+    stateAbbreviation.put(pState.textString, pState.abbreviation);
     stateList.add(pState);
 }
 
@@ -48,10 +48,7 @@ void addTweet(Tweet tweet) {
 }
 
 interface JavaScriptInterface {
-    void setTweetsText(String text);
-    void setFeeling(String text);
-    void setTweetText(String text);
-    void setTweetMeta(long id, String text, String name, String screen_name, String location, String created_at_bsb);
+    void setTweetMeta(long id, String textString, String name, String screen_name, String location, String created_at_bsb);
 }
 
 JavaScriptInterface js;

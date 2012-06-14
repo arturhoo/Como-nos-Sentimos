@@ -1,5 +1,4 @@
 class Particle{
-    static final float defaultRadius = 10.0;
     Tweet tweet;
     PVector loc, vel, acc;
     float r;
@@ -8,7 +7,7 @@ class Particle{
         this.acc = new PVector(0, 0, 0);
         this.vel = new PVector(random(-1, 1), random(-1, 1), 0);
         this.loc = l.get();
-        this.r = this.defaultRadius;
+        this.r = PARTICLE_RADIUS;
     }
 
     float getVelocity() {
@@ -61,7 +60,7 @@ class Particle{
             aFocusedTweet = true;
             pFocusedTweet = this;
         }
-        else r = defaultRadius;
+        else r = PARTICLE_RADIUS;
 
         // Updates speed and location
         vel.add(acc);

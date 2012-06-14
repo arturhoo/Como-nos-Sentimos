@@ -36,7 +36,7 @@ class Tweet {
     Author author;
     Location location;
     long id;
-    String text;
+    String textString;
     String created_at;
     String created_at_bsb;
     String created_at_local;
@@ -56,6 +56,6 @@ class Tweet {
         String locationString = "algum lugar";
         if(location != null)
             locationString = location.formatLocation();
-        setTweetMeta(id, text, author.name, author.screen_name, locationString, created_at_bsb);
+        setTweetMeta(id, textString, author.name, author.screen_name, locationString, created_at_bsb);
     }
 }

@@ -20,3 +20,48 @@ void sortListThatHasTextAndOccurrenceFields(ArrayList list, HashMap map) {
         list.set(largest, temp);
     }
 }
+
+void setListElementsLocation(ArrayList list) {
+    float leftBorderOffset = width*0.05;
+    float rightBorderOffset = width*0.05;
+    float topBorderOffset = height*0.10;
+    float bottomBorderOffset = height*0.10;
+    float distBtwnTextAndParticles = width*0.05;
+    float distBtwnParticles = PARTICLE_RADIUS*0.80;
+    float distBtwnHistogramEntries = PARTICLE_RADIUS*1.00;
+    float textWidth = width*0.10;
+    float textX = leftBorderOffset + textWidth;
+
+    float particlesWidth = width - leftBorderOffset - rightBorderOffset - distBtwnTextAndParticles;
+    int numParticlesInOneLine = parseInt((particlesWidth + distBtwnParticles)/(PARTICLE_RADIUS + distBtwnParticles));
+    println("numParticlesInOneLine: " + numParticlesInOneLine);
+    println("textWidth: " + textWidth);
+    println("particlesWidth: " + particlesWidth);
+
+    int y = parseInt(topBorderOffset);
+    int splittableY = -1; // unsplittable
+    Iterator<Feeling> itr = feelingList.iterator();
+    while (itr.hasNext()) {
+      Feeling tempFeeling = itr.next();
+      if(tempFeeling.occurrence == 0) break;
+      tempFeeling.loc.set(textX, y, 0);
+      // Defines the new Y for the next histogram entry
+      int numHistogramLines = parseInt(tempFeeling.occurrence/numParticlesInOneLine) + 1;
+      y += (distBtwnHistogramEntries + HISTOGRAM_FONT_SIZE)*numHistogramLines;
+
+      // Identify if this histogram line spans less than half of the canvas
+      tempX = textX + distBtwnTextAndParticles;
+      if((tempFeeling.occurrence*(PARTICLE_RADIUS + distBtwnParticles) + tempX < width/2) &&
+         splittableY == -1) {
+        splittableY = y;
+      }
+
+      // Identify if Y has gone below the imposed limits
+      if(y > (height - bottomBorderOffset)) {
+        // If so, start using two columns
+        textX = width/2 + leftBorderOffset + textWidth;
+        // Reset the Y
+        y = parseInt(topBorderOffset);
+      }
+    }
+}

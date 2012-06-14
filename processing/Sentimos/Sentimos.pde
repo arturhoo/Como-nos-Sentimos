@@ -1,5 +1,7 @@
 static final int MAX_NUM_PARTICLES = 1000;
 static int NUM_PARTICLES = 0;
+static final float PARTICLE_RADIUS = 10.0;
+static final int HISTOGRAM_FONT_SIZE = 13;
 Particle[] particles = new Particle[MAX_NUM_PARTICLES];
 ArrayList<Feeling> feelingList;
 HashMap feelingOccurrence;
@@ -41,8 +43,15 @@ void draw() {
 
     aFocusedTweet = false;
     pFocusedTweet = null;
-    for (int i=NUM_PARTICLES-1; i >= 0; i--) {
-        particles[i].run();
+    // for (int i=NUM_PARTICLES-1; i >= 0; i--) {
+    //     particles[i].run();
+    // }
+    Iterator<Feeling> itr = feelingList.iterator();
+    while (itr.hasNext()) {
+        Feeling tempFeeling = itr.next();
+        if(tempFeeling.occurrence > 0) {
+            tempFeeling.drawText();
+        }
     }
     fill(255);
     textAlign(LEFT);
@@ -55,7 +64,8 @@ void mouseClicked() {
             particles[i].tweet.showTweet();
         }
     }
-    // sortListThatHasTextAndOccurrenceFields(feelingList, feelingOccurrence);
+    sortListThatHasTextAndOccurrenceFields(feelingList, feelingOccurrence);
+    setListElementsLocation(feelingList);
     // for (int i=0; i<feelingList.size(); i++)
     //     println(feelingList.get(i).text + ": " + feelingList.get(i).occurrence);
     // sortListThatHasTextAndOccurrenceFields(stateList, stateOccurrence);

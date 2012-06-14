@@ -1,15 +1,17 @@
 class Feeling {
-    String text;
+    String textString;
     int[] frgb;
     int occurrence = 0;
+    PVector loc;
 
-    Feeling (String text, int[] frgb) {
-        this.text = text;
+    Feeling (String textString, int[] frgb) {
+        this.textString = textString;
         this.frgb = frgb;
+        this.loc = new PVector();
     }
 
     String getKeyAttribute() {
-        return this.text;
+        return this.textString;
     }
 
     int getSortableAttribute() {
@@ -18,5 +20,13 @@ class Feeling {
 
     void setSortableAttribute(int value) {
         this.occurrence = value;
+    }
+
+    void drawText() {
+        textAlign(RIGHT);
+        textFont(font, HISTOGRAM_FONT_SIZE);
+        fill(255);
+        text(textString + ": " + occurrence, loc.x, loc.y);
+        textAlign(LEFT);
     }
 }

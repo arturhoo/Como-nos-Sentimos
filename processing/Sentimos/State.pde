@@ -1,10 +1,10 @@
 class State {
-    String text;
+    String textString;
     String abbreviation;
     int occurrence = 0;
 
-    State (String text, String abbreviation) {
-        this.text = text;
+    State (String textString, String abbreviation) {
+        this.textString = textString;
         this.abbreviation = abbreviation;
     }
 

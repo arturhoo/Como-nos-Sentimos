@@ -22,46 +22,38 @@ void sortListThatHasTextAndOccurrenceFields(ArrayList list, HashMap map) {
 }
 
 void setListElementsLocation(ArrayList list) {
-    float leftBorderOffset = width*0.05;
-    float rightBorderOffset = width*0.05;
-    float topBorderOffset = height*0.10;
-    float bottomBorderOffset = height*0.10;
-    float distBtwnTextAndParticles = width*0.05;
-    float distBtwnParticles = PARTICLE_RADIUS*0.80;
-    float distBtwnHistogramEntries = PARTICLE_RADIUS*1.00;
-    float textWidth = width*0.10;
-    float textX = leftBorderOffset + textWidth;
-
-    float particlesWidth = width - leftBorderOffset - rightBorderOffset - distBtwnTextAndParticles;
-    int numParticlesInOneLine = parseInt((particlesWidth + distBtwnParticles)/(PARTICLE_RADIUS + distBtwnParticles));
+    float textX = LEFT_BORDER_OFFSET + TEXT_WIDTH;
+    int numParticlesInOneLine = parseInt((PARTICLES_WIDTH + DIST_BTWN_PARTICLES)/(PARTICLE_RADIUS + DIST_BTWN_PARTICLES));
     println("numParticlesInOneLine: " + numParticlesInOneLine);
-    println("textWidth: " + textWidth);
-    println("particlesWidth: " + particlesWidth);
+    println("textWidth: " + TEXT_WIDTH);
+    println("particlesWidth: " + PARTICLES_WIDTH);
 
-    int y = parseInt(topBorderOffset);
+    int y = parseInt(TOP_BORDER_OFFSET);
     int splittableY = -1; // unsplittable
     Iterator<Feeling> itr = feelingList.iterator();
     while (itr.hasNext()) {
       Feeling tempFeeling = itr.next();
       if(tempFeeling.occurrence == 0) break;
       tempFeeling.loc.set(textX, y, 0);
+      tempFeeling.particlesLoc.set(textX+DIST_BTWN_TEXT_AND_PARTICLES, y, 0);
+
       // Defines the new Y for the next histogram entry
       int numHistogramLines = parseInt(tempFeeling.occurrence/numParticlesInOneLine) + 1;
-      y += (distBtwnHistogramEntries + HISTOGRAM_FONT_SIZE)*numHistogramLines;
+      y += (DIST_BTWN_HISTOGRAM_ENTRIES + HISTOGRAM_FONT_SIZE)*numHistogramLines;
 
       // Identify if this histogram line spans less than half of the canvas
-      tempX = textX + distBtwnTextAndParticles;
-      if((tempFeeling.occurrence*(PARTICLE_RADIUS + distBtwnParticles) + tempX < width/2) &&
+      tempX = textX + DIST_BTWN_TEXT_AND_PARTICLES;
+      if((tempFeeling.occurrence*(PARTICLE_RADIUS + DIST_BTWN_PARTICLES) + tempX < width/2) &&
          splittableY == -1) {
         splittableY = y;
       }
 
       // Identify if Y has gone below the imposed limits
-      if(y > (height - bottomBorderOffset)) {
+      if(y > (height - BOTTOM_BORDER_OFFSET)) {
         // If so, start using two columns
-        textX = width/2 + leftBorderOffset + textWidth;
+        textX = width/2 + LEFT_BORDER_OFFSET + TEXT_WIDTH;
         // Reset the Y
-        y = parseInt(topBorderOffset);
+        y = parseInt(TOP_BORDER_OFFSET);
       }
     }
 }

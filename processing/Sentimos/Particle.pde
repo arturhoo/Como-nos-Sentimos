@@ -1,10 +1,11 @@
 class Particle{
     Tweet tweet;
     PVector loc, vel, acc;
+    PVector feelingLoc;
     float r;
 
     Particle(PVector l) {
-        this.acc = new PVector(0, 0, 0);
+        this.acc = new PVector();
         this.vel = new PVector(random(-1, 1), random(-1, 1), 0);
         this.loc = l.get();
         this.r = PARTICLE_RADIUS;
@@ -89,6 +90,21 @@ class Particle{
         }
     }
 
+    void setFeelingLoc() {
+        Feeling tempFeeling = null;
+        Iterator<Feeling> itr = feelingList.iterator();
+        while (itr.hasNext()) {
+            tempFeeling = itr.next();
+            if(tempFeeling.textString.equals(tweet.feelings[0]))
+                break;
+        }
+        PVector returnedPVector = tempFeeling.getAParticleLoc();
+        feelingLoc = new PVector();
+        feelingLoc.x = returnedPVector.x;
+        feelingLoc.y = returnedPVector.y;
+        feelingLoc.z = 0;
+    }
+
     /**
     * Draws the particle on the canvas
     */
@@ -96,7 +112,8 @@ class Particle{
         ellipseMode(CENTER);
         stroke(255, 255, 255);
         fill(tweet.frgb[0], tweet.frgb[1], tweet.frgb[2]);
-        ellipse(loc.x, loc.y, r, r);
+        // ellipse(loc.x, loc.y, r, r);
+        ellipse(feelingLoc.x, feelingLoc.y, r, r);
     }
 
     /**

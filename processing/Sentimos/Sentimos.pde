@@ -56,6 +56,9 @@ void mouseClicked() {
             particles[i].tweet.showTweet();
         }
     }
+    sortFeelingList();
+    for (int i=0; i<feelingList.size(); i++)
+        println(feelingList.get(i).text + ": " + feelingList.get(i).occurrence);
 }
 
 

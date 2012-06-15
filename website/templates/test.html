@@ -253,9 +253,14 @@
 
       function loadStates() {
         {% for state in states %}
-          var textString = "{{ state[0] }}";
-          var abbreviation = "{{ state[1] }}";
-          var pState = new pjs.State(textString, abbreviation);
+          var textString = "{{ state[1] }}";
+          var abbreviation = "{{ state[0] }}";
+          var srgb = "{{ state[2] }}";
+          srgb = srgb.split(',');
+          for (var i = srgb.length - 1; i >= 0; i--) {
+            srgb[i] = parseInt(srgb[i]);
+          }
+          var pState = new pjs.State(textString, abbreviation, srgb);
           pjs.addState(pState);
         {% endfor %}
       }

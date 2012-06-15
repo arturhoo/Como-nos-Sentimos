@@ -94,12 +94,14 @@ def load_weather_translations(file_name):
 
 
 def load_states(file_name):
-    states_dic = {}
+    states_list = []
     with open(file_name) as f:
         for line in f.readlines():
             line_list = line.split(';')
-            states_dic[line_list[0].decode('utf-8')] = line_list[1].rstrip()
-    return states_dic
+            states_list.append((line_list[1],
+                                line_list[0].decode('utf-8'),
+                                line_list[2].rstrip()))
+    return states_list
 
 
 @app.route("/")
@@ -129,7 +131,7 @@ def hello():
                            tweets=tweets,
                            feelings=sorted(feelings.items()),
                            weather_translations=sorted(weather_translations.items()),
-                           states=sorted(states.items()),
+                           states=sorted(states),
                            data_md5=data_md5)
 
 if __name__ == "__main__":

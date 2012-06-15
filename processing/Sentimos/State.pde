@@ -1,9 +1,11 @@
 class State extends Attribute {
     String abbreviation;
+    int[] srgb;
 
-    State (String textString, String abbreviation) {
+    State (String textString, String abbreviation, int[] srgb) {
         super(textString);
         this.abbreviation = abbreviation;
+        this.srgb = srgb;
     }
 
     String getKeyAttribute() {

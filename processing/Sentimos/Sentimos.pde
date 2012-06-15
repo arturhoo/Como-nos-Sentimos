@@ -38,6 +38,8 @@ ArrayList<State> stateList;
 HashMap stateOccurrence;
 HashMap stateAbbreviation;
 
+PImage questionMarkImage;
+ArrayList questionMarkPixels;
 PFont font;
 boolean aFocusedTweet;
 Particle pFocusedTweet;
@@ -58,6 +60,7 @@ void setup() {
     stateOccurrence = new HashMap();
     stateAbbreviation = new HashMap();
 
+    questionMarkImage = requestImage("static/images/question4.png");
     font = loadFont("Helvetica", 24);
     frameRate(30);
 }

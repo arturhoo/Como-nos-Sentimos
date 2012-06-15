@@ -86,6 +86,16 @@ void setListElementsLocation(ArrayList list) {
     }
 }
 
+void loadQuestionMarkPixels() {
+    while(questionMarkImage.width == 0) continue;
+    questionMarkImage.loadPixels();
+    questionMarkPixels = new ArrayList();
+    for (int i=0; i<(questionMarkImage.width*questionMarkImage.height); i++) {
+        if (questionMarkImage.pixels[i] == color(0, 0, 0))
+            questionMarkPixels.add(i);
+    }
+}
+
 /**
 * This method executes everything that must be done after data of the
 * visualization has been loaded, such as sorting lists
@@ -96,6 +106,8 @@ void postTweetLoadingProcedures() {
     dropDuplicateItemsFromList(stateList);
     setListElementsLocation(feelingList);
     setListElementsLocation(stateList);
+
+    loadQuestionMarkPixels();
 
     for (int i=NUM_PARTICLES-1; i >= 0; i--) {
         particles[i].setFeelingLoc();

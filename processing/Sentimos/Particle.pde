@@ -129,9 +129,16 @@ class Particle{
                 }
             }
         }
+        stateLoc = new PVector();
         if(foundState) {
-            stateLoc = new PVector();
             stateLoc.set(tempState.getAParticleLoc());
+        } else {
+            // Set random location from the question mark
+            int pos = (int) (random(questionMarkPixels.size()));
+            stateLoc.set(new PVector(questionMarkPixels.get(pos)%questionMarkImage.width +
+                                     width - LEFT_BORDER_OFFSET * 2.0,
+                                     questionMarkPixels.get(pos)/questionMarkImage.width +
+                                     height - BOTTOM_BORDER_OFFSET * 2.0));
         }
     }
 

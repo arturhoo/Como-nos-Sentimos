@@ -18,7 +18,7 @@ class State extends Attribute {
         textAlign(RIGHT);
         textFont(font, HISTOGRAM_FONT_SIZE);
         fill(255);
-        text(abbreviation + ": " + occurrence, loc.x, loc.y);
+        text(abbreviation.toUpperCase() + ": " + occurrence, loc.x, loc.y);
         textAlign(LEFT);
     }
 }

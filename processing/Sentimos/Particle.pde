@@ -48,6 +48,8 @@ class Particle{
         if(abs(vel.x) > randomLimit*15 || abs(vel.y) > randomLimit*15)
             vel.mult(0.5);
 
+        r = PARTICLE_RADIUS;
+        // If mouse is over canvas
         if(!MOUSE_OUT) {
             // If mouse is close
             if(abs(mouseX - loc.x) < r*3 && abs(mouseY - loc.y) < r*3) {
@@ -63,7 +65,7 @@ class Particle{
                 text(tweet.feelings[0], loc.x+12, loc.y+12);
                 aFocusedTweet = true;
                 pFocusedTweet = this;
-            } else r = PARTICLE_RADIUS;
+            }
         }
 
         // Updates speed and location

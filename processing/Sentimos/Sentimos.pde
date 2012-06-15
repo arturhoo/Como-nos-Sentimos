@@ -14,7 +14,13 @@ static float DIST_BTWN_TEXT_AND_PARTICLES = WIDTH*0.05;
 static float DIST_BTWN_PARTICLES          = PARTICLE_RADIUS*0.80;
 static float DIST_BTWN_HISTOGRAM_ENTRIES  = PARTICLE_RADIUS*1.00;
 static float TEXT_WIDTH                   = WIDTH*0.10;
-static float PARTICLES_WIDTH              = WIDTH - LEFT_BORDER_OFFSET - RIGHT_BORDER_OFFSET - DIST_BTWN_TEXT_AND_PARTICLES;
+static float PARTICLES_WIDTH              = WIDTH - TEXT_WIDTH - LEFT_BORDER_OFFSET - RIGHT_BORDER_OFFSET - DIST_BTWN_TEXT_AND_PARTICLES;
+
+static final int MADNESS = 1;
+static final int FEELINGS = 2;
+static int VIEW = MADNESS;
+
+static boolean MOUSE_OUT = false;
 
 Particle[] particles = new Particle[MAX_NUM_PARTICLES];
 ArrayList<Feeling> feelingList;
@@ -57,17 +63,21 @@ void draw() {
     aFocusedTweet = false;
     pFocusedTweet = null;
     for (int i=NUM_PARTICLES-1; i >= 0; i--) {
-        if(particles[i].feelingLoc != null) particles[i].render();
-        // particles[i].run();
+        particles[i].run();
     }
-    Iterator<Feeling> itr = feelingList.iterator();
-    while (itr.hasNext()) {
-        Feeling tempFeeling = itr.next();
-        if(tempFeeling.occurrence > 0) {
-            tempFeeling.drawText();
+
+    // Draw feelings text
+    if(VIEW == FEELINGS) {
+        Iterator<Feeling> itr = feelingList.iterator();
+        while (itr.hasNext()) {
+            Feeling tempFeeling = itr.next();
+            if(tempFeeling.occurrence > 0) {
+                tempFeeling.drawText();
+            }
         }
     }
 
+    // Draw Frame Rate
     textFont(font,12);
     fill(255);
     textAlign(LEFT);
@@ -80,14 +90,14 @@ void mouseClicked() {
             particles[i].tweet.showTweet();
         }
     }
-    sortListThatHasTextAndOccurrenceFields(feelingList, feelingOccurrence);
-    setListElementsLocation(feelingList);
-    for (int i=NUM_PARTICLES-1; i >= 0; i--) {
-        if(particles[i].feelingLoc == null) particles[i].setFeelingLoc();
-    }
-    // for (int i=0; i<feelingList.size(); i++)
-    //     println(feelingList.get(i).text + ": " + feelingList.get(i).occurrence);
-    // sortListThatHasTextAndOccurrenceFields(stateList, stateOccurrence);
-    // for (int i=0; i<stateList.size(); i++)
-    //     println(stateList.get(i).abbreviation + ": " + stateList.get(i).occurrence);
 }
+
+void mouseOut() {
+    MOUSE_OUT = true;
+}
+
+void mouseOver() {
+    MOUSE_OUT = false;
+}
+
+

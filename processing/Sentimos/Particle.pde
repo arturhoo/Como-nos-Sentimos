@@ -1,7 +1,7 @@
 class Particle{
     Tweet tweet;
     PVector loc, vel, acc;
-    PVector feelingLoc;
+    PVector feelingLoc = null;
     float r;
 
     Particle(PVector l) {
@@ -19,19 +19,22 @@ class Particle{
         return atan2(vel.x, vel.y);
     }
 
-
     void run() {
         update();
         render();
     }
 
     void update() {
-        // Sets the new, random, acceleration
+        if(VIEW == MADNESS) this.madnessUpdate();
+        else if(VIEW == FEELINGS) this.feelingsUpdate();
+    }
+
+    void madnessUpdate() {
+        // Sets the new, random acceleration
         float randomLimit = 0.32;
         float randomAcc1 = random(-randomLimit, randomLimit);
         float randomAcc2 = random(-randomLimit, randomLimit);
         acc.set(randomAcc1, randomAcc2, 0);
-
 
         // Bounce off the walls
         this.bounceOffWalls();
@@ -42,54 +45,67 @@ class Particle{
         // }
 
         // Prevent the particle from going too fast
-        if (abs(vel.x) > randomLimit*15 || abs(vel.y) > randomLimit*15) {
+        if(abs(vel.x) > randomLimit*15 || abs(vel.y) > randomLimit*15)
             vel.mult(0.5);
-        }
 
-        // If mouse is close
-        if (abs(mouseX - loc.x) < r*3 && abs(mouseY - loc.y) < r*3) {
-            vel.mult(0.9);
-            acc.add((mouseX - loc.x)*0.01, (mouseY - loc.y)*0.01, 0);
-        }
+        if(!MOUSE_OUT) {
+            // If mouse is close
+            if(abs(mouseX - loc.x) < r*3 && abs(mouseY - loc.y) < r*3) {
+                vel.mult(0.9);
+                acc.add((mouseX - loc.x)*0.01, (mouseY - loc.y)*0.01, 0);
+            }
 
-        // If mouse is over
-        if (this.isIn(mouseX, mouseY) && aFocusedTweet == false) {
-            r = 14.0;
-            textFont(font, 12);
-            fill(255);
-            text(tweet.feelings[0], loc.x+12, loc.y+12);
-            aFocusedTweet = true;
-            pFocusedTweet = this;
+            // If mouse is over
+            if(this.isIn(mouseX, mouseY) && aFocusedTweet == false) {
+                r = 14.0;
+                textFont(font, 12);
+                fill(255);
+                text(tweet.feelings[0], loc.x+12, loc.y+12);
+                aFocusedTweet = true;
+                pFocusedTweet = this;
+            } else r = PARTICLE_RADIUS;
         }
-        else r = PARTICLE_RADIUS;
 
         // Updates speed and location
         vel.add(acc);
         loc.add(vel);
     }
 
-    void bounceOffWalls() {
-        // Bounce off bottom
-        if (loc.y > height - r*0.5) {
-            vel.y = -abs(vel.y) * 0.9;
-        }
-
-        // Bounce off ceiling
-        if (loc.y < r*0.5) {
-            vel.y = abs(vel.y) * 0.9;
-        }
-
-        // Bounce off left border
-        if (loc.x < r*0.5) {
-            vel.x = abs(vel.x) * 0.9;
-        }
-
-        // Bounce off right border
-        if (loc.x > width - r*0.5) {
-            vel.x = -abs(vel.x) * 0.9;
+    void feelingsUpdate() {
+        this.goTo(feelingLoc);
+        // If mouse is over
+        if(this.isIn(mouseX, mouseY)) {
+            r = 14.0;
+        } else {
+            r += random(-1.0, 1.0);
+            if (r > 14.0) r -= 2;
+            if (r < 6.0) r += 2;
         }
     }
 
+    void goTo(PVector l) {
+        acc.set(random(-0.08, 0.08), random(-0.08, 0.08), 0);
+        acc.add((l.x - loc.x)*0.015, (l.y - loc.y)*0.015, 0);
+        vel.add(acc);
+        loc.add(vel);
+        vel.mult(0.8);
+      }
+
+    void bounceOffWalls() {
+        // Bounce off bottom
+        if(loc.y > height - r*0.5) vel.y = -abs(vel.y) * 0.9;
+        // Bounce off ceiling
+        if(loc.y < r*0.5) vel.y = abs(vel.y) * 0.9;
+        // Bounce off left border
+        if(loc.x < r*0.5) vel.x = abs(vel.x) * 0.9;
+        // Bounce off right border
+        if(loc.x > width - r*0.5) vel.x = -abs(vel.x) * 0.9;
+    }
+
+    /**
+    * Sets the PVector of this particle when the Feeling Histogram view
+    * is displayed
+    */
     void setFeelingLoc() {
         Feeling tempFeeling = null;
         Iterator<Feeling> itr = feelingList.iterator();
@@ -98,11 +114,8 @@ class Particle{
             if(tempFeeling.textString.equals(tweet.feelings[0]))
                 break;
         }
-        PVector returnedPVector = tempFeeling.getAParticleLoc();
         feelingLoc = new PVector();
-        feelingLoc.x = returnedPVector.x;
-        feelingLoc.y = returnedPVector.y;
-        feelingLoc.z = 0;
+        feelingLoc.set(tempFeeling.getAParticleLoc());
     }
 
     /**
@@ -112,12 +125,12 @@ class Particle{
         ellipseMode(CENTER);
         stroke(255, 255, 255);
         fill(tweet.frgb[0], tweet.frgb[1], tweet.frgb[2]);
-        // ellipse(loc.x, loc.y, r, r);
-        ellipse(feelingLoc.x, feelingLoc.y, r, r);
+        ellipse(loc.x, loc.y, r, r);
+        // ellipse(feelingLoc.x, feelingLoc.y, r, r);
     }
 
     /**
-    * Checks if the coordinates specified are inside the particle
+    * Checks if the coordinates specified are within the particle
     */
     boolean isIn(int x, int y) {
     if (((x - loc.x)*(x - loc.x) + (y - loc.y)*(y - loc.y)) <= (r * r))
@@ -133,8 +146,7 @@ void bounce(Particle a, Particle b) {
                 pow(a.loc.y + a.vel.y - b.loc.y - b.vel.y, 2))) {
 
             float commonTangentAngle = atan2(b.loc.x - a.loc.x, b.loc.y
-                    - a.loc.y)
-                    + asin(1);
+                                        - a.loc.y) + asin(1);
 
             float v1 = a.getVelocity();
             float v2 = b.getVelocity();

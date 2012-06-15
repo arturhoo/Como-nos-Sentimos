@@ -104,7 +104,7 @@ def load_states(file_name):
 
 @app.route("/")
 def hello():
-    limit = 70
+    limit = 100
     feelings = load_feelings('../crawler/feelings.txt')
     weather_translations = load_weather_translations('../crawler/weather_translations.txt')
     states = load_states('../crawler/states.txt')

@@ -35,7 +35,7 @@ void setListElementsLocation(ArrayList list) {
       Feeling tempFeeling = itr.next();
       if(tempFeeling.occurrence == 0) break;
       tempFeeling.loc.set(textX, y, 0);
-      tempFeeling.particlesLoc.set(textX+DIST_BTWN_TEXT_AND_PARTICLES, y, 0);
+      tempFeeling.particlesLoc.set(textX+DIST_BTWN_TEXT_AND_PARTICLES, y-PARTICLE_RADIUS/2, 0);
 
       // Defines the new Y for the next histogram entry
       int numHistogramLines = parseInt(tempFeeling.occurrence/numParticlesInOneLine) + 1;
@@ -53,7 +53,28 @@ void setListElementsLocation(ArrayList list) {
         // If so, start using two columns
         textX = width/2 + LEFT_BORDER_OFFSET + TEXT_WIDTH;
         // Reset the Y
-        y = parseInt(TOP_BORDER_OFFSET);
+        y = splittableY;
       }
     }
+}
+
+/**
+* This method executes everything that must be done after data of the
+* visualization has been loaded, such as sorting lists
+*/
+void postTweetLoadingProcedures() {
+    sortListThatHasTextAndOccurrenceFields(feelingList, feelingOccurrence);
+    sortListThatHasTextAndOccurrenceFields(stateList, stateOccurrence);
+    setListElementsLocation(feelingList);
+    for (int i=NUM_PARTICLES-1; i >= 0; i--) {
+        particles[i].setFeelingLoc();
+    }
+}
+
+void setFeelingsView() {
+    VIEW = FEELINGS;
+}
+
+void setMadnessView() {
+    VIEW = MADNESS;
 }

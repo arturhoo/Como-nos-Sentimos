@@ -36,6 +36,18 @@
       /*margin: 20px 0px 20px 0px;*/
     }
 
+    .clearfix:after {
+      content:".";
+      display:block;
+      height:0;
+      clear:both;
+      visibility:hidden;
+    }
+    .clearfix {display:inline-block;}
+    /* Hide from IE Mac \*/
+    .clearfix {display:block;}
+    /* End hide from IE Mac */
+
     a:link {text-decoration: none; color:inherit}
     a:visited {text-decoration: none; color:inherit}
     a:hover {text-decoration: underline; color:inherit}
@@ -124,7 +136,17 @@
         <canvas id="Sentimos" class="boxShadow" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Feeling.pde processing/Sentimos/Weather.pde processing/Sentimos/State.pde processing/Sentimos/General.pde"></canvas>
       </div>
 
-      <p style="text-align: right; font-size: 11px;">Hash da visualização: {{ data_md5 }}</p>
+      <div class="clearfix">
+        <br>
+        <div style="float: left;">
+          <button onclick="setFeelingsView()">Feelings</button>
+          <button onclick="setMadnessView()">Madness</button>
+        </div>
+        <div style="float: right; font-size: 11px;">
+          Hash da visualização: {{ data_md5 }}
+        </div>
+        <br> <br>
+      </div>
 
       <!-- If JSON was used -->
       <div id="fromProcessing">
@@ -236,6 +258,14 @@
           pjs.addState(pState);
         {% endfor %}
       }
+
+      function setFeelingsView() {
+        pjs.setFeelingsView();
+      }
+
+      function setMadnessView() {
+        pjs.setMadnessView();
+      }
     </script>
 
     <!-- Processing to HTML -->
@@ -273,12 +303,13 @@
         makeTheLink();
       }
 
-      function afterLoad() {
       // afterLoad is used to load initial functions
+      function afterLoad() {
         loadFeelings();
         loadWeatherTranslations();
         loadStates();
         loadTweets();
+        pjs.postTweetLoadingProcedures();
       }
 
       function makeTheLink() {

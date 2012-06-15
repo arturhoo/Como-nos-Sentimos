@@ -2,6 +2,7 @@ class Particle{
     Tweet tweet;
     PVector loc, vel, acc;
     PVector feelingLoc = null;
+    PVector stateLoc = null;
     float r;
 
     Particle(PVector l) {
@@ -9,14 +10,6 @@ class Particle{
         this.vel = new PVector(random(-1, 1), random(-1, 1), 0);
         this.loc = l.get();
         this.r = PARTICLE_RADIUS;
-    }
-
-    float getVelocity() {
-        return sqrt(vel.x * vel.x + vel.y * vel.y);
-    }
-
-    float getMotionDirection() {
-        return atan2(vel.x, vel.y);
     }
 
     void run() {
@@ -27,6 +20,7 @@ class Particle{
     void update() {
         if(VIEW == MADNESS) this.madnessUpdate();
         else if(VIEW == FEELINGS) this.feelingsUpdate();
+        else if(VIEW == STATES) this.statesUpdate();
     }
 
     void madnessUpdate() {
@@ -85,6 +79,73 @@ class Particle{
         }
     }
 
+    void statesUpdate() {
+        if(stateLoc != null) {
+            this.goTo(stateLoc);
+            // If mouse is over
+            if(this.isIn(mouseX, mouseY)) {
+                r = 14.0;
+            } else {
+                r += random(-1.0, 1.0);
+                if (r > 14.0) r -= 2;
+                if (r < 6.0) r += 2;
+            }
+        } else {
+            this.goTo(new PVector(width-10, height-10));
+        }
+    }
+
+    /**
+    * Sets the PVector of this particle when the Feeling Histogram view
+    * is displayed
+    */
+    void setFeelingLoc() {
+        Feeling tempFeeling = null;
+        Iterator<Feeling> itr = feelingList.iterator();
+        while(itr.hasNext()) {
+            tempFeeling = itr.next();
+            if(tempFeeling.textString.equals(tweet.feelings[0]))
+                break;
+        }
+        feelingLoc = new PVector();
+        feelingLoc.set(tempFeeling.getAParticleLoc());
+    }
+
+    /**
+    * Sets the PVector of this particle when the Feeling Histogram view
+    * is displayed
+    */
+    void setStateLoc() {
+        State tempState = null;
+        boolean foundState = false;
+        Iterator<State> itr = stateList.iterator();
+        while(itr.hasNext()) {
+            tempState = itr.next();
+            if(tweet.location != null) {
+                String abbreviation = stateAbbreviation.get(tweet.location.state);
+                if(tempState.abbreviation.equals(abbreviation)) {
+                    foundState = true;
+                    break;
+                }
+            }
+        }
+        if(foundState) {
+            stateLoc = new PVector();
+            stateLoc.set(tempState.getAParticleLoc());
+        }
+    }
+
+    /**
+    * Draws the particle on the canvas
+    */
+    void render() {
+        ellipseMode(CENTER);
+        stroke(255, 255, 255);
+        fill(tweet.frgb[0], tweet.frgb[1], tweet.frgb[2]);
+        ellipse(loc.x, loc.y, r, r);
+        // ellipse(feelingLoc.x, feelingLoc.y, r, r);
+    }
+
     void goTo(PVector l) {
         acc.set(random(-0.08, 0.08), random(-0.08, 0.08), 0);
         acc.add((l.x - loc.x)*0.015, (l.y - loc.y)*0.015, 0);
@@ -105,40 +166,21 @@ class Particle{
     }
 
     /**
-    * Sets the PVector of this particle when the Feeling Histogram view
-    * is displayed
-    */
-    void setFeelingLoc() {
-        Feeling tempFeeling = null;
-        Iterator<Feeling> itr = feelingList.iterator();
-        while (itr.hasNext()) {
-            tempFeeling = itr.next();
-            if(tempFeeling.textString.equals(tweet.feelings[0]))
-                break;
-        }
-        feelingLoc = new PVector();
-        feelingLoc.set(tempFeeling.getAParticleLoc());
-    }
-
-    /**
-    * Draws the particle on the canvas
-    */
-    void render() {
-        ellipseMode(CENTER);
-        stroke(255, 255, 255);
-        fill(tweet.frgb[0], tweet.frgb[1], tweet.frgb[2]);
-        ellipse(loc.x, loc.y, r, r);
-        // ellipse(feelingLoc.x, feelingLoc.y, r, r);
-    }
-
-    /**
     * Checks if the coordinates specified are within the particle
     */
     boolean isIn(int x, int y) {
-    if (((x - loc.x)*(x - loc.x) + (y - loc.y)*(y - loc.y)) <= (r * r))
-        return true;
-    else return false;
-  }
+        if (((x - loc.x)*(x - loc.x) + (y - loc.y)*(y - loc.y)) <= (r * r))
+            return true;
+        else return false;
+    }
+
+    float getVelocity() {
+        return sqrt(vel.x * vel.x + vel.y * vel.y);
+    }
+
+    float getMotionDirection() {
+        return atan2(vel.x, vel.y);
+    }
 }
 
 void bounce(Particle a, Particle b) {

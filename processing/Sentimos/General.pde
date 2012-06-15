@@ -1,13 +1,17 @@
+/**
+* Sort a list based on a given attribute that must be returned by the Object.
+* Uses the simple selection sort algorithm to sort.
+*/
 void sortListThatHasTextAndOccurrenceFields(ArrayList list, HashMap map) {
     // Updating the occurrences on the elements of the list
     int size = list.size();
     for (int i=0; i<size; i++)
         list.get(i).setSortableAttribute((Integer) map.get(list.get(i).getKeyAttribute()));
+
+    // Using selection sort
     Object temp;
     int count1, count2;
     int largest;
-
-    // Using selection sort
     for(count1=0; count1<size-1; count1++) {
         largest = 0;
         for(count2=largest+1; count2<size-count1; count2++) {
@@ -21,17 +25,40 @@ void sortListThatHasTextAndOccurrenceFields(ArrayList list, HashMap map) {
     }
 }
 
+/**
+* Drops duplicate items from the list, especially useful for the states list
+* as there might be more than one entry in states.txt sharing the same state
+* abbreviation
+*/
+void dropDuplicateItemsFromList(ArrayList list) {
+    ArrayList indexesToBeRemoved = new ArrayList();
+    String lastKey = "";
+    for(int i=0; i<list.size(); i++) {
+        keyAttribute = list.get(i).getKeyAttribute();
+        if(keyAttribute.equals(lastKey)) {
+            indexesToBeRemoved.add(i);
+        }
+        lastKey = keyAttribute;
+    }
+    for(int i=indexesToBeRemoved.size()-1; i>=0; i--) {
+        list.remove(indexesToBeRemoved.get(i));
+    }
+
+}
+
+/**
+* Given a list of viewable elements, such as Feeling and State, the method
+* provides sets the location of these objects, according to the size of the
+* canvas and global constraints
+*/
 void setListElementsLocation(ArrayList list) {
     float textX = LEFT_BORDER_OFFSET + TEXT_WIDTH;
     int numParticlesInOneLine = parseInt((PARTICLES_WIDTH + DIST_BTWN_PARTICLES)/(PARTICLE_RADIUS + DIST_BTWN_PARTICLES));
-    println("numParticlesInOneLine: " + numParticlesInOneLine);
-    println("textWidth: " + TEXT_WIDTH);
-    println("particlesWidth: " + PARTICLES_WIDTH);
-
     int y = parseInt(TOP_BORDER_OFFSET);
     int splittableY = -1; // unsplittable
-    Iterator<Feeling> itr = feelingList.iterator();
-    while (itr.hasNext()) {
+
+    Iterator<Object> itr = list.iterator();
+    while(itr.hasNext()) {
       Object temp = itr.next();
       if(temp.occurrence == 0) break;
       temp.loc.set(textX, y, 0);
@@ -65,9 +92,13 @@ void setListElementsLocation(ArrayList list) {
 void postTweetLoadingProcedures() {
     sortListThatHasTextAndOccurrenceFields(feelingList, feelingOccurrence);
     sortListThatHasTextAndOccurrenceFields(stateList, stateOccurrence);
+    dropDuplicateItemsFromList(stateList);
     setListElementsLocation(feelingList);
+    setListElementsLocation(stateList);
+
     for (int i=NUM_PARTICLES-1; i >= 0; i--) {
         particles[i].setFeelingLoc();
+        particles[i].setStateLoc();
     }
 }
 
@@ -77,4 +108,8 @@ void setFeelingsView() {
 
 void setMadnessView() {
     VIEW = MADNESS;
+}
+
+void setStatesView() {
+    VIEW = STATES;
 }

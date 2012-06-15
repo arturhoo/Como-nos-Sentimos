@@ -32,18 +32,18 @@ void setListElementsLocation(ArrayList list) {
     int splittableY = -1; // unsplittable
     Iterator<Feeling> itr = feelingList.iterator();
     while (itr.hasNext()) {
-      Feeling tempFeeling = itr.next();
-      if(tempFeeling.occurrence == 0) break;
-      tempFeeling.loc.set(textX, y, 0);
-      tempFeeling.particlesLoc.set(textX+DIST_BTWN_TEXT_AND_PARTICLES, y-PARTICLE_RADIUS/2, 0);
+      Object temp = itr.next();
+      if(temp.occurrence == 0) break;
+      temp.loc.set(textX, y, 0);
+      temp.particlesLoc.set(textX+DIST_BTWN_TEXT_AND_PARTICLES, y-PARTICLE_RADIUS/2, 0);
 
       // Defines the new Y for the next histogram entry
-      int numHistogramLines = parseInt(tempFeeling.occurrence/numParticlesInOneLine) + 1;
+      int numHistogramLines = parseInt(temp.occurrence/numParticlesInOneLine) + 1;
       y += (DIST_BTWN_HISTOGRAM_ENTRIES + HISTOGRAM_FONT_SIZE)*numHistogramLines;
 
       // Identify if this histogram line spans less than half of the canvas
       tempX = textX + DIST_BTWN_TEXT_AND_PARTICLES;
-      if((tempFeeling.occurrence*(PARTICLE_RADIUS + DIST_BTWN_PARTICLES) + tempX < width/2) &&
+      if((temp.occurrence*(PARTICLE_RADIUS + DIST_BTWN_PARTICLES) + tempX < width/2) &&
          splittableY == -1) {
         splittableY = y;
       }

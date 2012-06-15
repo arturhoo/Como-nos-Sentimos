@@ -32,13 +32,14 @@ void sortListThatHasTextAndOccurrenceFields(ArrayList list, HashMap map) {
 */
 void dropDuplicateItemsFromList(ArrayList list) {
     ArrayList indexesToBeRemoved = new ArrayList();
-    String lastKey = "";
+    ArrayList keys = new ArrayList();
     for(int i=0; i<list.size(); i++) {
-        keyAttribute = list.get(i).getKeyAttribute();
-        if(keyAttribute.equals(lastKey)) {
+        key = list.get(i).getKeyAttribute();
+        if(keys.indexOf(key) >= 0) {
             indexesToBeRemoved.add(i);
+        } else {
+            keys.add(key);
         }
-        lastKey = keyAttribute;
     }
     for(int i=indexesToBeRemoved.size()-1; i>=0; i--) {
         list.remove(indexesToBeRemoved.get(i));

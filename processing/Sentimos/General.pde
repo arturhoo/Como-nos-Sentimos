@@ -116,12 +116,13 @@ void postTweetLoadingProcedures() {
     setListElementsLocation(stateList);
 
     loadQuestionMarkPixels();
-    loadCountryMapPixels();
+    // Currently being called from the page to prevent script blocking
+    // loadCountryMapPixels();
 
     for (int i=NUM_PARTICLES-1; i >= 0; i--) {
         particles[i].setFeelingLoc();
         particles[i].setStateLoc();
-        particles[i].setMapLoc();
+        // particles[i].setMapLoc();
     }
 }
 

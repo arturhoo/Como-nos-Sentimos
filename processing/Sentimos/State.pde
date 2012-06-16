@@ -35,7 +35,6 @@ class State extends Attribute {
             if(img.pixels[i] == scolor)
                 mapCoordinates.add(i);
         }
-
     }
 
     PVector getARandomMapCoordinate() {

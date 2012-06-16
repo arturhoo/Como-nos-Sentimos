@@ -20,9 +20,12 @@ static float PARTICLES_WIDTH              = WIDTH -
                                             RIGHT_BORDER_OFFSET -
                                             DIST_BTWN_TEXT_AND_PARTICLES;
 
+static final String LOADING_TEXT = "CARREGANDO";
+
 static final int MADNESS = 1;
 static final int FEELINGS = 2;
 static final int STATES = 3;
+static final int MAP = 4;
 static int VIEW = MADNESS;
 
 static boolean MOUSE_OUT = false;
@@ -40,6 +43,10 @@ HashMap stateAbbreviation;
 
 PImage questionMarkImage;
 ArrayList questionMarkPixels;
+Pimage countryGrayMapImage;
+PImage countryMapImage;
+ArrayList countryMapPixels;
+
 PFont font;
 boolean aFocusedTweet;
 Particle pFocusedTweet;
@@ -48,20 +55,22 @@ boolean written = false;
 void setup() {
     size(WIDTH, HEIGHT);
     smooth();
-    feelingList = new ArrayList<Feeling>();
-    feelingOccurrence = new HashMap();
-    feelingRGB = new HashMap();
+    feelingList         = new ArrayList<Feeling>();
+    feelingOccurrence   = new HashMap();
+    feelingRGB          = new HashMap();
 
-    weatherList = new ArrayList<Weather>();
-    weatherOccurrence = new HashMap();
+    weatherList         = new ArrayList<Weather>();
+    weatherOccurrence   = new HashMap();
     weatherTranslations = new HashMap();
 
-    stateList = new ArrayList<State>();
-    stateOccurrence = new HashMap();
-    stateAbbreviation = new HashMap();
+    stateList           = new ArrayList<State>();
+    stateOccurrence     = new HashMap();
+    stateAbbreviation   = new HashMap();
 
-    questionMarkImage = requestImage("static/images/question4.png");
-    font = loadFont("Helvetica", 24);
+    questionMarkImage   = requestImage("static/images/question4.png");
+    countryMapImage     = requestImage("static/images/brasil_color.png");
+    countryGrayMapImage = requestImage("static/images/brasil_gray.png");
+    font                = loadFont("Helvetica", 24);
     frameRate(30);
 }
 
@@ -70,8 +79,11 @@ void draw() {
 
     aFocusedTweet = false;
     pFocusedTweet = null;
-    for(int i=NUM_PARTICLES-1; i >= 0; i--) {
-        particles[i].run();
+    if(NUM_PARTICLES == 0) {
+        textFont(font,12);
+        fill(255);
+        textAlign(CENTER);
+        text(LOADING_TEXT, width/2, height/2);
     }
 
     // Draw feelings text
@@ -94,6 +106,17 @@ void draw() {
                 tempState.drawText();
             }
         }
+    }
+
+    // Draw map
+    if(VIEW == MAP) {
+        imgWidth = countryGrayMapImage.width;
+        imgHeight = countryGrayMapImage.height;
+        image(countryGrayMapImage, (width - imgWidth)/2, (height-imgHeight)/2);
+    }
+
+    for(int i=NUM_PARTICLES-1; i >= 0; i--) {
+        particles[i].run();
     }
 
     // Draw Frame Rate

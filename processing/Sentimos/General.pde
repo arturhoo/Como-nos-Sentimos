@@ -96,6 +96,14 @@ void loadQuestionMarkPixels() {
     }
 }
 
+void loadCountryMapPixels() {
+    while(countryMapImage.width == 0) continue;
+    countryMapImage.loadPixels();
+    for(int i=0; i<stateList.size(); i++) {
+        stateList.get(i).loadMapCoordinates(countryMapImage);
+    }
+}
+
 /**
 * This method executes everything that must be done after data of the
 * visualization has been loaded, such as sorting lists
@@ -108,11 +116,21 @@ void postTweetLoadingProcedures() {
     setListElementsLocation(stateList);
 
     loadQuestionMarkPixels();
+    loadCountryMapPixels();
 
     for (int i=NUM_PARTICLES-1; i >= 0; i--) {
         particles[i].setFeelingLoc();
         particles[i].setStateLoc();
+        particles[i].setMapLoc();
     }
+}
+
+PVector getRandomLocationFromQuestionMark() {
+    int pos = (int) (random(questionMarkPixels.size()));
+    return new PVector(questionMarkPixels.get(pos)%questionMarkImage.width +
+                 width - LEFT_BORDER_OFFSET * 2.0,
+                 questionMarkPixels.get(pos)/questionMarkImage.width +
+                 height - BOTTOM_BORDER_OFFSET * 2.0, 0);
 }
 
 void setFeelingsView() {
@@ -126,3 +144,8 @@ void setMadnessView() {
 void setStatesView() {
     VIEW = STATES;
 }
+
+void setMapView() {
+    VIEW = MAP;
+}
+

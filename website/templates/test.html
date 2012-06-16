@@ -142,6 +142,7 @@
           <button onclick="setMadnessView()">Madness</button>
           <button onclick="setFeelingsView()">Feelings</button>
           <button onclick="setStatesView()">States</button>
+          <button onclick="setMapView()">Map</button>
         </div>
         <div style="float: right; font-size: 11px;">
           Hash da visualização: {{ data_md5 }}
@@ -275,6 +276,10 @@
 
       function setStatesView() {
         pjs.setStatesView();
+      }
+
+      function setMapView() {
+        pjs.setMapView();
       }
     </script>
 

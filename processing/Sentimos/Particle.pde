@@ -3,6 +3,7 @@ class Particle{
     PVector loc, vel, acc;
     PVector feelingLoc = null;
     PVector stateLoc = null;
+    PVector mapLoc = null;
     float r;
 
     Particle(PVector l) {
@@ -21,6 +22,7 @@ class Particle{
         if(VIEW == MADNESS) this.madnessUpdate();
         else if(VIEW == FEELINGS) this.feelingsUpdate();
         else if(VIEW == STATES) this.statesUpdate();
+        else if(VIEW == MAP) this.mapUpdate();
     }
 
     void madnessUpdate() {
@@ -90,8 +92,20 @@ class Particle{
                 if (r > 14.0) r -= 2;
                 if (r < 6.0) r += 2;
             }
-        } else {
-            this.goTo(new PVector(width-10, height-10));
+        }
+    }
+
+    void mapUpdate() {
+        if(mapLoc != null) {
+            this.goTo(mapLoc);
+            // If mouse is over
+            if(this.isIn(mouseX, mouseY)) {
+                r = 14.0;
+            } else {
+                r += random(-1.0, 1.0);
+                if (r > 14.0) r -= 2;
+                if (r < 6.0) r += 2;
+            }
         }
     }
 
@@ -116,29 +130,22 @@ class Particle{
     * is displayed
     */
     void setStateLoc() {
-        State tempState = null;
-        boolean foundState = false;
-        Iterator<State> itr = stateList.iterator();
-        while(itr.hasNext()) {
-            tempState = itr.next();
-            if(tweet.location != null) {
-                String abbreviation = stateAbbreviation.get(tweet.location.state);
-                if(tempState.abbreviation.equals(abbreviation)) {
-                    foundState = true;
-                    break;
-                }
-            }
-        }
+        State tempState = this.getState();
         stateLoc = new PVector();
-        if(foundState) {
+        if(tempState != null) {
             stateLoc.set(tempState.getAParticleLoc());
         } else {
-            // Set random location from the question mark
-            int pos = (int) (random(questionMarkPixels.size()));
-            stateLoc.set(questionMarkPixels.get(pos)%questionMarkImage.width +
-                         width - LEFT_BORDER_OFFSET * 2.0,
-                         questionMarkPixels.get(pos)/questionMarkImage.width +
-                         height - BOTTOM_BORDER_OFFSET * 2.0, 0);
+            stateLoc.set(getRandomLocationFromQuestionMark());
+        }
+    }
+
+    void setMapLoc() {
+        State tempState = this.getState();
+        mapLoc = new PVector();
+        if(tempState != null) {
+            mapLoc.set(tempState.getARandomMapCoordinate());
+        } else {
+            mapLoc.set(getRandomLocationFromQuestionMark());
         }
     }
 
@@ -187,6 +194,27 @@ class Particle{
 
     float getMotionDirection() {
         return atan2(vel.x, vel.y);
+    }
+
+    State getState() {
+        State tempState = null;
+        boolean foundState = false;
+        Iterator<State> itr = stateList.iterator();
+        while(itr.hasNext()) {
+            tempState = itr.next();
+            if(tweet.location != null) {
+                String abbreviation = stateAbbreviation.get(tweet.location.state);
+                if(tempState.abbreviation.equals(abbreviation)) {
+                    foundState = true;
+                    break;
+                }
+            }
+        }
+        if(foundState) {
+            return tempState;
+        } else {
+            return null;
+        }
     }
 }
 

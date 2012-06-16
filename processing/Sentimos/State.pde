@@ -1,11 +1,15 @@
 class State extends Attribute {
     String abbreviation;
-    int[] srgb;
+    color scolor;
+    ArrayList mapCoordinates;
+    int mapWidth;
+    int mapHeight;
 
     State (String textString, String abbreviation, int[] srgb) {
         super(textString);
-        this.abbreviation = abbreviation;
-        this.srgb = srgb;
+        this.abbreviation   = abbreviation;
+        this.scolor         = color(srgb[0], srgb[1], srgb[2]);
+        this.mapCoordinates = new ArrayList();
     }
 
     String getKeyAttribute() {
@@ -22,5 +26,25 @@ class State extends Attribute {
         fill(255);
         text(abbreviation.toUpperCase() + ": " + occurrence, loc.x, loc.y);
         textAlign(LEFT);
+    }
+
+    void loadMapCoordinates(PImage img) {
+        mapWidth  = img.width;
+        mapHeight = img.height;
+        println(abbreviation);
+        for(int i=0; i<(img.width * img.height); i++) {
+            if(img.pixels[i] == scolor)
+                mapCoordinates.add(i);
+        }
+        // println("State: " + abbreviation + ", mapCoordinatesSize: " + mapCoordinates.size());
+
+    }
+
+    PVector getARandomMapCoordinate() {
+        int pos = (int) (random(mapCoordinates.size()));
+        return new PVector(mapCoordinates.get(pos)%mapWidth +
+                           (width - mapWidth)/2,
+                           mapCoordinates.get(pos)/mapWidth +
+                           (height - mapHeight)/2);
     }
 }

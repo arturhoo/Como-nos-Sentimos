@@ -103,8 +103,8 @@ class Particle{
                 r = 14.0;
             } else {
                 r += random(-1.0, 1.0);
-                if (r > 14.0) r -= 2;
-                if (r < 6.0) r += 2;
+                if (r > 11.0) r -= 1;
+                if (r < 9.0) r += 1;
             }
         }
     }

@@ -131,7 +131,7 @@ def load_states(file_name):
 
 @app.route("/")
 def hello():
-    limit = 100
+    limit = NUM_PARTICLES
     feelings = load_feelings('../crawler/feelings.txt')
     weather_translations = load_weather_translations('../crawler/weather_translations.txt')
     states = load_states('../crawler/states.txt')
@@ -145,7 +145,8 @@ def hello():
                                 limit=limit)
 
     else:
-        db_tweets = g.coll.find({'location': {'$exists': True}}, sort=[('created_at', -1)], limit=limit)
+        db_tweets = g.coll.find(sort=[('created_at', -1)], limit=limit)
+        # db_tweets = g.coll.find({'location': {'$exists': True}, 'location': {'$ne': None}}, sort=[('created_at', -1)], limit=limit)
     tweets = []
     string_md5 = ''
     for db_tweet in db_tweets:

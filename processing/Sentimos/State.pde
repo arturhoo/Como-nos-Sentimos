@@ -31,12 +31,10 @@ class State extends Attribute {
     void loadMapCoordinates(PImage img) {
         mapWidth  = img.width;
         mapHeight = img.height;
-        println(abbreviation);
         for(int i=0; i<(img.width * img.height); i++) {
             if(img.pixels[i] == scolor)
                 mapCoordinates.add(i);
         }
-        // println("State: " + abbreviation + ", mapCoordinatesSize: " + mapCoordinates.size());
 
     }
 

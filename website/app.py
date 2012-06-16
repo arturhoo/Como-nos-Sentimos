@@ -3,6 +3,8 @@ from flask import Flask, render_template, g, request
 from pymongo import Connection
 from datetime import timedelta
 import hashlib
+import re
+import htmlentitydefs
 
 
 try:
@@ -35,9 +37,32 @@ class Tweet(object):
         self.feelings = feelings
 
 
+def unescape(text):
+    def fixup(m):
+        text = m.group(0)
+        if text[:2] == "&#":
+            # character reference
+            try:
+                if text[:3] == "&#x":
+                    return unichr(int(text[3:-1], 16))
+                else:
+                    return unichr(int(text[2:-1]))
+            except ValueError:
+                pass
+        else:
+            # named entity
+            try:
+                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+            except KeyError:
+                pass
+        return text  # leave as is
+    return re.sub("&#?\w+;", fixup, text)
+
+
 def prepareStringForJavaScript(string):
     new_string = string.replace('\n', '')
     new_string = new_string.replace('\\', '\\\\')
+    new_string = unescape(new_string)
     return new_string
 
 
@@ -120,7 +145,7 @@ def hello():
                                 limit=limit)
 
     else:
-        db_tweets = g.coll.find(sort=[('created_at', -1)], limit=limit)
+        db_tweets = g.coll.find({'location': {'$exists': True}}, sort=[('created_at', -1)], limit=limit)
     tweets = []
     string_md5 = ''
     for db_tweet in db_tweets:

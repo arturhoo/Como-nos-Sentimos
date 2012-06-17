@@ -47,6 +47,18 @@ void addTweet(Tweet tweet) {
     NUM_PARTICLES++;
 }
 
+int getQuestionMarkImageWidth() {
+    return questionMarkImage.width;
+}
+
+int getCountryMapImageWidth() {
+    return countryMapImage.width;
+}
+
+int getStateListSize() {
+    return stateList.size();
+}
+
 interface JavaScriptInterface {
     void setTweetMeta(long id, String textString, String name, String screen_name, String location, String created_at_bsb);
 }

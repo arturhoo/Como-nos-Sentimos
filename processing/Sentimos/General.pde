@@ -86,6 +86,9 @@ void setListElementsLocation(ArrayList list) {
     }
 }
 
+/**
+* Loads the question mark pixels and store them in a array
+*/
 void loadQuestionMarkPixels() {
     while(questionMarkImage.width == 0) continue;
     questionMarkImage.loadPixels();
@@ -96,11 +99,24 @@ void loadQuestionMarkPixels() {
     }
 }
 
-void loadCountryMapPixels() {
-    while(countryMapImage.width == 0) continue;
-    countryMapImage.loadPixels();
-    for(int i=0; i<stateList.size(); i++) {
-        stateList.get(i).loadMapCoordinates(countryMapImage);
+/**
+* Loads the pixels of a given state based on the country map PNG
+*/
+int loadCountryMapPixels(int i) {
+    stateList.get(i).loadMapCoordinates(countryMapImage);
+    return 1;
+}
+
+/**
+* Sets the particles location after every list has been sorted, positions
+* calculated and image pixels identified. Each one of these is used in a
+* specific view
+*/
+void setParticlesLocs() {
+    for (int i=NUM_PARTICLES-1; i >= 0; i--) {
+        particles[i].setFeelingLoc();
+        particles[i].setStateLoc();
+        particles[i].setMapLoc();
     }
 }
 
@@ -108,22 +124,12 @@ void loadCountryMapPixels() {
 * This method executes everything that must be done after data of the
 * visualization has been loaded, such as sorting lists
 */
-void postTweetLoadingProcedures() {
+void postInitialLoading() {
     sortListThatHasTextAndOccurrenceFields(feelingList, feelingOccurrence);
     sortListThatHasTextAndOccurrenceFields(stateList, stateOccurrence);
     dropDuplicateItemsFromList(stateList);
     setListElementsLocation(feelingList);
     setListElementsLocation(stateList);
-
-    loadQuestionMarkPixels();
-    // Currently being called from the page to prevent script blocking
-    // loadCountryMapPixels();
-
-    for (int i=NUM_PARTICLES-1; i >= 0; i--) {
-        particles[i].setFeelingLoc();
-        particles[i].setStateLoc();
-        // particles[i].setMapLoc();
-    }
 }
 
 PVector getRandomLocationFromQuestionMark() {

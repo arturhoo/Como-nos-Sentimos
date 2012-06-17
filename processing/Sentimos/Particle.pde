@@ -157,7 +157,6 @@ class Particle{
         stroke(255, 255, 255);
         fill(tweet.frgb[0], tweet.frgb[1], tweet.frgb[2]);
         ellipse(loc.x, loc.y, r, r);
-        // ellipse(feelingLoc.x, feelingLoc.y, r, r);
     }
 
     void goTo(PVector l) {

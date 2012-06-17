@@ -2,7 +2,6 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <!-- <link href='http://fonts.googleapis.com/css?family=Oleo+Script:700' rel='stylesheet' type='text/css'> -->
     <link rel="stylesheet" href="static/chosen/chosen.css" />
     <style type="text/css">
     /*::selection { background: #906B2D; }
@@ -24,7 +23,6 @@
       font-size: 30px;
       margin-top: -5px;
       color: #282828;
-      /*font-family: 'Oleo Script', cursive;*/
     }
 
     footer {
@@ -129,10 +127,11 @@
     <div class="centered-content">
       <div id="tweet">
         <div id="tweetMeta" class="boxShadow">
+          Clique em uma partícula
         </div>
       </div>
       <br>
-      <div id="pjscanvas">
+      <div id="pjsdiv">
         <canvas id="Sentimos" class="boxShadow" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Attribute.pde processing/Sentimos/Feeling.pde processing/Sentimos/Weather.pde processing/Sentimos/State.pde processing/Sentimos/General.pde"></canvas>
       </div>
 
@@ -189,6 +188,7 @@
     <!-- HTML to Processing -->
     <script type="text/javascript">
       function loadTweets() {
+        var pjs = Processing.instances[0];
         {% for tweet in tweets %}
           var author = new pjs.Author();
           author.screen_name = "{{ tweet.author.screen_name }}";
@@ -281,6 +281,50 @@
       function setMapView() {
         pjs.setMapView();
       }
+
+      function pjsPostInitialLoading() {
+        pjs.postInitialLoading();
+      }
+
+      function pjsPostImagesLoading() {
+        pjsLoadQuestionMarkPixels();
+        pjsLoadCountryMapPixels();
+        pjsSetParticlesLocs();
+      }
+
+      function pjsLoadQuestionMarkPixels() {
+        var pjsQuestionMarkImageWidth = pjs.getQuestionMarkImageWidth();
+        if(pjsQuestionMarkImageWidth == 0) {
+          setTimeout(pjsLoadQuestionMarkPixels, 400);
+        } else {
+          pjs.loadQuestionMarkPixels();
+        }
+      }
+
+      function pjsLoadCountryMapPixels() {
+        var pjsCountryMapImageWidth = pjs.getCountryMapImageWidth();
+        if(pjsCountryMapImageWidth == 0) {
+          setTimeout(pjsLoadCountryMapPixels, 400);
+        } else {
+          var stateListSize = pjs.getStateListSize();
+          for (var i=0; i<stateListSize; i++) {
+            setTimeout((function(x) {
+              return function() {
+                countryStatesLoaded += pjs.loadCountryMapPixels(x);
+              }
+            })(i), 0);
+          }
+        }
+      }
+
+      function pjsSetParticlesLocs() {
+        var stateListSize = pjs.getStateListSize();
+        if(countryStatesLoaded != stateListSize) {
+          setTimeout(pjsSetParticlesLocs, 400);
+        } else {
+          pjs.setParticlesLocs();
+        }
+      }
     </script>
 
     <!-- Processing to HTML -->
@@ -313,29 +357,41 @@
 
     <!-- Processing.js essentials -->
     <script type="text/javascript">
+      // GLOBAL variables
+      var pjs = undefined;
+      var countryStatesLoaded = 0;
       window.onload = function() {
-        var pjs;
         makeTheLink();
       }
 
-      // afterLoad is used to load initial functions
-      function afterLoad() {
-        loadFeelings();
-        loadWeatherTranslations();
-        loadStates();
-        loadTweets();
-        pjs.postTweetLoadingProcedures();
+      // initialLoad is used to load initial functions
+      function initialLoad() {
+        if(pjs == undefined) {
+          setTimeout(initialLoad, 400);
+        } else {
+          loadFeelings();
+          loadWeatherTranslations();
+          loadStates();
+          loadTweets();
+          pjsPostInitialLoading();
+          pjsPostImagesLoading();
+        }
       }
 
       function makeTheLink() {
-        pjs = Processing.getInstanceById("Sentimos");
+        pjs = Processing.instances[0];
         if(pjs == undefined) {
-          setTimeout(makeTheLink, 200);
-          return;
+          setTimeout(makeTheLink, 1000);
+        } else {
+          Processing.logger = console;
+          pjs.setInterfaceLink(this);
+          initialLoad();
+          // try {
+          //   pjs.setInterfaceLink(this);
+          // } catch(e) {
+          //   setTimeout(initialLoad, 200);
+          // }
         }
-        Processing.logger = console;
-        pjs.setInterfaceLink(this);
-        setTimeout(afterLoad, 200);
       }
     </script>
     <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>

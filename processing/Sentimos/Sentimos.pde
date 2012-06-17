@@ -1,3 +1,6 @@
+/* @pjs font="static/fonts/MavenPro-Bold.ttf"; */
+/* @pjs preload="static/images/question4.png,static/images/brasil_color.png,static/images/brasil_gray.png" */
+
 static int WIDTH  = 800;
 static int HEIGHT = 460;
 
@@ -67,9 +70,10 @@ void setup() {
     stateOccurrence     = new HashMap();
     stateAbbreviation   = new HashMap();
 
-    questionMarkImage   = requestImage("static/images/question4.png");
-    countryMapImage     = requestImage("static/images/brasil_color.png");
-    countryGrayMapImage = requestImage("static/images/brasil_gray.png");
+    questionMarkImage   = loadImage("static/images/question4.png");
+    countryMapImage     = loadImage("static/images/brasil_color.png");
+    countryGrayMapImage = loadImage("static/images/brasil_gray.png");
+    font2               = createFont("static/fonts/MavenPro-Bold.ttf", 24);
     font                = loadFont("Helvetica", 24);
     frameRate(30);
 }
@@ -80,7 +84,7 @@ void draw() {
     aFocusedTweet = false;
     pFocusedTweet = null;
     if(NUM_PARTICLES == 0) {
-        textFont(font,12);
+        textFont(font, 12);
         fill(255);
         textAlign(CENTER);
         text(LOADING_TEXT, width/2, height/2);
@@ -120,7 +124,7 @@ void draw() {
     }
 
     // Draw Frame Rate
-    textFont(font,12);
+    textFont(font, 12);
     fill(255);
     textAlign(LEFT);
     text(frameRate, 20, 20);
@@ -141,5 +145,3 @@ void mouseOut() {
 void mouseOver() {
     MOUSE_OUT = false;
 }
-
-

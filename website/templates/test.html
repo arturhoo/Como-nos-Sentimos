@@ -381,16 +381,17 @@
       function makeTheLink() {
         pjs = Processing.instances[0];
         if(pjs == undefined) {
-          setTimeout(makeTheLink, 1000);
+          setTimeout(makeTheLink, 600);
         } else {
           Processing.logger = console;
-          pjs.setInterfaceLink(this);
-          initialLoad();
-          // try {
-          //   pjs.setInterfaceLink(this);
-          // } catch(e) {
-          //   setTimeout(initialLoad, 200);
-          // }
+          // pjs.setInterfaceLink(this);
+          // initialLoad();
+          try {
+            pjs.setInterfaceLink(this);
+            initialLoad()
+          } catch(e) {
+            setTimeout(makeTheLink, 200);
+          }
         }
       }
     </script>

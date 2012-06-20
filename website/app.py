@@ -133,6 +133,8 @@ def load_states(file_name):
 def hello():
     limit = NUM_PARTICLES
     feelings = load_feelings('../crawler/feelings.txt')
+    states = load_states('../crawler/states.txt')
+    states_unique = load_states('../crawler/states_unique.txt')
     weather_translations = load_weather_translations('../crawler/weather_translations.txt')
     states = load_states('../crawler/states.txt')
     if 'selected-feelings' in request.args:
@@ -143,10 +145,16 @@ def hello():
                                 'feelings_size': 1}, \
                                 sort=[('created_at', -1)], \
                                 limit=limit)
-
+    elif 'selected-states' in request.args:
+        states_query_list = []
+        for state in request.args.getlist('selected-states'):
+            state_full_name = states_unique[[x[0] for x in states_unique].index(state)][1]
+            states_query_list.append({'location.state': state_full_name})
+        db_tweets = g.coll.find({'$or': states_query_list}, \
+                                sort=[('created_at', -1)], \
+                                limit=limit)
     else:
         db_tweets = g.coll.find(sort=[('created_at', -1)], limit=limit)
-        # db_tweets = g.coll.find({'location': {'$exists': True}, 'location': {'$ne': None}}, sort=[('created_at', -1)], limit=limit)
     tweets = []
     string_md5 = ''
     for db_tweet in db_tweets:
@@ -158,6 +166,7 @@ def hello():
                            feelings=sorted(feelings.items()),
                            weather_translations=sorted(weather_translations.items()),
                            states=sorted(states),
+                           states_unique=sorted(states_unique),
                            data_md5=data_md5)
 
 if __name__ == "__main__":

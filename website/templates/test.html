@@ -169,7 +169,7 @@
       </div>
 
       <div class="search-feelings-div">
-        <form action="{{url_for('hello')}}" method="get">
+        <form action="{{url_for('hello')}}" method="get" style="float: left;">
           <select name="selected-feelings" data-placeholder="Escolha sentimentos..." class="chzn-select" multiple style="width:350px;" tabindex="4">
             {% for feeling in feelings %}
               <option value="{{ feeling[0] }}">{{ feeling[0] }}</option>;
@@ -177,6 +177,16 @@
           </select>
           <div>
             <input type="submit" value="Carregar">
+          </div>
+        </form>
+        <form action="{{url_for('hello')}}" method="get" style="float: right;">
+          <select name="selected-states" data-placeholder="Escolha estados..." class="chzn-select" multiple style="width:350px;" tabindex="4">
+            {% for state in states_unique %}
+              <option value="{{ state[0] }}">{{ state[1] }}</option>;
+            {% endfor %}
+          </select>
+          <div>
+            <input type="submit" value="Carregar" style="float: right;">
           </div>
         </form>
       </div>

@@ -55,7 +55,6 @@ void dropDuplicateItemsFromList(ArrayList list) {
 void setListElementsLocation(ArrayList list) {
     float textX = LEFT_BORDER_OFFSET + TEXT_WIDTH;
     int numParticlesInOneLine = parseInt((PARTICLES_WIDTH + DIST_BTWN_PARTICLES)/(PARTICLE_RADIUS + DIST_BTWN_PARTICLES));
-    println("General: " + numParticlesInOneLine);
     int y = parseInt(TOP_BORDER_OFFSET);
     int splittableY = -1; // unsplittable
     boolean split = false;
@@ -107,19 +106,6 @@ void loadQuestionMarkPixels() {
 }
 
 /**
-* Loads the question mark pixels and store them in a array
-*/
-void loadPlusImagePixels() {
-    while(plusImage.width == 0) continue;
-    plusImage.loadPixels();
-    plusPixels = new ArrayList();
-    for(int i=0; i<(plusImage.width*plusImage.height); i++) {
-        if (plusImage.pixels[i] == color(0, 0, 0))
-            plusPixels.add(i);
-    }
-}
-
-/**
 * Loads the pixels of a given state based on the country map PNG
 */
 int loadCountryMapPixels(int i) {
@@ -157,14 +143,6 @@ PVector getRandomLocationFromQuestionMark() {
     return new PVector(questionMarkPixels.get(pos)%questionMarkImage.width +
                  width - LEFT_BORDER_OFFSET * 2.0,
                  questionMarkPixels.get(pos)/questionMarkImage.width +
-                 height - BOTTOM_BORDER_OFFSET * 2.0, 0);
-}
-
-PVector getRandomLocationFromPlus() {
-    int pos = (int) (random(plusPixels.size()));
-    return new PVector(plusPixels.get(pos)%plusImage.width +
-                 width - LEFT_BORDER_OFFSET * 2.0,
-                 plusPixels.get(pos)/plusImage.width +
                  height - BOTTOM_BORDER_OFFSET * 2.0, 0);
 }
 

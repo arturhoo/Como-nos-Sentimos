@@ -54,12 +54,8 @@ class Particle{
             }
 
             // If mouse is over
-            if(this.isIn(mouseX, mouseY) && aFocusedTweet == false) {
+            if(this.isIn(mouseX, mouseY) && pFocusedTweet == null) {
                 r = 14.0;
-                textFont(font, 12);
-                fill(255);
-                text(tweet.feelings[0], loc.x+12, loc.y+12);
-                aFocusedTweet = true;
                 pFocusedTweet = this;
             }
         }
@@ -70,14 +66,33 @@ class Particle{
     }
 
     void feelingsUpdate() {
-        this.goTo(feelingLoc);
-        // If mouse is over
-        if(this.isIn(mouseX, mouseY)) {
-            r = 14.0;
+        // If this feeling could fit the canvas
+        if(feelingLoc.y != height) {
+            this.goTo(feelingLoc);
+            // If mouse is over
+            if(this.isIn(mouseX, mouseY) && pFocusedTweet == null) {
+                r = 14.0;
+                pFocusedTweet = this;
+            } else {
+                r += random(-1.0, 1.0);
+                if (r > 14.0) r -= 2;
+                if (r < 6.0) r += 2;
+            }
+        // If this feeling couldn't fit the canvas
         } else {
-            r += random(-1.0, 1.0);
-            if (r > 14.0) r -= 2;
-            if (r < 6.0) r += 2;
+            r = PARTICLE_RADIUS;
+            if(loc.y < feelingLoc.y-10) this.goTo(feelingLoc);
+            else {
+                vel.y = 0;
+                loc.y = height-PARTICLE_RADIUS/2
+            }
+            if(loc.x < 0+PARTICLE_RADIUS/2 || loc.x > width-PARTICLE_RADIUS/2) vel.x *= -1;
+            if(abs(vel.x) > 10.0) vel.mult(0.5);
+            float randomLimit = 1.32;
+            float randomAcc1 = random(-randomLimit, randomLimit);
+            acc.set(randomAcc1, 0, 0);
+            vel.add(acc);
+            loc.add(vel);
         }
     }
 
@@ -85,8 +100,9 @@ class Particle{
         if(stateLoc != null) {
             this.goTo(stateLoc);
             // If mouse is over
-            if(this.isIn(mouseX, mouseY)) {
+            if(this.isIn(mouseX, mouseY) && pFocusedTweet == null) {
                 r = 14.0;
+                pFocusedTweet = this;
             } else {
                 r += random(-1.0, 1.0);
                 if (r > 14.0) r -= 2;
@@ -99,8 +115,9 @@ class Particle{
         if(mapLoc != null) {
             this.goTo(mapLoc);
             // If mouse is over
-            if(this.isIn(mouseX, mouseY)) {
+            if(this.isIn(mouseX, mouseY) && pFocusedTweet == null) {
                 r = 14.0;
+                pFocusedTweet = this;
             } else {
                 r += random(-1.0, 1.0);
                 if (r > 11.0) r -= 1;
@@ -139,6 +156,9 @@ class Particle{
         }
     }
 
+    /**
+    * Sets the PVector of this particle when the Map view is displayed
+    */
     void setMapLoc() {
         State tempState = this.getState();
         mapLoc = new PVector();
@@ -155,9 +175,15 @@ class Particle{
     void render() {
         ellipseMode(CENTER);
         // stroke(255, 255, 255);
-        if(this.isIn(mouseX, mouseY)) {
+        // if(this.isIn(mouseX, mouseY) && !MOUSE_OUT && !aFocusedTweet) {
+        if(pFocusedTweet == this) {
             strokeWeight(3);
             stroke(255, 196, 0, FILL_TRANSPARENCY);
+            if(VIEW != FEELINGS) {
+                textFont(font, 12);
+                fill(255);
+                text(tweet.feelings[0], loc.x+12, loc.y+12);
+            }
         }
         else noStroke();
         fill(tweet.frgb[0], tweet.frgb[1], tweet.frgb[2], FILL_TRANSPARENCY);

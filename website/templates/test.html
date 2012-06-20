@@ -288,7 +288,6 @@
 
       function pjsPostImagesLoading() {
         pjsLoadQuestionMarkPixels();
-        pjsLoadPlusPixels();
         pjsLoadCountryMapPixels();
         pjsSetParticlesLocs();
       }
@@ -299,16 +298,6 @@
           setTimeout(pjsLoadQuestionMarkPixels, 400);
         } else {
           pjs.loadQuestionMarkPixels();
-        }
-      }
-
-      function pjsLoadPlusPixels() {
-        var pjsPlusImageWidth = pjs.getPlusImageWidth();
-        if(pjsPlusImageWidth == 0) {
-          setTimeout(pjsLoadPlusPixels, 400);
-        } else {
-          // console.log(pjsPlusImageWidth);
-          pjs.loadPlusImagePixels();
         }
       }
 

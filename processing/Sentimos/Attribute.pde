@@ -32,14 +32,15 @@ class Attribute {
     * feeling histogram view
     */
     PVector getAParticleLoc() {
-        if(paginated) return getRandomLocationFromPlus();
-        else {
+        if(paginated) {
+            // If the feeling couldn't fit the canvas, this is the PVector signal
+            return new PVector(random(width), height, 0);
+        } else {
             PVector vectorToBeReturned = new PVector();
             vectorToBeReturned.set(particlesLoc);
 
             // Update the next PVector to be returned
             int numParticlesInOneLine = parseInt((PARTICLES_WIDTH + DIST_BTWN_PARTICLES)/(PARTICLE_RADIUS + DIST_BTWN_PARTICLES));
-            println("Att: " + numParticlesInOneLine);
 
             // If reached limit of particles in one histogram line
             if(numParticlesCurrentLine + 2 > numParticlesInOneLine) {

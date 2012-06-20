@@ -288,6 +288,7 @@
 
       function pjsPostImagesLoading() {
         pjsLoadQuestionMarkPixels();
+        pjsLoadPlusPixels();
         pjsLoadCountryMapPixels();
         pjsSetParticlesLocs();
       }
@@ -298,6 +299,16 @@
           setTimeout(pjsLoadQuestionMarkPixels, 400);
         } else {
           pjs.loadQuestionMarkPixels();
+        }
+      }
+
+      function pjsLoadPlusPixels() {
+        var pjsPlusImageWidth = pjs.getPlusImageWidth();
+        if(pjsPlusImageWidth == 0) {
+          setTimeout(pjsLoadPlusPixels, 400);
+        } else {
+          // console.log(pjsPlusImageWidth);
+          pjs.loadPlusImagePixels();
         }
       }
 
@@ -383,10 +394,12 @@
         if(pjs == undefined) {
           setTimeout(makeTheLink, 600);
         } else {
-          Processing.logger = console;
+          // Processing.logger = console;
           // pjs.setInterfaceLink(this);
           // initialLoad();
           try {
+            // Comment the line below to make it work on IE9
+            Processing.logger = console;
             pjs.setInterfaceLink(this);
             initialLoad()
           } catch(e) {

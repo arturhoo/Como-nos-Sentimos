@@ -5,6 +5,7 @@ class Attribute {
     // Histogram Variables
     PVector particlesLoc;
     int numParticlesCurrentLine = 0;
+    boolean paginated = false;
 
     Attribute (String textString) {
         this.textString = textString;
@@ -31,20 +32,25 @@ class Attribute {
     * feeling histogram view
     */
     PVector getAParticleLoc() {
-        PVector vectorToBeReturned = new PVector();
-        vectorToBeReturned.set(particlesLoc);
+        if(paginated) return getRandomLocationFromPlus();
+        else {
+            PVector vectorToBeReturned = new PVector();
+            vectorToBeReturned.set(particlesLoc);
 
-        // Update the next PVector to be returned
-        int numParticlesInOneLine = parseInt((PARTICLES_WIDTH + DIST_BTWN_PARTICLES)/(PARTICLE_RADIUS + DIST_BTWN_PARTICLES));
-        // If reached limit of particles in one histogram line
-        if(numParticlesCurrentLine + 1 > numParticlesInOneLine) {
-            numParticlesCurrentLine = 0;
-            particlesLoc.x = loc.x + DIST_BTWN_TEXT_AND_PARTICLES;
-            particlesLoc.y += DIST_BTWN_HISTOGRAM_ENTRIES + HISTOGRAM_FONT_SIZE;
-        } else {
-            particlesLoc.x += PARTICLE_RADIUS + DIST_BTWN_PARTICLES;
-            numParticlesCurrentLine++;
+            // Update the next PVector to be returned
+            int numParticlesInOneLine = parseInt((PARTICLES_WIDTH + DIST_BTWN_PARTICLES)/(PARTICLE_RADIUS + DIST_BTWN_PARTICLES));
+            println("Att: " + numParticlesInOneLine);
+
+            // If reached limit of particles in one histogram line
+            if(numParticlesCurrentLine + 2 > numParticlesInOneLine) {
+                numParticlesCurrentLine = 0;
+                particlesLoc.x = loc.x + DIST_BTWN_TEXT_AND_PARTICLES;
+                particlesLoc.y += DIST_BTWN_HISTOGRAM_ENTRIES + HISTOGRAM_FONT_SIZE;
+            } else {
+                particlesLoc.x += PARTICLE_RADIUS + DIST_BTWN_PARTICLES;
+                numParticlesCurrentLine++;
+            }
+            return vectorToBeReturned;
         }
-        return vectorToBeReturned;
     }
 }

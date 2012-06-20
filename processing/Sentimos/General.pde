@@ -55,8 +55,10 @@ void dropDuplicateItemsFromList(ArrayList list) {
 void setListElementsLocation(ArrayList list) {
     float textX = LEFT_BORDER_OFFSET + TEXT_WIDTH;
     int numParticlesInOneLine = parseInt((PARTICLES_WIDTH + DIST_BTWN_PARTICLES)/(PARTICLE_RADIUS + DIST_BTWN_PARTICLES));
+    println("General: " + numParticlesInOneLine);
     int y = parseInt(TOP_BORDER_OFFSET);
     int splittableY = -1; // unsplittable
+    boolean split = false;
 
     Iterator<Object> itr = list.iterator();
     while(itr.hasNext()) {
@@ -66,7 +68,7 @@ void setListElementsLocation(ArrayList list) {
       temp.particlesLoc.set(textX+DIST_BTWN_TEXT_AND_PARTICLES, y-PARTICLE_RADIUS/2, 0);
 
       // Defines the new Y for the next histogram entry
-      int numHistogramLines = parseInt(temp.occurrence/numParticlesInOneLine) + 1;
+      int numHistogramLines = parseInt((temp.occurrence - 1)/numParticlesInOneLine) + 1;
       y += (DIST_BTWN_HISTOGRAM_ENTRIES + HISTOGRAM_FONT_SIZE)*numHistogramLines;
 
       // Identify if this histogram line spans less than half of the canvas
@@ -78,10 +80,15 @@ void setListElementsLocation(ArrayList list) {
 
       // Identify if Y has gone below the imposed limits
       if(y > (height - BOTTOM_BORDER_OFFSET)) {
-        // If so, start using two columns
-        textX = width/2 + LEFT_BORDER_OFFSET + TEXT_WIDTH;
-        // Reset the Y
-        y = splittableY;
+        if(!split) {
+          // If so, start using two columns
+          textX = width/2 + LEFT_BORDER_OFFSET + TEXT_WIDTH;
+          // Reset the Y
+          y = splittableY;
+          split = true;
+        } else {
+          temp.paginated = true;
+        }
       }
     }
 }
@@ -93,9 +100,22 @@ void loadQuestionMarkPixels() {
     while(questionMarkImage.width == 0) continue;
     questionMarkImage.loadPixels();
     questionMarkPixels = new ArrayList();
-    for (int i=0; i<(questionMarkImage.width*questionMarkImage.height); i++) {
+    for(int i=0; i<(questionMarkImage.width*questionMarkImage.height); i++) {
         if (questionMarkImage.pixels[i] == color(0, 0, 0))
             questionMarkPixels.add(i);
+    }
+}
+
+/**
+* Loads the question mark pixels and store them in a array
+*/
+void loadPlusImagePixels() {
+    while(plusImage.width == 0) continue;
+    plusImage.loadPixels();
+    plusPixels = new ArrayList();
+    for(int i=0; i<(plusImage.width*plusImage.height); i++) {
+        if (plusImage.pixels[i] == color(0, 0, 0))
+            plusPixels.add(i);
     }
 }
 
@@ -113,7 +133,7 @@ int loadCountryMapPixels(int i) {
 * specific view
 */
 void setParticlesLocs() {
-    for (int i=NUM_PARTICLES-1; i >= 0; i--) {
+    for(int i=NUM_PARTICLES-1; i >= 0; i--) {
         particles[i].setFeelingLoc();
         particles[i].setStateLoc();
         particles[i].setMapLoc();
@@ -137,6 +157,14 @@ PVector getRandomLocationFromQuestionMark() {
     return new PVector(questionMarkPixels.get(pos)%questionMarkImage.width +
                  width - LEFT_BORDER_OFFSET * 2.0,
                  questionMarkPixels.get(pos)/questionMarkImage.width +
+                 height - BOTTOM_BORDER_OFFSET * 2.0, 0);
+}
+
+PVector getRandomLocationFromPlus() {
+    int pos = (int) (random(plusPixels.size()));
+    return new PVector(plusPixels.get(pos)%plusImage.width +
+                 width - LEFT_BORDER_OFFSET * 2.0,
+                 plusPixels.get(pos)/plusImage.width +
                  height - BOTTOM_BORDER_OFFSET * 2.0, 0);
 }
 

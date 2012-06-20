@@ -1,5 +1,5 @@
 /* @pjs font="static/fonts/MavenPro-Bold.ttf"; */
-/* @pjs preload="static/images/question4.png,static/images/brasil_color.png,static/images/brasil_gray.png" */
+/* @pjs preload="static/images/question4.png,static/images/plus.png,static/images/brasil_color.png,static/images/brasil_gray.png" */
 
 static int WIDTH  = 800;
 static int HEIGHT = 460;
@@ -46,6 +46,8 @@ HashMap stateAbbreviation;
 
 PImage questionMarkImage;
 ArrayList questionMarkPixels;
+PImage plusImage;
+ArrayList plusPixels;
 Pimage countryGrayMapImage;
 PImage countryMapImage;
 ArrayList countryMapPixels;
@@ -71,6 +73,7 @@ void setup() {
     stateAbbreviation   = new HashMap();
 
     questionMarkImage   = loadImage("static/images/question4.png");
+    plusImage           = loadImage("static/images/plus.png");
     countryMapImage     = loadImage("static/images/brasil_color.png");
     countryGrayMapImage = loadImage("static/images/brasil_gray.png");
     font2               = createFont("static/fonts/MavenPro-Bold.ttf", 24);

@@ -51,6 +51,10 @@ int getQuestionMarkImageWidth() {
     return questionMarkImage.width;
 }
 
+int getPlusImageWidth() {
+    return plusImage.width;
+}
+
 int getCountryMapImageWidth() {
     return countryMapImage.width;
 }

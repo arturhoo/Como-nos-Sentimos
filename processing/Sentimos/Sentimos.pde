@@ -8,6 +8,7 @@ static final int MAX_NUM_PARTICLES = 1000;
 static int NUM_PARTICLES = 0;
 static final float PARTICLE_RADIUS = 10.0;
 static final int HISTOGRAM_FONT_SIZE = 13;
+static final int FILL_TRANSPARENCY = 215;
 
 static float LEFT_BORDER_OFFSET           = WIDTH*0.05;
 static float RIGHT_BORDER_OFFSET          = WIDTH*0.05;

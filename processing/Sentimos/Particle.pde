@@ -154,8 +154,13 @@ class Particle{
     */
     void render() {
         ellipseMode(CENTER);
-        stroke(255, 255, 255);
-        fill(tweet.frgb[0], tweet.frgb[1], tweet.frgb[2]);
+        // stroke(255, 255, 255);
+        if(this.isIn(mouseX, mouseY)) {
+            strokeWeight(3);
+            stroke(255, 196, 0, FILL_TRANSPARENCY);
+        }
+        else noStroke();
+        fill(tweet.frgb[0], tweet.frgb[1], tweet.frgb[2], FILL_TRANSPARENCY);
         ellipse(loc.x, loc.y, r, r);
     }
 

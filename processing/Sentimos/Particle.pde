@@ -69,15 +69,6 @@ class Particle{
         // If this feeling could fit the canvas
         if(feelingLoc.y != height) {
             this.goTo(feelingLoc);
-            // If mouse is over
-            if(this.isIn(mouseX, mouseY) && pFocusedTweet == null) {
-                r = 14.0;
-                pFocusedTweet = this;
-            } else {
-                r += random(-1.0, 1.0);
-                if (r > 14.0) r -= 2;
-                if (r < 6.0) r += 2;
-            }
         // If this feeling couldn't fit the canvas
         } else {
             r = PARTICLE_RADIUS;
@@ -86,13 +77,32 @@ class Particle{
                 vel.y = 0;
                 loc.y = height-PARTICLE_RADIUS/2
             }
-            if(loc.x < 0+PARTICLE_RADIUS/2 || loc.x > width-PARTICLE_RADIUS/2) vel.x *= -1;
+            this.bounceOffWalls();
+
+            // Prevent the particle from going too fast
             if(abs(vel.x) > 10.0) vel.mult(0.5);
+
             float randomLimit = 1.32;
             float randomAcc1 = random(-randomLimit, randomLimit);
             acc.set(randomAcc1, 0, 0);
+
+            // If mouse is close
+            if(abs(mouseX - loc.x) < r*3 && abs(mouseY - loc.y) < r*3) {
+                vel.mult(0.6);
+                acc.add((mouseX - loc.x)*0.01, (mouseY - loc.y)*0.01, 0);
+            }
+
             vel.add(acc);
             loc.add(vel);
+        }
+        // If mouse is in
+        if(this.isIn(mouseX, mouseY) && pFocusedTweet == null && !MOUSE_OUT) {
+            r = 14.0;
+            pFocusedTweet = this;
+        } else {
+            r += random(-1.0, 1.0);
+            if (r > 14.0) r -= 2;
+            if (r < 6.0) r += 2;
         }
     }
 
@@ -179,11 +189,16 @@ class Particle{
         if(pFocusedTweet == this) {
             strokeWeight(3);
             stroke(255, 196, 0, FILL_TRANSPARENCY);
-            if(VIEW != FEELINGS) {
-                textFont(font, 12);
-                fill(255);
-                text(tweet.feelings[0], loc.x+12, loc.y+12);
-            }
+            // Draw feeling
+            textFont(font, 12);
+            fill(255);
+            if(loc.y > (height-PARTICLE_RADIUS*2)) {
+                text(tweet.feelings[0], loc.x+12, loc.y-12);
+            } else if (loc.x > (width-RIGHT_BORDER_OFFSET*2)) {
+                textAlign(RIGHT);
+                text(tweet.feelings[0], loc.x-12, loc.y+12);
+                textAlign(LEFT);
+            }else text(tweet.feelings[0], loc.x+12, loc.y+12);
         }
         else noStroke();
         fill(tweet.frgb[0], tweet.frgb[1], tweet.frgb[2], FILL_TRANSPARENCY);

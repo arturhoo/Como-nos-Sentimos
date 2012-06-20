@@ -24,7 +24,8 @@ static float PARTICLES_WIDTH              = WIDTH -
                                             RIGHT_BORDER_OFFSET -
                                             DIST_BTWN_TEXT_AND_PARTICLES;
 
-static final String LOADING_TEXT = "CARREGANDO";
+static final String LOADING_TEXT   = "CARREGANDO";
+static final String EXTRA_FEELIGNS = "E outros mais abaixo!";
 
 static final int MADNESS = 1;
 static final int FEELINGS = 2;
@@ -93,10 +94,17 @@ void draw() {
     // Draw feelings text
     if(VIEW == FEELINGS) {
         Iterator<Feeling> itr = feelingList.iterator();
+        boolean paginated_drawn = false;
         while(itr.hasNext()) {
             Feeling tempFeeling = itr.next();
             if(tempFeeling.occurrence > 0) {
                 tempFeeling.drawText();
+            }
+            if(tempFeeling.paginated && !paginated_drawn) {
+                textAlign(RIGHT);
+                text(EXTRA_FEELIGNS, tempFeeling.loc.x, tempFeeling.loc.y);
+                paginated_drawn = true;
+                textAlign(LEFT);
             }
         }
     }

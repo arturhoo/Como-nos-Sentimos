@@ -21,6 +21,7 @@ class Feeling extends Attribute {
         textAlign(RIGHT);
         textFont(font, HISTOGRAM_FONT_SIZE);
         fill(255);
+        // text(textString + ": " + occurrence, loc.x, loc.y);
         if(!paginated) text(textString + ": " + occurrence, loc.x, loc.y);
         textAlign(LEFT);
     }

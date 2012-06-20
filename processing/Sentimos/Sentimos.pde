@@ -81,7 +81,6 @@ void setup() {
 void draw() {
     background(40, 40, 40);
 
-    aFocusedTweet = false;
     pFocusedTweet = null;
 
     if(NUM_PARTICLES == 0) {
@@ -134,8 +133,18 @@ void draw() {
 }
 
 void mouseClicked() {
-    if(pFocusedTweet != null)
+    if(pFocusedTweet != null) {
         pFocusedTweet.tweet.showTweet();
+        for(int i=NUM_PARTICLES-1; i >= 0; i--) {
+            if(particles[i] != pFocusedTweet) {
+                float distance = sqrt(pow(particles[i].loc.x - mouseX, 2) + pow(particles[i].loc.y - mouseY, 2)) * (float) 2.0;
+                float ang = atan2(particles[i].loc.x - mouseX, particles[i].loc.y - mouseY);
+                f = min(1 / distance, 3) * 250;
+                particles[i].vel.x += sin(ang) * f;
+                particles[i].vel.y += cos(ang) * f;
+            }
+        }
+    }
 }
 
 void mouseOut() {

@@ -2,6 +2,7 @@
 from flask import Flask, render_template, g, request
 from pymongo import Connection
 from datetime import timedelta
+from pylibmc import Client
 import hashlib
 import re
 import htmlentitydefs
@@ -14,6 +15,8 @@ except ImportError:
 
 app = Flask(__name__)
 app.debug = True
+mc = Client(["127.0.0.1"], binary=True,
+                    behaviors={"tcp_nodelay": True, "ketama": True})
 
 
 class Author(object):
@@ -27,7 +30,8 @@ class Location(object):
 
 
 class Tweet(object):
-    def __init__(self, tid, author, text, created_at, created_at_bsb, created_at_local, feelings):
+    def __init__(self, tid, author, text, created_at, created_at_bsb, \
+                 created_at_local, feelings):
         self.id = tid
         self.author = author
         self.text = text
@@ -100,6 +104,15 @@ def tweetFromDictToObject(tweet):
     return new_tweet
 
 
+def tweet_list_from_cursor(db_tweets):
+    tweets = []
+    string_md5 = ''
+    for db_tweet in db_tweets:
+        string_md5 += str(db_tweet['_id'])
+        tweets.append(tweetFromDictToObject(db_tweet))
+    return (tweets, string_md5)
+
+
 def load_feelings(file_name):
     feelings_dic = {}
     with open(file_name) as f:
@@ -137,6 +150,8 @@ def hello():
     states_unique = load_states('../crawler/states_unique.txt')
     weather_translations = load_weather_translations('../crawler/weather_translations.txt')
     states = load_states('../crawler/states.txt')
+    tweets = None
+    string_md5 = None
     if 'selected-feelings' in request.args:
         feelings_query_list = []
         for feeling in request.args.getlist('selected-feelings'):
@@ -145,6 +160,10 @@ def hello():
                                 'feelings_size': 1}, \
                                 sort=[('created_at', -1)], \
                                 limit=limit)
+        tweet_tuple = tweet_list_from_cursor(db_tweets)
+        tweets = tweet_tuple[0]
+        string_md5 = tweet_tuple[1]
+
     elif 'selected-states' in request.args:
         states_query_list = []
         for state in request.args.getlist('selected-states'):
@@ -153,13 +172,19 @@ def hello():
         db_tweets = g.coll.find({'$or': states_query_list}, \
                                 sort=[('created_at', -1)], \
                                 limit=limit)
+        tweet_tuple = tweet_list_from_cursor(db_tweets)
+        tweets = tweet_tuple[0]
+        string_md5 = tweet_tuple[1]
+
     else:
-        db_tweets = g.coll.find(sort=[('created_at', -1)], limit=limit)
-    tweets = []
-    string_md5 = ''
-    for db_tweet in db_tweets:
-        string_md5 += str(db_tweet['_id'])
-        tweets.append(tweetFromDictToObject(db_tweet))
+        tweet_tuple = mc.get('no_kw')
+        if not tweet_tuple:
+            db_tweets = g.coll.find(sort=[('created_at', -1)], limit=limit)
+            tweet_tuple = tweet_list_from_cursor(db_tweets)
+            mc.set('no_kw', tweet_tuple, 20)
+        tweets = tweet_tuple[0]
+        string_md5 = tweet_tuple[1]
+
     data_md5 = hashlib.md5(string_md5).hexdigest()
     return render_template('test.html',
                            tweets=tweets,

@@ -96,7 +96,7 @@ class Particle{
             loc.add(vel);
         }
         // If mouse is in
-        if(this.isIn(mouseX, mouseY) && pFocusedTweet == null && !MOUSE_OUT) {
+        if(!MOUSE_OUT && pFocusedTweet == null && this.isIn(mouseX, mouseY)) {
             r = 14.0;
             pFocusedTweet = this;
         } else {

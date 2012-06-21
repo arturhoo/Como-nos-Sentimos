@@ -77,6 +77,7 @@ void setup() {
     font2               = createFont("static/fonts/MavenPro-Bold.ttf", 24);
     font                = loadFont("Helvetica", 24);
     frameRate(30);
+    textMode(SCREEN);
 }
 
 void draw() {

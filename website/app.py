@@ -3,9 +3,9 @@ from flask import Flask, render_template, g, request
 from pymongo import Connection
 from datetime import timedelta
 from pylibmc import Client
-import hashlib
-import re
-import htmlentitydefs
+from hashlib import md5
+from htmlentitydefs import name2codepoint
+from re import sub
 
 
 try:
@@ -15,8 +15,8 @@ except ImportError:
 
 app = Flask(__name__)
 app.debug = True
-mc = Client(["127.0.0.1"], binary=True,
-                    behaviors={"tcp_nodelay": True, "ketama": True})
+mc = Client(["127.0.0.1"], binary=True, behaviors={"tcp_nodelay": True,
+                                                   "ketama": True})
 
 
 class Author(object):
@@ -56,11 +56,11 @@ def unescape(text):
         else:
             # named entity
             try:
-                text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+                text = unichr(name2codepoint[text[1:-1]])
             except KeyError:
                 pass
         return text  # leave as is
-    return re.sub("&#?\w+;", fixup, text)
+    return sub("&#?\w+;", fixup, text)
 
 
 def prepareStringForJavaScript(string):
@@ -152,6 +152,7 @@ def hello():
     states = load_states('../crawler/states.txt')
     tweets = None
     string_md5 = None
+
     if 'selected-feelings' in request.args:
         feelings_query_list = []
         for feeling in request.args.getlist('selected-feelings'):
@@ -181,11 +182,11 @@ def hello():
         if not tweet_tuple:
             db_tweets = g.coll.find(sort=[('created_at', -1)], limit=limit)
             tweet_tuple = tweet_list_from_cursor(db_tweets)
-            mc.set('no_kw', tweet_tuple, 20)
+            mc.set('no_kw', tweet_tuple, 2)
         tweets = tweet_tuple[0]
         string_md5 = tweet_tuple[1]
 
-    data_md5 = hashlib.md5(string_md5).hexdigest()
+    data_md5 = md5(string_md5).hexdigest()
     return render_template('test.html',
                            tweets=tweets,
                            feelings=sorted(feelings.items()),

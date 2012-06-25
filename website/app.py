@@ -145,11 +145,22 @@ def load_states(file_name):
 @app.route("/")
 def hello():
     limit = NUM_PARTICLES
-    feelings = load_feelings('../crawler/feelings.txt')
-    states = load_states('../crawler/states.txt')
-    states_unique = load_states('../crawler/states_unique.txt')
-    weather_translations = load_weather_translations('../crawler/weather_translations.txt')
-    states = load_states('../crawler/states.txt')
+    feelings = mc.get('feelings')
+    if not feelings:
+        feelings = load_feelings('../crawler/feelings.txt')
+        mc.set('feelings', feelings, 0)
+    states = mc.get('states')
+    if not states:
+        states = load_states('../crawler/states.txt')
+        mc.set('states', states, 0)
+    states_unique = mc.get('states_unique')
+    if not states_unique:
+        states_unique = load_states('../crawler/states_unique.txt')
+        mc.set('states_unique', states_unique, 0)
+    weather_translations = mc.get('weather_translations')
+    if not weather_translations:
+        weather_translations = load_weather_translations('../crawler/weather_translations.txt')
+        mc.set('weather_translations', weather_translations, 0)
     tweets = None
     string_md5 = None
 

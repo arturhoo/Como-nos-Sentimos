@@ -6,6 +6,7 @@ from pylibmc import Client
 from hashlib import md5
 from htmlentitydefs import name2codepoint
 from re import sub
+import locale
 
 
 try:
@@ -17,6 +18,7 @@ app = Flask(__name__)
 app.debug = True
 mc = Client(["127.0.0.1"], binary=True, behaviors={"tcp_nodelay": True,
                                                    "ketama": True})
+locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 
 class Author(object):
@@ -119,7 +121,10 @@ def load_feelings(file_name):
         for line in f.readlines():
             line_list = line.split(';')
             feelings_dic[line_list[0].decode('utf-8')] = line_list[2].rstrip()
-    return feelings_dic
+    feelings_list = []
+    for key in sorted(feelings_dic.iterkeys(), cmp=locale.strcoll):
+        feelings_list.append((key, feelings_dic[key]))
+    return feelings_list
 
 
 def load_weather_translations(file_name):
@@ -200,7 +205,7 @@ def hello():
     data_md5 = md5(string_md5).hexdigest()
     return render_template('test.html',
                            tweets=tweets,
-                           feelings=sorted(feelings.items()),
+                           feelings=feelings,
                            weather_translations=sorted(weather_translations.items()),
                            states=sorted(states),
                            states_unique=sorted(states_unique),

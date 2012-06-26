@@ -215,8 +215,6 @@ def before_request():
     g.conn = Connection(MONGO_HOST)
     g.db = g.conn[MONGO_DB]
     g.coll = g.db[MONGO_COLLECTION]
-    g.coll_sh = g.db[MONGO_COLLECTION_STATS_HISTORY]
-    g.coll_sg = g.db[MONGO_COLLECTION_STATS_GENERAL]
 
 
 @app.teardown_request

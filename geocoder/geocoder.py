@@ -2,7 +2,7 @@
 from geopy import geocoders
 from pymongo import Connection
 from utils import remove_accents
-from bson import ObjectId
+from datetime import timedelta
 from pywapi import get_weather_from_google
 import beanstalkc
 import re
@@ -18,7 +18,8 @@ except ImportError:
 geo_collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_GEO_COLLECTION]
 crawler_collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_CRAWLER_COLLECTION]
 beanstalk = beanstalkc.Connection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
-beanstalk.watch(BEANSTALKD_TUBE)
+beanstalk.watch(BEANSTALKD_GEO_TUBE)
+beanstalk.use(BEANSTALKD_STATS_TUBE)
 beanstalk.ignore('default')
 
 
@@ -97,6 +98,12 @@ if __name__ == '__main__':
         if not item:
             job.delete()
             continue
+
+        analytics_dic = {
+            'feelings': item['feelings'],
+            'created_at': str(item['created_at'] + timedelta(seconds=-10800))
+        }
+
         user_location = item['author']['location']
         search_db_result = search_db(user_location)
         if search_db_result:
@@ -119,6 +126,9 @@ if __name__ == '__main__':
             else:
                 insert_into_db_miss(user_location)
 
+        if 'state' in location:
+            analytics_dic['state'] = location['state']
+
         if 'city' in location:
             query = location['city'] + ' - ' + location['state'] + ', brasil'
             query = query.encode('utf-8')
@@ -131,4 +141,10 @@ if __name__ == '__main__':
                 weather = {'condition': condition, 'temp': temp}
                 crawler_collection.update({'_id': int(job.body)},
                                           {'$set': {'location.weather': weather}})
+                analytics_dic['weather'] = condition
+
         job.delete()
+        beanstalk.put(str(analytics_dic))
+
+
+

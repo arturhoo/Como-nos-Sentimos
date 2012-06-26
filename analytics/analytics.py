@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime
 from ast import literal_eval
 from beanstalkc import Connection as BSConnection
@@ -16,14 +17,29 @@ bs.watch(BEANSTALKD_TUBE)
 bs.ignore('default')
 
 
-def insert_history(feeling, date):
+def load_states_abbreviations(file_name):
+    states_dic = {}
+    with open(file_name) as f:
+        for line in f.readlines():
+            line_list = line.split(';')
+            states_dic[line_list[0].decode('utf-8')] = line_list[1]
+    return states_dic
+
+
+def insert_history(feeling, date, state, weather):
     feeling_key = 'feelings.' + feeling
+    inc_data = {feeling_key + '.count': 1, 'count': 1}
+    if state is not None:
+        inc_data[feeling_key + '.states.' + state] = 1
+    if weather is not None:
+        inc_data[feeling_key + '.weather.' + weather] = 1
+
     monthly_key = {
         'type': 'monthly',
         'year': int(datetime.strftime(date, '%Y')),
         'month': int(datetime.strftime(date, '%m'))
     }
-    monthly_data = {'$inc': {feeling_key: 1, 'count': 1}}
+    monthly_data = {'$inc': inc_data}
     coll_hist.update(monthly_key, monthly_data, True)
 
     daily_key = {
@@ -32,7 +48,7 @@ def insert_history(feeling, date):
         'month': int(datetime.strftime(date, '%m')),
         'day': int(datetime.strftime(date, '%d'))
     }
-    daily_data = {'$inc': {feeling_key: 1, 'count': 1}}
+    daily_data = {'$inc': inc_data}
     coll_hist.update(daily_key, daily_data, True)
 
     hourly_key = {
@@ -42,50 +58,62 @@ def insert_history(feeling, date):
         'day': int(datetime.strftime(date, '%d')),
         'hour': int(datetime.strftime(date, '%H'))
     }
-    hourly_data = {'$inc': {feeling_key: 1, 'count': 1}}
+    hourly_data = {'$inc': inc_data}
     coll_hist.update(hourly_key, hourly_data, True)
 
 
-def insert_general(feeling, date):
+def insert_general(feeling, date, state, weather):
     feeling_key = 'feelings.' + feeling
+    inc_data = {feeling_key + '.count': 1, 'count': 1}
+    if state is not None:
+        inc_data[feeling_key + '.states.' + state] = 1
+    if weather is not None:
+        inc_data[feeling_key + '.weather.' + weather] = 1
+
     month_key = {
         'type': 'month',
         'month': int(datetime.strftime(date, '%m'))
     }
-    month_data = {'$inc': {feeling_key: 1, 'count': 1}}
+    month_data = {'$inc': inc_data}
     coll_general.update(month_key, month_data, True)
 
     weekday_key = {
         'type': 'weekday',
         'weekday': int(datetime.strftime(date, '%w'))
     }
-    weekday_data = {'$inc': {feeling_key: 1, 'count': 1}}
+    weekday_data = {'$inc': inc_data}
     coll_general.update(weekday_key, weekday_data, True)
 
     day_key = {
         'type': 'day',
         'day': int(datetime.strftime(date, '%d'))
     }
-    day_data = {'$inc': {feeling_key: 1, 'count': 1}}
+    day_data = {'$inc': inc_data}
     coll_general.update(day_key, day_data, True)
 
     hour_key = {
         'type': 'hour',
         'hour': int(datetime.strftime(date, '%H'))
     }
-    hour_data = {'$inc': {feeling_key: 1, 'count': 1}}
+    hour_data = {'$inc': inc_data}
     coll_general.update(hour_key, hour_data, True)
 
 
 if __name__ == '__main__':
+    states_dic = load_states_abbreviations('../crawler/states.txt')
     while(True):
         job = bs.reserve()
         job_object = literal_eval(job.body)
-        feelings = job_object[0]
-        date = datetime.strptime(job_object[1], '%Y-%m-%d %H:%M:%S')
+        feelings = job_object['feelings']
+        date = datetime.strptime(job_object['created_at'], '%Y-%m-%d %H:%M:%S')
+        state = None
+        if 'state' in job_object:
+            state = states_dic[job_object['state']]
+        weather = None
+        if 'weather' in job_object:
+            weather = job_object['weather']
+
         for feeling in feelings:
-            insert_history(feeling, date)
-            insert_general(feeling, date)
+            insert_history(feeling, date, state, weather)
+            insert_general(feeling, date, state, weather)
         job.delete()
-
-

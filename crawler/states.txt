@@ -9,6 +9,7 @@ Ceará;ce;0,170,169
 Distrito Federal;df;255,255,255
 ES;es;254,220,189
 Espírito Santo;es;254,220,189
+Federal District;df;255,255,255
 Goiás;go;162,28,80
 Maranhão;ma;130,0,79
 Mato Grosso do Sul;ms;0,173,104

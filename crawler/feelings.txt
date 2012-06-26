@@ -2,7 +2,6 @@ abençoado;a+be+n(s+|sc|ç|c)o+a+d;24,116,41
 alegre;a+l+e+gr;255,164,1
 amado;a+ma+d;243,1,114
 apaixonado;a*pa+i+(x+|ch)o+na+d;115,32,124
-bem;be+m+;255,127,0
 cansado;(c|k)a+n(s+|ç|sc|c)a+d;36,156,240
 carente;(c|k)a+re+nt;1,72,114
 chateado;(ch|x)at(i+|e)ad;61,74,123

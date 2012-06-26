@@ -21,7 +21,6 @@ auth.set_access_token(TOKEN_KEY, TOKEN_SECRET)
 
 collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_COLLECTION]
 beanstalk = beanstalkc.Connection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
-beanstalk.use(BEANSTALKD_TUBE)
 
 
 def check_full_query(query, text):
@@ -76,12 +75,15 @@ def insert_tweet(collection, status, feelings):
         tweet['location'] = structure_location(status.place)
     try:
         tweet_id = collection.insert(tweet)
+        beanstalk.use(BEANSTALKD_STATS_TUBE)
+        beanstalk.put(str((feelings, str(status.created_at + timedelta(seconds=-10800)))))
 
     except Exception, e:
         print >> sys.stderr, 'Encountered exception trying to insert tweet:', e
 
     if (status.author.location) and ('location' not in tweet):
         try:
+            beanstalk.use(BEANSTALKD_GEO_TUBE)
             beanstalk.put(str(tweet_id))
         except Exception, e:
             print >> sys.stderr, 'Encountered exception ' + \

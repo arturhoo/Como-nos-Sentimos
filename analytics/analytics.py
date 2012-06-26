@@ -98,6 +98,19 @@ def insert_general(feeling, date, state, weather):
     hour_data = {'$inc': inc_data}
     coll_general.update(hour_key, hour_data, True)
 
+    # Adding extra alltime data
+    if state is not None:
+        inc_data['states.' + state + '.count'] = 1
+        inc_data['states.' + state + '.feelings.' + feeling] = 1
+    if weather is not None:
+        inc_data['weather_conditions.' + weather + '.count'] = 1
+        inc_data['weather_conditions.' + weather + '.feelings.' + feeling] = 1
+    alltime_key = {
+        'type': 'alltime'
+    }
+    alltime_data = {'$inc': inc_data}
+    coll_general.update(alltime_key, alltime_data, True)
+
 
 if __name__ == '__main__':
     states_dic = load_states_abbreviations('../crawler/states.txt')

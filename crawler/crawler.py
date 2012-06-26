@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from tweepy import OAuthHandler, StreamListener
 from tweepy.streaming import Stream
 from sentiment_filter import identify_feelings

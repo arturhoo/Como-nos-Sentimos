@@ -19,7 +19,7 @@ geo_collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_GEO_COLLECTION]
 crawler_collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_CRAWLER_COLLECTION]
 beanstalk = beanstalkc.Connection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
 beanstalk.watch(BEANSTALKD_GEO_TUBE)
-beanstalk.use(BEANSTALKD_STATS_TUBE)
+beanstalk.use(BEANSTALKD_ANALYTICS_TUBE)
 beanstalk.ignore('default')
 
 

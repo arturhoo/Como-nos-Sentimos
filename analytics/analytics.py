@@ -10,8 +10,8 @@ try:
 except ImportError:
     sys.exit("No Crawler Local Settings found!")
 
-coll_hist = MongoConnection(host=MONGO_HOST)[MONGO_DB][MONGO_COLLECTION_STATS_HISTORY]
-coll_general = MongoConnection(host=MONGO_HOST)[MONGO_DB][MONGO_COLLECTION_STATS_GENERAL]
+coll_hist = MongoConnection(host=MONGO_HOST)[MONGO_DB][MONGO_COLLECTION_ANALYTICS_HISTORY]
+coll_general = MongoConnection(host=MONGO_HOST)[MONGO_DB][MONGO_COLLECTION_ANALYTICS_GENERAL]
 bs = BSConnection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
 bs.watch(BEANSTALKD_TUBE)
 bs.ignore('default')

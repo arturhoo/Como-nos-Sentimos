@@ -6,6 +6,7 @@ from pylibmc import Client
 from hashlib import md5
 from htmlentitydefs import name2codepoint
 from re import sub
+from web_analytics import last_hours_sparkline
 import locale
 
 
@@ -203,13 +204,15 @@ def hello():
         string_md5 = tweet_tuple[1]
 
     data_md5 = md5(string_md5).hexdigest()
+    sparkline_data = last_hours_sparkline(g.db)
     return render_template('test.html',
                            tweets=tweets,
                            feelings=feelings,
                            weather_translations=sorted(weather_translations.items()),
                            states=sorted(states),
                            states_unique=sorted(states_unique),
-                           data_md5=data_md5)
+                           data_md5=data_md5,
+                           sparkline_data=sparkline_data)
 
 if __name__ == "__main__":
     app.run()
@@ -219,7 +222,7 @@ if __name__ == "__main__":
 def before_request():
     g.conn = Connection(MONGO_HOST)
     g.db = g.conn[MONGO_DB]
-    g.coll = g.db[MONGO_COLLECTION]
+    g.coll = g.db[MONGO_COLLECTION_TWEETS]
 
 
 @app.teardown_request

@@ -19,11 +19,14 @@ def last_hours_sparkline(mongo_db):
         }
     and the objective is to give coordinates for a charting library
     """
-
-    results = mongo_db[MONGO_COLLECTION_ANALYTICS_HISTORY].find({'type': 'hourly'},
-                    {'count': 1, 'hour': 1},
-                    sort=[('hour', -1), ('day', -1)],
-                    limit=24)
+    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_HISTORY]
+    results = coll.find({'type': 'hourly'},
+                        {'count': 1, 'hour': 1},
+                        sort=[('year', -1),
+                              ('month', -1),
+                              ('day', -1),
+                              ('hour', -1)],
+                        limit=24)
     l = []
     for item in results:
         l.append(item['count'])

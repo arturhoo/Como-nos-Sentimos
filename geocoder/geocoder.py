@@ -107,7 +107,6 @@ if __name__ == '__main__':
         user_location = item['author']['location']
         search_db_result = search_db(user_location)
         if search_db_result:
-            # print 'Hit DB: ' + user_location
             if 'miss' in search_db_result:
                 job.delete()
                 continue
@@ -118,7 +117,6 @@ if __name__ == '__main__':
         else:
             result_dic = search_geocoder(user_location)
             if result_dic:
-                # print 'Hit GEO: ' + user_location
                 insert_into_db_hit(user_location, result_dic)
                 crawler_collection.update({'_id': int(job.body)},
                                           {'$set': {'location': result_dic}})
@@ -145,6 +143,3 @@ if __name__ == '__main__':
 
         job.delete()
         beanstalk.put(str(analytics_dic))
-
-
-

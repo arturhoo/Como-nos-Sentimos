@@ -20,7 +20,6 @@ auth.set_access_token(TOKEN_KEY, TOKEN_SECRET)
 
 collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_COLLECTION]
 beanstalk = beanstalkc.Connection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
-beanstalk.use(BEANSTALKD_GEO_TUBE)
 
 
 def check_full_query(query, text):
@@ -79,12 +78,25 @@ def insert_tweet(collection, status, feelings):
     except Exception, e:
         print >> sys.stderr, 'Encountered exception trying to insert tweet:', e
 
+    # If it is not geotagged but has the user location field
     if (status.author.location) and ('location' not in tweet):
         try:
+            beanstalk.use(BEANSTALKD_GEO_TUBE)
             beanstalk.put(str(tweet_id))
         except Exception, e:
             print >> sys.stderr, 'Encountered exception ' + \
                                  'trying to insert job:', e
+    # If it is geotagged or has no location information at all
+    else:
+        analytics_dic = {
+            'feelings': feelings,
+            'created_at': str(tweet['created_at'] + timedelta(seconds=-10800))
+        }
+        # If it is geotagged
+        if 'location' in tweet:
+            analytics_dic['state'] = tweet['location']['state']
+        beanstalk.use(BEANSTALKD_ANALYTICS_TUBE)
+        beanstalk.put(str(analytics_dic))
 
 
 class CustomStreamListener(StreamListener):

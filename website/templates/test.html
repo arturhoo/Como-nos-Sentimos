@@ -293,8 +293,8 @@
         };
         // Apply the theme
         var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
-        var chart_sparkline = sparkline({{ sparkline_data }}, 'sparkline');
         makeTheLink();
+        var chart_sparkline = setTimeout(function() { sparkline({{ sparkline_data }}, 'sparkline')}, 1200);
       }
 
       // initialLoad is used to load initial functions

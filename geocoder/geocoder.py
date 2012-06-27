@@ -109,6 +109,7 @@ if __name__ == '__main__':
         if search_db_result:
             if 'miss' in search_db_result:
                 job.delete()
+                beanstalk.put(str(analytics_dic))
                 continue
             else:
                 crawler_collection.update({'_id': int(job.body)},

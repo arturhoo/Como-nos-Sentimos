@@ -26,7 +26,7 @@ def last_hours_sparkline(mongo_db):
                               ('month', -1),
                               ('day', -1),
                               ('hour', -1)],
-                        limit=24)
+                        limit=48)
     l = []
     for item in results:
         l.append(item['count'])

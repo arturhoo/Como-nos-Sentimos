@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, g, request
 from pymongo import Connection
-from datetime import timedelta
 from pylibmc import Client
 from hashlib import md5
-from htmlentitydefs import name2codepoint
-from re import sub
 from web_analytics import last_hours_sparkline
+from tweet import tweet_from_dict_to_object
 import locale
 
 
@@ -22,97 +20,12 @@ mc = Client(["127.0.0.1"], binary=True, behaviors={"tcp_nodelay": True,
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
 
 
-class Author(object):
-    def __init__(self, screen_name):
-        self.screen_name = screen_name
-
-
-class Location(object):
-    def __init__(self, state):
-        self.state = state
-
-
-class Tweet(object):
-    def __init__(self, tid, author, text, created_at, created_at_bsb, \
-                 created_at_local, feelings):
-        self.id = tid
-        self.author = author
-        self.text = text
-        self.created_at = created_at
-        self.created_at_bsb = created_at_bsb
-        self.created_at_local = created_at_local
-        self.feelings = feelings
-
-
-def unescape(text):
-    def fixup(m):
-        text = m.group(0)
-        if text[:2] == "&#":
-            # character reference
-            try:
-                if text[:3] == "&#x":
-                    return unichr(int(text[3:-1], 16))
-                else:
-                    return unichr(int(text[2:-1]))
-            except ValueError:
-                pass
-        else:
-            # named entity
-            try:
-                text = unichr(name2codepoint[text[1:-1]])
-            except KeyError:
-                pass
-        return text  # leave as is
-    return sub("&#?\w+;", fixup, text)
-
-
-def prepareStringForJavaScript(string):
-    new_string = string.replace('\n', '')
-    new_string = new_string.replace('\\', '\\\\')
-    new_string = unescape(new_string)
-    return new_string
-
-
-def tweetFromDictToObject(tweet):
-    author = Author(tweet['author']['screen_name'])
-    if 'name' in tweet['author']:
-        author.name = prepareStringForJavaScript(tweet['author']['name'])
-    if 'location' in tweet['author']:
-        author.location = prepareStringForJavaScript(tweet['author']['location'])
-
-    location = None
-    if 'location' in tweet and tweet['location'] != None:
-        try:
-            location = Location(tweet['location']['state'])
-            if 'city' in tweet['location']:
-                location.city = tweet['location']['city']
-                if 'weather' in tweet['location']:
-                    location.weather = tweet['location']['weather']['condition']
-
-        except TypeError, e:
-            print tweet['location']
-            print >> sys.stderr, e
-
-    new_tweet = Tweet(tweet['_id'],
-                      author,
-                      prepareStringForJavaScript(tweet['text']),
-                      tweet['created_at'],
-                      tweet['created_at'] + timedelta(seconds=-10800),
-                      tweet['created_at_local'],
-                      tweet['feelings'])
-
-    if location is not None:
-        new_tweet.location = location
-
-    return new_tweet
-
-
 def tweet_list_from_cursor(db_tweets):
     tweets = []
     string_md5 = ''
     for db_tweet in db_tweets:
         string_md5 += str(db_tweet['_id'])
-        tweets.append(tweetFromDictToObject(db_tweet))
+        tweets.append(tweet_from_dict_to_object(db_tweet))
     return (tweets, string_md5)
 
 

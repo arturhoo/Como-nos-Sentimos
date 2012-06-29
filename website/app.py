@@ -18,6 +18,8 @@ app.debug = True
 mc = Client(["127.0.0.1"], binary=True, behaviors={"tcp_nodelay": True,
                                                    "ketama": True})
 locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
+db = Connection(MONGO_HOST)[MONGO_DB]
+coll = db[MONGO_COLLECTION_TWEETS]
 
 
 def tweet_list_from_cursor(db_tweets):
@@ -87,7 +89,7 @@ def hello():
         feelings_query_list = []
         for feeling in request.args.getlist('selected-feelings'):
             feelings_query_list.append({'feelings': feeling})
-        db_tweets = g.coll.find({'$or': feelings_query_list,
+        db_tweets = coll.find({'$or': feelings_query_list,
                                 'feelings_size': 1}, \
                                 sort=[('created_at', -1)], \
                                 limit=limit)
@@ -100,7 +102,7 @@ def hello():
         for state in request.args.getlist('selected-states'):
             state_full_name = states_unique[[x[0] for x in states_unique].index(state)][1]
             states_query_list.append({'location.state': state_full_name})
-        db_tweets = g.coll.find({'$or': states_query_list}, \
+        db_tweets = coll.find({'$or': states_query_list}, \
                                 sort=[('created_at', -1)], \
                                 limit=limit)
         tweet_tuple = tweet_list_from_cursor(db_tweets)
@@ -110,14 +112,14 @@ def hello():
     else:
         tweet_tuple = mc.get('no_kw')
         if not tweet_tuple:
-            db_tweets = g.coll.find(sort=[('created_at', -1)], limit=limit)
+            db_tweets = coll.find(sort=[('created_at', -1)], limit=limit)
             tweet_tuple = tweet_list_from_cursor(db_tweets)
-            mc.set('no_kw', tweet_tuple, 2)
+            mc.set('no_kw', tweet_tuple, 5)
         tweets = tweet_tuple[0]
         string_md5 = tweet_tuple[1]
 
     data_md5 = md5(string_md5).hexdigest()
-    sparkline_data = last_hours_sparkline(g.db)
+    sparkline_data = last_hours_sparkline(db)
     return render_template('test.html',
                            tweets=tweets,
                            feelings=feelings,
@@ -129,15 +131,3 @@ def hello():
 
 if __name__ == "__main__":
     app.run()
-
-
-@app.before_request
-def before_request():
-    g.conn = Connection(MONGO_HOST)
-    g.db = g.conn[MONGO_DB]
-    g.coll = g.db[MONGO_COLLECTION_TWEETS]
-
-
-@app.teardown_request
-def teardown_request(exception):
-    g.conn.disconnect()

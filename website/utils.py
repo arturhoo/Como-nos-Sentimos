@@ -10,7 +10,6 @@ def unescape(text):
     Author: Fredrik Lundh
     Source: http://effbot.org/zone/re-sub.htm#unescape-html
     '''
-
     def fixup(m):
         text = m.group(0)
         if text[:2] == "&#":

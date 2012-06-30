@@ -82,14 +82,14 @@
       <div>
         <form action="{{url_for('hello')}}" method="get">
           <div style="display: inline-block;">
-            <select name="selected-feelings" data-placeholder="Escolha sentimentos..." class="chzn-select" multiple style="width: 350px; " tabindex="4">
+            <select name="feeling" data-placeholder="Escolha sentimentos..." class="chzn-select" multiple style="width: 350px; " tabindex="4">
               {% for feeling in feelings %}
                 <option value="{{ feeling[0] }}">{{ feeling[0] }}</option>;
               {% endfor %}
             </select>
           </div>
           <div style="float: right;">
-            <select name="selected-states" data-placeholder="Escolha estados..." class="chzn-select" multiple style="width: 350px; " tabindex="4">
+            <select name="state" data-placeholder="Escolha estados..." class="chzn-select" multiple style="width: 350px; " tabindex="4">
               {% for state in states_unique %}
                 <option value="{{ state[0] }}">{{ state[1] }}</option>;
               {% endfor %}

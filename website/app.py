@@ -106,8 +106,9 @@ def hello():
 
     last_hour_top_feelings = get_last_hour_top_feelings(db)
     feelings_percentages_last_hours = []
-    for feeling in last_hour_top_feelings[:6]:
+    for feeling in last_hour_top_feelings[:5]:
         feelings_percentages_last_hours.append((feeling, get_feeling_percentage_last_hours(db, feeling)))
+    feelings_percentages_last_hours.append(('sono', get_feeling_percentage_last_hours(db, 'sono')))
     return render_template('test.html',
                            tweets=tweets,
                            feelings=feelings,

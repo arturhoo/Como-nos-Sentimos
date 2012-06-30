@@ -71,7 +71,8 @@ def insert_tweet(collection, status, feelings):
     if status.author.location:
         tweet['author']['location'] = status.author.location
     if status.place and status.place['full_name']:
-        tweet['location'] = structure_location(status.place)
+        if status.place['country_code'] == u'BR':
+            tweet['location'] = structure_location(status.place)
     try:
         tweet_id = collection.insert(tweet)
 

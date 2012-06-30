@@ -105,3 +105,58 @@ function cf_feelings_percentages_for_state(categories, dataset, state, container
         }]
     });
 }
+
+function cf_feelings_percentages_last_hours(categories, dataset, names, container) {
+    var new_series = [];
+    console.log(categories);
+    console.log(names);
+    console.log(dataset);
+    for(var i=0; i<names.length; i++) {
+        new_series.push({name: names[i], data: dataset[i]});
+    }
+    console.log(new_series);
+    return new Highcharts.Chart({
+        chart: {
+            renderTo: container,
+            type: 'spline'
+        },
+        title: {
+            text: 'Sentimentos mais frequentes nas últimas 24 horas',
+            x: -20 //center
+        },
+        credits:{
+            enabled:false
+        },
+        xAxis: {
+            categories: categories,
+            enabled: true,
+            text: 'Hora do dia'
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: null
+            },
+            labels: {
+                formatter: function() {
+                    return this.value + ' %';
+                }
+            }
+        },
+        tooltip: {
+            formatter: function() {
+                    return '<b>'+ this.series.name +'</b><br/>'+
+                        this.x +'h: '+ Math.round(this.y*10)/10 +'%';
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -10,
+            y: 100,
+            borderWidth: 0
+        },
+        series: new_series
+    });
+}

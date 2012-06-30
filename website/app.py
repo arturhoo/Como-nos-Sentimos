@@ -4,7 +4,9 @@ from pymongo import Connection
 from pylibmc import Client
 from hashlib import md5
 from web_analytics import last_hours_sparkline, \
-                          get_feelings_percentages_for_state
+                          get_feelings_percentages_for_state, \
+                          get_last_hour_top_feelings, \
+                          get_feeling_percentage_last_hours
 from tweet import tweet_from_dict_to_object
 from filters import request_args_filter
 import locale
@@ -101,10 +103,11 @@ def hello():
     if 'state' in request.args:
         for state in request.args.getlist('state'):
             feelings_percentages_for_states[state] = get_feelings_percentages_for_state(db, state)
-    # feelings_percentages_for_states = {
-    #     'mg': get_feelings_percentages_for_state(db, 'mg'),
-    #     'sp': get_feelings_percentages_for_state(db, 'sp')
-    # }
+
+    last_hour_top_feelings = get_last_hour_top_feelings(db)
+    feelings_percentages_last_hours = []
+    for feeling in last_hour_top_feelings[:6]:
+        feelings_percentages_last_hours.append((feeling, get_feeling_percentage_last_hours(db, feeling)))
     return render_template('test.html',
                            tweets=tweets,
                            feelings=feelings,
@@ -113,7 +116,8 @@ def hello():
                            states_unique=sorted(states_unique),
                            data_md5=data_md5,
                            sparkline_data=sparkline_data,
-                           feelings_percentages_for_states=feelings_percentages_for_states)
+                           feelings_percentages_for_states=feelings_percentages_for_states,
+                           feelings_percentages_last_hours=feelings_percentages_last_hours)
 
 if __name__ == "__main__":
     app.run()

@@ -7,11 +7,8 @@ except ImportError:
     sys.exit("No Flask Local Settings found!")
 
 
-def last_hours_sparkline(mongo_db):
-    """executes a mongo query of the form:
-        db.stats_history01
-            .find({type: 'hourly'}, {hour: 1, count: 1})
-            .sort({'hour': -1, 'day': -1})
+def last_hours_sparkline(mongo_db, hours=48):
+    """executes a mongo query of the form and
     receives a series of documents of the form:
         {
             "_id" : ObjectId("4fe92b2b31f6b91c918577f5"),
@@ -27,13 +24,67 @@ def last_hours_sparkline(mongo_db):
                               ('month', -1),
                               ('day', -1),
                               ('hour', -1)],
-                        limit=48)
+                        limit=hours)
     l = []
     for item in results:
         l.append(item['count'])
     del l[0]
     l.reverse()
     return l
+
+
+def get_last_hour_top_feelings(mongo_db):
+    """queries the db for the top feelings in the last hour
+    this information can be used to get the most relevant feelings for example
+    returned list example:
+
+        [u'feliz', u'saudade', u'triste', (...) u'realizado', u'est\xfapido']
+    """
+    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_HISTORY]
+    results = coll.find({'type': 'hourly'},
+                        {'feelings': 1},
+                        sort=[('year', -1),
+                              ('month', -1),
+                              ('day', -1),
+                              ('hour', -1)],
+                        limit=2)
+    result_dic = results[1]['feelings']
+    result_sorted = sorted(result_dic.iteritems(),
+                           key=lambda x: x[1]['count'],
+                           reverse=True)
+    last_hour_top_feelings_list = [item[0] for item in result_sorted]
+    return last_hour_top_feelings_list
+
+
+def get_feeling_percentage_last_hours(mongo_db, feeling, hours=24):
+    """returns the percetange of a given feeling, in the total of the feelings
+    identified, in the last hours. The percentage for the current hour is
+    not considered.
+    returned list example:
+        [(12, 0.07079646017699115),
+         (13, 0.0720679714762555),
+         (14, 0.06841011430550745)]
+    """
+    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_HISTORY]
+    results = coll.find({'type': 'hourly'},
+                        {'feelings.' + feeling: 1,
+                         'hour': 1,
+                         'count': 1},
+                        sort=[('year', -1),
+                              ('month', -1),
+                              ('day', -1),
+                              ('hour', -1)],
+                        limit=hours)
+    feeling_percentage_list = []
+    for result in results:
+        hour = result['hour']
+        total = result['count']
+        feeling_count = result['feelings'][feeling]['count']
+        feeling_percentage_list.append((hour,
+                                        float(feeling_count / float(total) * 100.0)))
+    del feeling_percentage_list[0]
+    feeling_percentage_list.reverse()
+    return feeling_percentage_list
 
 
 def get_feelings_percentages_for_state(mongo_db, state, num_feelings=10):

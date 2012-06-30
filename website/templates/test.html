@@ -94,6 +94,8 @@
 
       <div style="height: 50px;"></div>
 
+      <div id="feelings_chart" style="float: middle; width: 800px; height: 250px;"></div>
+
       <div id="states_charts" style="float: middle;"></div>
 
       <div style="height: 50px;"></div>
@@ -171,6 +173,29 @@
             var state_chart = cf_feelings_percentages_for_state(categories, dataset, getStateFromAbbreviation(state), chart_id);
           }
         }
+        ///
+        var feelings_percentages_last_hours = {{ feelings_percentages_last_hours|tojson|safe }}
+        var dataset = [];
+        var names = [];
+        var categories = [];
+        for(var i=0; i<feelings_percentages_last_hours.length; i++) {
+          entry = feelings_percentages_last_hours[i];
+          if(i==0) {
+            for(var j=0; j<entry[1].length; j++) {
+              hours = entry[1][j];
+              categories.push(hours[0]);
+            }
+          }
+          names.push(entry[0]);
+          data_entry = []
+          for(var j=0; j<entry[1].length; j++) {
+            data = entry[1][j]
+            data_entry.push(data[1]);
+          }
+          dataset.push(data_entry);
+        }
+        var feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, 'feelings_chart');
+        ///
       }
 
       // This method is used to load initial functions

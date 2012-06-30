@@ -46,11 +46,11 @@ a:active {text-decoration: underline; color:inherit}
 
 .screen_nameLink a:hover {text-decoration: none;}
 
-.boxShadow {
+/*.boxShadow {
   -moz-box-shadow: 0 0 15px #8B8B8B;
   -webkit-box-shadow: 0 0 15px #8B8B8B;
   box-shadow: 0 0 15px #8B8B8B;
-}
+}*/
 
 .centered-content {
   max-width: 800px;

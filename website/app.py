@@ -3,7 +3,8 @@ from flask import Flask, render_template, request
 from pymongo import Connection
 from pylibmc import Client
 from hashlib import md5
-from web_analytics import last_hours_sparkline
+from web_analytics import last_hours_sparkline, \
+                          get_feelings_percentages_for_state
 from tweet import tweet_from_dict_to_object
 from filters import request_args_filter
 import locale
@@ -96,6 +97,14 @@ def hello():
 
     data_md5 = md5(string_md5).hexdigest()
     sparkline_data = last_hours_sparkline(db)
+    feelings_percentages_for_states = {}
+    if 'state' in request.args:
+        for state in request.args.getlist('state'):
+            feelings_percentages_for_states[state] = get_feelings_percentages_for_state(db, state)
+    # feelings_percentages_for_states = {
+    #     'mg': get_feelings_percentages_for_state(db, 'mg'),
+    #     'sp': get_feelings_percentages_for_state(db, 'sp')
+    # }
     return render_template('test.html',
                            tweets=tweets,
                            feelings=feelings,
@@ -103,7 +112,8 @@ def hello():
                            states=sorted(states),
                            states_unique=sorted(states_unique),
                            data_md5=data_md5,
-                           sparkline_data=sparkline_data)
+                           sparkline_data=sparkline_data,
+                           feelings_percentages_for_states=feelings_percentages_for_states)
 
 if __name__ == "__main__":
     app.run()

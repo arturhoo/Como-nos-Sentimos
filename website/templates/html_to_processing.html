@@ -1,0 +1,141 @@
+<script type="text/javascript">
+  function loadTweets() {
+    var pjs = Processing.instances[0];
+    {% for tweet in tweets %}
+      var author = new pjs.Author();
+      author.screen_name = "{{ tweet.author.screen_name }}";
+      {% if tweet.author.name %}
+        author.name = "{{ tweet.author.name }}";
+      {% endif %}
+
+      {% if tweet.author.location %}
+        author.location = "{{ tweet.author.location }}";
+      {% endif %}
+
+      var location = undefined;
+      {% if tweet.location %}
+        var tempLocation = new pjs.Location();
+        tempLocation.state = "{{ tweet.location.state }}";
+        {% if tweet.location.city %}
+          tempLocation.city = "{{ tweet.location.city }}";
+        {% endif %}
+        {% if tweet.location.weather %}
+          tempLocation.weather = "{{ tweet.location.weather }}"
+        {% endif %}
+        location = tempLocation;
+      {% endif %}
+
+      var pTweet = new pjs.Tweet();
+      pTweet.id = "{{ tweet.id }}";
+      pTweet.textString = "{{ tweet.text }}";
+      pTweet.feelings = [];
+      pTweet.created_at = "às " + "{{ tweet.created_at.strftime('%H:%M do dia %d/%m') }}";
+      pTweet.created_at_bsb = "às " + "{{ tweet.created_at_bsb.strftime('%H:%M do dia %d/%m') }}";
+      pTweet.created_at_local = "às " + "{{ tweet.created_at_local.strftime('%H:%M do dia %d/%m') }}";
+      {% for feeling in tweet.feelings %}
+        pTweet.feelings.push("{{ feeling }}");
+      {% endfor %}
+      pTweet.author = author;
+      if(location != undefined)
+        pTweet.location = location;
+      pjs.addTweet(pTweet);
+    {% endfor %}
+  }
+
+  function loadFeelings() {
+    {% for feeling in feelings %}
+      var textString = "{{ feeling[0] }}";
+      var frgb = "{{ feeling[1] }}";
+      frgb = frgb.split(',');
+      for (var i = frgb.length - 1; i >= 0; i--) {
+        frgb[i] = parseInt(frgb[i]);
+      }
+      var pFeeling = new pjs.Feeling(textString, frgb);
+      pjs.addFeeling(pFeeling);
+    {% endfor %}
+  }
+
+  function loadWeatherTranslations() {
+    {% for translation in weather_translations %}
+      var condition = "{{ translation[0] }}";
+      var translation = "{{ translation[1] }}";
+      var pWeather = new pjs.Weather(condition, translation);
+      pjs.addWeather(pWeather);
+    {% endfor %}
+  }
+
+  function loadStates() {
+    {% for state in states %}
+      var textString = "{{ state[1] }}";
+      var abbreviation = "{{ state[0] }}";
+      var srgb = "{{ state[2] }}";
+      srgb = srgb.split(',');
+      for (var i = srgb.length - 1; i >= 0; i--) {
+        srgb[i] = parseInt(srgb[i]);
+      }
+      var pState = new pjs.State(textString, abbreviation, srgb);
+      pjs.addState(pState);
+    {% endfor %}
+  }
+
+  function setFeelingsView() {
+    pjs.setFeelingsView();
+  }
+
+  function setMadnessView() {
+    pjs.setMadnessView();
+  }
+
+  function setStatesView() {
+    pjs.setStatesView();
+  }
+
+  function setMapView() {
+    pjs.setMapView();
+  }
+
+  function pjsPostInitialLoading() {
+    pjs.postInitialLoading();
+    // pjs.mouseOut();
+  }
+
+  function pjsPostImagesLoading() {
+    pjsLoadQuestionMarkPixels();
+    pjsLoadCountryMapPixels();
+    pjsSetParticlesLocs();
+  }
+
+  function pjsLoadQuestionMarkPixels() {
+    var pjsQuestionMarkImageWidth = pjs.getQuestionMarkImageWidth();
+    if(pjsQuestionMarkImageWidth == 0) {
+      setTimeout(pjsLoadQuestionMarkPixels, 400);
+    } else {
+      pjs.loadQuestionMarkPixels();
+    }
+  }
+
+  function pjsLoadCountryMapPixels() {
+    var pjsCountryMapImageWidth = pjs.getCountryMapImageWidth();
+    if(pjsCountryMapImageWidth == 0) {
+      setTimeout(pjsLoadCountryMapPixels, 400);
+    } else {
+      var stateListSize = pjs.getStateListSize();
+      for (var i=0; i<stateListSize; i++) {
+        setTimeout((function(x) {
+          return function() {
+            countryStatesLoaded += pjs.loadCountryMapPixels(x);
+          }
+        })(i), 0);
+      }
+    }
+  }
+
+  function pjsSetParticlesLocs() {
+    var stateListSize = pjs.getStateListSize();
+    if(countryStatesLoaded != stateListSize) {
+      setTimeout(pjsSetParticlesLocs, 400);
+    } else {
+      pjs.setParticlesLocs();
+    }
+  }
+</script>

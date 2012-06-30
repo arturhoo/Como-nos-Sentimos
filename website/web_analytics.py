@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from operator import itemgetter
 
 try:
     from local_settings import *
@@ -33,3 +34,19 @@ def last_hours_sparkline(mongo_db):
     del l[0]
     l.reverse()
     return l
+
+
+def get_feelings_percentages_for_state(mongo_db, state, num_feelings=10):
+    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_GENERAL]
+    result = coll.find_one({'type': 'alltime'},
+                            {'states.' + state: 1})
+    total = result['states'][state]['count']
+    feelings_count = result['states'][state]['feelings']
+    # Sort the dict by value, the result is a list of tuples
+    feelings_count = sorted(feelings_count.iteritems(),
+                            key=itemgetter(1),
+                            reverse=True)
+    feelings_percentage = [(feeling, float(count / float(total) * 100.0)) \
+                           for (feeling, count) \
+                           in feelings_count]
+    return feelings_percentage[:num_feelings]

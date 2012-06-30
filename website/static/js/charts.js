@@ -1,4 +1,4 @@
-function sparkline(dataset, container) {
+function cf_sparkline(dataset, container) {
     return new Highcharts.Chart({
         chart: {
             renderTo: container,
@@ -53,6 +53,54 @@ function sparkline(dataset, container) {
         series: [{
             color:'#4A4A4A',
             fillColor:'rgba(150, 150, 150,.25)',
+            data: dataset
+        }]
+    });
+}
+
+function cf_feelings_percentages_for_state(categories, dataset, state, container) {
+    return new Highcharts.Chart({
+        chart: {
+            renderTo: container,
+            type: 'column'
+        },
+        title: {
+            text: 'Sentimentos de ' + state
+        },
+        credits:{
+            enabled:false
+        },
+        xAxis: {
+            categories: categories,
+            enabled: false
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: null
+            },
+            labels: {
+                formatter: function() {
+                    return this.value + ' %';
+                }
+            }
+
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            formatter: function() {
+                return this.x +': '+ Math.round(this.y*10)/10 +'%';
+            }
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+            series: [{
             data: dataset
         }]
     });

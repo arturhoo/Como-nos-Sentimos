@@ -36,7 +36,6 @@
 
     <a href="https://github.com/arturhoo/Como-nos-Sentimos"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
-    <!-- <div style="height: 30px"></div> -->
     <div class="centered-content">
       <div id="tweet">
         <div id="tweetMeta" class="boxShadow">
@@ -66,19 +65,6 @@
         <br> <br>
       </div>
 
-      <!-- If JSON was used -->
-      <div id="fromProcessing">
-        <script type="text/javascript">
-          // var my_json;
-          // $.getJSON("http://cns.com/read_api/api/v1/tweets/", function(json) {
-          //   my_json = json;
-          //   for (var i in my_json.tweets) {
-          //     $("#fromProcessing").append(my_json.tweets[i].text + "<br>");
-          //   }
-          // });
-        </script>
-      </div>
-
       <div>
         <form action="{{url_for('hello')}}" method="get">
           <div style="display: inline-block;">
@@ -106,7 +92,11 @@
         </form>
       </div>
 
-      <div style="height: 300px;"></div>
+      <div style="height: 50px;"></div>
+
+      <div id="states_charts" style="float: middle;"></div>
+
+      <div style="height: 50px;"></div>
 
     </div>
 
@@ -116,148 +106,7 @@
       </div>
     </footer>
 
-    <!-- HTML to Processing -->
-    <script type="text/javascript">
-      function loadTweets() {
-        var pjs = Processing.instances[0];
-        {% for tweet in tweets %}
-          var author = new pjs.Author();
-          author.screen_name = "{{ tweet.author.screen_name }}";
-          {% if tweet.author.name %}
-            author.name = "{{ tweet.author.name }}";
-          {% endif %}
-
-          {% if tweet.author.location %}
-            author.location = "{{ tweet.author.location }}";
-          {% endif %}
-
-          var location = undefined;
-          {% if tweet.location %}
-            var tempLocation = new pjs.Location();
-            tempLocation.state = "{{ tweet.location.state }}";
-            {% if tweet.location.city %}
-              tempLocation.city = "{{ tweet.location.city }}";
-            {% endif %}
-            {% if tweet.location.weather %}
-              tempLocation.weather = "{{ tweet.location.weather }}"
-            {% endif %}
-            location = tempLocation;
-          {% endif %}
-
-          var pTweet = new pjs.Tweet();
-          pTweet.id = "{{ tweet.id }}";
-          pTweet.textString = "{{ tweet.text }}";
-          pTweet.feelings = [];
-          pTweet.created_at = "às " + "{{ tweet.created_at.strftime('%H:%M do dia %d/%m') }}";
-          pTweet.created_at_bsb = "às " + "{{ tweet.created_at_bsb.strftime('%H:%M do dia %d/%m') }}";
-          pTweet.created_at_local = "às " + "{{ tweet.created_at_local.strftime('%H:%M do dia %d/%m') }}";
-          {% for feeling in tweet.feelings %}
-            pTweet.feelings.push("{{ feeling }}");
-          {% endfor %}
-          pTweet.author = author;
-          if(location != undefined)
-            pTweet.location = location;
-          pjs.addTweet(pTweet);
-        {% endfor %}
-      }
-
-      function loadFeelings() {
-        {% for feeling in feelings %}
-          var textString = "{{ feeling[0] }}";
-          var frgb = "{{ feeling[1] }}";
-          frgb = frgb.split(',');
-          for (var i = frgb.length - 1; i >= 0; i--) {
-            frgb[i] = parseInt(frgb[i]);
-          }
-          var pFeeling = new pjs.Feeling(textString, frgb);
-          pjs.addFeeling(pFeeling);
-        {% endfor %}
-      }
-
-      function loadWeatherTranslations() {
-        {% for translation in weather_translations %}
-          var condition = "{{ translation[0] }}";
-          var translation = "{{ translation[1] }}";
-          var pWeather = new pjs.Weather(condition, translation);
-          pjs.addWeather(pWeather);
-        {% endfor %}
-      }
-
-      function loadStates() {
-        {% for state in states %}
-          var textString = "{{ state[1] }}";
-          var abbreviation = "{{ state[0] }}";
-          var srgb = "{{ state[2] }}";
-          srgb = srgb.split(',');
-          for (var i = srgb.length - 1; i >= 0; i--) {
-            srgb[i] = parseInt(srgb[i]);
-          }
-          var pState = new pjs.State(textString, abbreviation, srgb);
-          pjs.addState(pState);
-        {% endfor %}
-      }
-
-      function setFeelingsView() {
-        pjs.setFeelingsView();
-      }
-
-      function setMadnessView() {
-        pjs.setMadnessView();
-      }
-
-      function setStatesView() {
-        pjs.setStatesView();
-      }
-
-      function setMapView() {
-        pjs.setMapView();
-      }
-
-      function pjsPostInitialLoading() {
-        pjs.postInitialLoading();
-        // pjs.mouseOut();
-      }
-
-      function pjsPostImagesLoading() {
-        pjsLoadQuestionMarkPixels();
-        pjsLoadCountryMapPixels();
-        pjsSetParticlesLocs();
-      }
-
-      function pjsLoadQuestionMarkPixels() {
-        var pjsQuestionMarkImageWidth = pjs.getQuestionMarkImageWidth();
-        if(pjsQuestionMarkImageWidth == 0) {
-          setTimeout(pjsLoadQuestionMarkPixels, 400);
-        } else {
-          pjs.loadQuestionMarkPixels();
-        }
-      }
-
-      function pjsLoadCountryMapPixels() {
-        var pjsCountryMapImageWidth = pjs.getCountryMapImageWidth();
-        if(pjsCountryMapImageWidth == 0) {
-          setTimeout(pjsLoadCountryMapPixels, 400);
-        } else {
-          var stateListSize = pjs.getStateListSize();
-          for (var i=0; i<stateListSize; i++) {
-            setTimeout((function(x) {
-              return function() {
-                countryStatesLoaded += pjs.loadCountryMapPixels(x);
-              }
-            })(i), 0);
-          }
-        }
-      }
-
-      function pjsSetParticlesLocs() {
-        var stateListSize = pjs.getStateListSize();
-        if(countryStatesLoaded != stateListSize) {
-          setTimeout(pjsSetParticlesLocs, 400);
-        } else {
-          pjs.setParticlesLocs();
-        }
-      }
-    </script>
+    {% include 'html_to_processing.html' %}
 
     <!-- Processing to HTML -->
     <script type="text/javascript">
@@ -292,6 +141,8 @@
       // GLOBAL variables
       var pjs = undefined;
       var countryStatesLoaded = 0;
+      var feelings_percentages_for_states = {{feelings_percentages_for_states|tojson|safe}};
+
       window.onload = function() {
         Highcharts.theme = {
            chart: {
@@ -301,10 +152,28 @@
         // Apply the theme
         var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
         makeTheLink();
-        var chart_sparkline = setTimeout(function() { sparkline({{ sparkline_data }}, 'sparkline')}, 1200);
+        var chart_sparkline = setTimeout(function() { cf_sparkline({{ sparkline_data }}, 'sparkline')}, 1200);
+
+        for(var state in feelings_percentages_for_states) {
+          if(feelings_percentages_for_states.hasOwnProperty(state)) {
+            var fpfs = feelings_percentages_for_states[state];
+            var categories = [];
+            var dataset = [];
+            for(var i=0; i<fpfs.length; i++) {
+              categories.push(fpfs[i][0]);
+              dataset.push(fpfs[i][1]);
+            }
+            var chart_id = 'states_charts_' + state;
+            $('<div/>', {
+              id: chart_id,
+              style: 'width: 800px; height:250px;'
+            }).appendTo('#states_charts');
+            var state_chart = cf_feelings_percentages_for_state(categories, dataset, getStateFromAbbreviation(state), chart_id);
+          }
+        }
       }
 
-      // initialLoad is used to load initial functions
+      // This method is used to load initial functions
       function initialLoad() {
         if(pjs == undefined) {
           setTimeout(initialLoad, 400);
@@ -335,6 +204,14 @@
             setTimeout(makeTheLink, 200);
           }
         }
+      }
+
+      function getStateFromAbbreviation(abbreviation) {
+        var states = {}
+        {% for state in states_unique %}
+          states['{{state[0]}}'] = '{{state[1]}}';
+        {% endfor %}
+        return states[abbreviation];
       }
     </script>
     <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>

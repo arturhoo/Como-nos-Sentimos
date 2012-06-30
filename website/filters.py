@@ -19,7 +19,10 @@ def states_filter(args, states_unique):
 def request_args_filter(request_args, feelings, states_unique):
     query_dict = {}
     if 'selected-feelings' in request_args:
-        query_dict['feelings'] = {'$in': feelings_filter(request_args, feelings)}
+        query_dict['feelings'] = {
+            '$in': feelings_filter(request_args, feelings)
+        }
+        query_dict['feelings_size'] = 1
     if 'selected-states' in request_args:
         query_dict['location.state'] = {'$in': states_filter(request_args, states_unique)}
     return query_dict

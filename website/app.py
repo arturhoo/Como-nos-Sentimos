@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, g, request
+from flask import Flask, render_template, request
 from pymongo import Connection
 from pylibmc import Client
 from hashlib import md5
 from web_analytics import last_hours_sparkline
 from tweet import tweet_from_dict_to_object
+from filters import request_args_filter
 import locale
 
 
@@ -85,38 +86,50 @@ def hello():
     tweets = None
     string_md5 = None
 
-    if 'selected-feelings' in request.args:
-        feelings_query_list = []
-        for feeling in request.args.getlist('selected-feelings'):
-            feelings_query_list.append({'feelings': feeling})
-        db_tweets = coll.find({'$or': feelings_query_list,
-                                'feelings_size': 1}, \
+    query_dict = request_args_filter(request.args, feelings, states_unique)
+    # if query_filter:
+    print query_dict
+    db_tweets = coll.find(query_dict, \
                                 sort=[('created_at', -1)], \
                                 limit=limit)
-        tweet_tuple = tweet_list_from_cursor(db_tweets)
-        tweets = tweet_tuple[0]
-        string_md5 = tweet_tuple[1]
+    # else:
+    #     db_tweets = coll.find(sort=[('created_at', -1)], limit=limit)
+    tweet_tuple = tweet_list_from_cursor(db_tweets)
+    tweets = tweet_tuple[0]
+    string_md5 = tweet_tuple[1]
 
-    elif 'selected-states' in request.args:
-        states_query_list = []
-        for state in request.args.getlist('selected-states'):
-            state_full_name = states_unique[[x[0] for x in states_unique].index(state)][1]
-            states_query_list.append({'location.state': state_full_name})
-        db_tweets = coll.find({'$or': states_query_list}, \
-                                sort=[('created_at', -1)], \
-                                limit=limit)
-        tweet_tuple = tweet_list_from_cursor(db_tweets)
-        tweets = tweet_tuple[0]
-        string_md5 = tweet_tuple[1]
+    # if 'selected-feelings' in request.args:
+    #     feelings_query_list = []
+    #     for feeling in request.args.getlist('selected-feelings'):
+    #         feelings_query_list.append({'feelings': feeling})
+    #     db_tweets = coll.find({'$or': feelings_query_list,
+    #                             'feelings_size': 1}, \
+    #                             sort=[('created_at', -1)], \
+    #                             limit=limit)
+    #     tweet_tuple = tweet_list_from_cursor(db_tweets)
+    #     tweets = tweet_tuple[0]
+    #     string_md5 = tweet_tuple[1]
 
-    else:
-        tweet_tuple = mc.get('no_kw')
-        if not tweet_tuple:
-            db_tweets = coll.find(sort=[('created_at', -1)], limit=limit)
-            tweet_tuple = tweet_list_from_cursor(db_tweets)
-            mc.set('no_kw', tweet_tuple, 5)
-        tweets = tweet_tuple[0]
-        string_md5 = tweet_tuple[1]
+    # elif 'selected-states' in request.args:
+    #     states_query_list = []
+    #     for state in request.args.getlist('selected-states'):
+    #         state_full_name = states_unique[[x[0] for x in states_unique].index(state)][1]
+    #         states_query_list.append({'location.state': state_full_name})
+    #     db_tweets = coll.find({'$or': states_query_list}, \
+    #                             sort=[('created_at', -1)], \
+    #                             limit=limit)
+    #     tweet_tuple = tweet_list_from_cursor(db_tweets)
+    #     tweets = tweet_tuple[0]
+    #     string_md5 = tweet_tuple[1]
+
+    # else:
+    #     tweet_tuple = mc.get('no_kw')
+    #     if not tweet_tuple:
+    #         db_tweets = coll.find(sort=[('created_at', -1)], limit=limit)
+    #         tweet_tuple = tweet_list_from_cursor(db_tweets)
+    #         mc.set('no_kw', tweet_tuple, 5)
+    #     tweets = tweet_tuple[0]
+    #     string_md5 = tweet_tuple[1]
 
     data_md5 = md5(string_md5).hexdigest()
     sparkline_data = last_hours_sparkline(db)

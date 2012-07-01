@@ -100,13 +100,14 @@ def hello():
 
     data_md5 = md5(string_md5).hexdigest()
     sparkline_data = last_hours_sparkline(db)
+
     feelings_percentages_for_states = {}
     if 'state' in request.args:
         for state in request.args.getlist('state'):
             feelings_percentages_for_states[state] = get_feelings_percentages_for_state(db, state)
 
     feelings_percentages_last_hours = []
-    if not request.args:
+    if not 'state' in request.args:
         today_top_feelings = get_today_top_feelings(db)
         for feeling in today_top_feelings[:5]:
             feelings_percentages_last_hours.append((feeling, get_feeling_percentage_last_hours(db, feeling)))

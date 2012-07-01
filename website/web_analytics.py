@@ -95,7 +95,12 @@ def get_feeling_percentage_last_hours(mongo_db, feeling, hours=25):
     for result in results:
         hour = result['hour']
         total = result['count']
-        feeling_count = result['feelings'][feeling]['count']
+        try:
+            feeling_count = result['feelings'][feeling]['count']
+        # KeyError means it has changed hours but there is no feeling yet
+        except KeyError:
+            feeling_count = 0
+
         feeling_percentage_list.append((hour,
                                         float(feeling_count / float(total) * 100.0)))
     del feeling_percentage_list[0]

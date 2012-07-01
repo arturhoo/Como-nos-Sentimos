@@ -60,17 +60,8 @@ a:visited {text-decoration: none; color:inherit}
 a:hover {text-decoration: underline; color:inherit}
 a:active {text-decoration: underline; color:inherit}
 
-.screen_nameLink a:hover {text-decoration: none;}
-
-/*.boxShadow {
-  -moz-box-shadow: 0 0 15px #8B8B8B;
-  -webkit-box-shadow: 0 0 15px #8B8B8B;
-  box-shadow: 0 0 15px #8B8B8B;
-}*/
-
-.charts-border {
-  border: 1px solid #B9B9B9;
-  background-color: #F9F9F9
+.screen_nameLink a:hover {
+  text-decoration: none;
 }
 
 .centered-content {
@@ -79,6 +70,13 @@ a:active {text-decoration: underline; color:inherit}
   padding: 0;
   padding-top: 20px;
 }
+
+/*.boxShadow {
+  -moz-box-shadow: 0 0 15px #8B8B8B;
+  -webkit-box-shadow: 0 0 15px #8B8B8B;
+  box-shadow: 0 0 15px #8B8B8B;
+}*/
+
 
 .centered-header {
   max-width: 800px;
@@ -89,6 +87,21 @@ a:active {text-decoration: underline; color:inherit}
   font-family: 'Amatic SC', cursive;
   font-size: 40px;
   padding-top: 10px;
+}
+
+.links-header {
+  float: right;
+  font-size: 16px;
+  padding-top: 40px;
+}
+
+.charts-border {
+  border: 1px solid #B9B9B9;
+  background-color: #F9F9F9
+}
+
+.filters-heading {
+  margin-top: -10px;
 }
 
 
@@ -116,10 +129,6 @@ a:active {text-decoration: underline; color:inherit}
 
 #tweetsText {
   margin-top: 20px;
-}
-
-.search-feelings-div {
-  color: #000;;
 }
 
 /*.chzn-container-multi .chzn-choices {

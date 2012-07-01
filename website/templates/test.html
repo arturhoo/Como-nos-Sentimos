@@ -28,8 +28,13 @@
   <body>
     <header class="boxShadow">
       <div class="centered-header">
-        <div class="logo-header">
+        <div class="logo-header" style="float: left">
           <span class="screen_nameLink"><a href="{{url_for('hello')}}">Como nos Sentimos</a></span>
+        </div>
+        <div class="links-header">
+          <span ><a href="#filters">Filtros</a>&nbsp;&nbsp;&nbsp;</span>
+          <span ><a href="#stats-heading">Estatísticas</a>&nbsp;&nbsp;&nbsp;</span>
+          <span ><a href="#about">Sobre</a></span>
         </div>
       </div>
     </header>
@@ -65,6 +70,8 @@
         <br> <br>
       </div>
 
+      <h4 id="filters" class="filters-heading"><span>Filtros</span></h4>
+
       <div>
         <form action="{{url_for('hello')}}" method="get">
           <div style="display: inline-block;">
@@ -93,15 +100,8 @@
       </div>
 
       <div style="height: 30px; text-align: center;"></div>
-      <!-- <hr> -->
-      <!-- <div style="height: 50px; text-align: center; margin: 0 auto;">
-        <div class="div-header-background"></div>
-        <div style="display: inline-block;">
-          <h4 >Estatísticas</h4>
-        </div>
-      </div> -->
 
-      <h4><span>Estatísticas</span></h4>
+      <h4 id="stats-heading"><span>Estatísticas</span></h4>
       <div id="stats">
 
       </div>
@@ -202,8 +202,11 @@
             }).appendTo('#stats');
             $('<div/>', {
               id: chart_id + '_inner',
-              style: 'height:250px; margin-bottom: 10px;'
+              style: 'height:250px; margin-bottom: 1px;'
             }).appendTo('#' + chart_id);
+            $('<div/>', {
+              style: 'height: 10px;'
+            }).appendTo('#stats');
             var state_chart = cf_feelings_percentages_for_state(categories, dataset, getStateFromAbbreviation(state), chart_id + '_inner');
           }
         }
@@ -235,8 +238,11 @@
           }).appendTo('#stats');
           $('<div/>', {
             id: 'feelings_chart_inner',
-            style: 'height:250px; margin-bottom: 10px;',
+            style: 'height:250px; margin-bottom: 1px;',
           }).appendTo('#feelings_chart');
+          $('<div/>', {
+              style: 'height: 10px;'
+            }).appendTo('#stats');
           var feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, 'feelings_chart_inner');
         }
         ///

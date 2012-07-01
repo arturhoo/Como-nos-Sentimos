@@ -7,7 +7,7 @@ except ImportError:
     sys.exit("No Flask Local Settings found!")
 
 
-def last_hours_sparkline(mongo_db, hours=48):
+def last_hours_sparkline(mongo_db, hours=49):
     """executes a mongo query of the form and
     receives a series of documents of the form:
         {
@@ -56,7 +56,23 @@ def get_last_hour_top_feelings(mongo_db):
     return last_hour_top_feelings_list
 
 
-def get_feeling_percentage_last_hours(mongo_db, feeling, hours=24):
+def get_today_top_feelings(mongo_db):
+    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_HISTORY]
+    results = coll.find_one({'type': 'daily'},
+                            {'feelings': 1},
+                            sort=[('year', -1),
+                                  ('month', -1),
+                                  ('day', -1),
+                                  ('hour', -1)])
+    result_dic = results['feelings']
+    result_sorted = sorted(result_dic.iteritems(),
+                           key=lambda x: x[1]['count'],
+                           reverse=True)
+    today_top_feelings_list = [item[0] for item in result_sorted]
+    return today_top_feelings_list
+
+
+def get_feeling_percentage_last_hours(mongo_db, feeling, hours=25):
     """returns the percetange of a given feeling, in the total of the feelings
     identified, in the last hours. The percentage for the current hour is
     not considered.

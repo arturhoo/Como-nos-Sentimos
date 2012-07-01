@@ -3,7 +3,9 @@ function cf_sparkline(dataset, container) {
         chart: {
             renderTo: container,
             defaultSeriesType: 'area',
-            margin:[0,0,0,0]
+            margin:[0,0,0,0],
+            backgroundColor: '#F3F3F3',
+            borderWidth: 0
         },
         title:{
             text:''
@@ -76,6 +78,7 @@ function cf_feelings_percentages_for_state(categories, dataset, state, container
         },
         yAxis: {
             min: 0,
+            tickInterval: 5,
             title: {
                 text: null
             },
@@ -108,13 +111,9 @@ function cf_feelings_percentages_for_state(categories, dataset, state, container
 
 function cf_feelings_percentages_last_hours(categories, dataset, names, container) {
     var new_series = [];
-    console.log(categories);
-    console.log(names);
-    console.log(dataset);
     for(var i=0; i<names.length; i++) {
         new_series.push({name: names[i], data: dataset[i]});
     }
-    console.log(new_series);
     return new Highcharts.Chart({
         chart: {
             renderTo: container,
@@ -130,7 +129,16 @@ function cf_feelings_percentages_last_hours(categories, dataset, names, containe
         xAxis: {
             categories: categories,
             enabled: true,
-            text: 'Hora do dia'
+            // title: {
+            //     text: 'Hora do dia'
+            // },
+            labels: {
+                formatter: function() {
+                    return this.value + '-' + (parseInt(this.value, 10) + 1).toString() + 'h';
+                },
+                rotation: -45,
+                align: 'right'
+            }
         },
         yAxis: {
             min: 0,

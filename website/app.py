@@ -6,7 +6,8 @@ from hashlib import md5
 from web_analytics import last_hours_sparkline, \
                           get_feelings_percentages_for_state, \
                           get_last_hour_top_feelings, \
-                          get_feeling_percentage_last_hours
+                          get_feeling_percentage_last_hours, \
+                          get_today_top_feelings
 from tweet import tweet_from_dict_to_object
 from filters import request_args_filter
 import locale
@@ -104,11 +105,11 @@ def hello():
         for state in request.args.getlist('state'):
             feelings_percentages_for_states[state] = get_feelings_percentages_for_state(db, state)
 
-    last_hour_top_feelings = get_last_hour_top_feelings(db)
     feelings_percentages_last_hours = []
-    for feeling in last_hour_top_feelings[:5]:
-        feelings_percentages_last_hours.append((feeling, get_feeling_percentage_last_hours(db, feeling)))
-    feelings_percentages_last_hours.append(('sono', get_feeling_percentage_last_hours(db, 'sono')))
+    if not request.args:
+        today_top_feelings = get_today_top_feelings(db)
+        for feeling in today_top_feelings[:5]:
+            feelings_percentages_last_hours.append((feeling, get_feeling_percentage_last_hours(db, feeling)))
     return render_template('test.html',
                            tweets=tweets,
                            feelings=feelings,

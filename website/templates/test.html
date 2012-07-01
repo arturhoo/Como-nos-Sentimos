@@ -92,12 +92,19 @@
         </form>
       </div>
 
-      <div style="height: 50px;"></div>
+      <div style="height: 30px; text-align: center;"></div>
+      <!-- <hr> -->
+      <!-- <div style="height: 50px; text-align: center; margin: 0 auto;">
+        <div class="div-header-background"></div>
+        <div style="display: inline-block;">
+          <h4 >Estatísticas</h4>
+        </div>
+      </div> -->
 
-      <div id="feelings_chart" style="float: middle; width: 800px; height: 250px;"></div>
+      <h4><span>Estatísticas</span></h4>
+      <div id="stats">
 
-      <div id="states_charts" style="float: middle;"></div>
-
+      </div>
       <div style="height: 50px;"></div>
 
     </div>
@@ -147,15 +154,38 @@
 
       window.onload = function() {
         Highcharts.theme = {
-           chart: {
-              backgroundColor: '#F3F3F3'
+          chart: {
+            backgroundColor: '#F9F9F9',
+            style: {
+             fontFamily: 'Helvetica',
+             paddingBottom: '20px'
             }
+          },
+          title: {
+            style: {
+             color: '#505050',
+             fontSize: '14px'
+            }
+          },
+          xAxis: {
+            title: {
+              style: {
+                color: '#737373'
+              }
+            }
+          },
+          legend: {
+            itemStyle: {
+              color: '#737373'
+            }
+          }
         };
         // Apply the theme
         var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
         makeTheLink();
         var chart_sparkline = setTimeout(function() { cf_sparkline({{ sparkline_data }}, 'sparkline')}, 1200);
 
+        ///
         for(var state in feelings_percentages_for_states) {
           if(feelings_percentages_for_states.hasOwnProperty(state)) {
             var fpfs = feelings_percentages_for_states[state];
@@ -168,9 +198,13 @@
             var chart_id = 'states_charts_' + state;
             $('<div/>', {
               id: chart_id,
-              style: 'width: 800px; height:250px;'
-            }).appendTo('#states_charts');
-            var state_chart = cf_feelings_percentages_for_state(categories, dataset, getStateFromAbbreviation(state), chart_id);
+              class: 'charts-border'
+            }).appendTo('#stats');
+            $('<div/>', {
+              id: chart_id + '_inner',
+              style: 'height:250px; margin-bottom: 10px;'
+            }).appendTo('#' + chart_id);
+            var state_chart = cf_feelings_percentages_for_state(categories, dataset, getStateFromAbbreviation(state), chart_id + '_inner');
           }
         }
         ///
@@ -194,7 +228,17 @@
           }
           dataset.push(data_entry);
         }
-        var feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, 'feelings_chart');
+        if(feelings_percentages_last_hours.length != 0) {
+          $('<div/>', {
+            id: 'feelings_chart',
+            class: 'charts-border'
+          }).appendTo('#stats');
+          $('<div/>', {
+            id: 'feelings_chart_inner',
+            style: 'height:250px; margin-bottom: 10px;',
+          }).appendTo('#feelings_chart');
+          var feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, 'feelings_chart_inner');
+        }
         ///
       }
 

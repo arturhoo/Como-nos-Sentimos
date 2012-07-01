@@ -69,6 +69,9 @@ function cf_feelings_percentages_for_state(categories, dataset, state, container
         title: {
             text: 'Sentimentos de ' + state
         },
+        subtitle: {
+            text: 'Dados de todos os tempos'
+        },
         credits:{
             enabled:false
         },

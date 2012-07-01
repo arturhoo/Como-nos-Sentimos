@@ -167,6 +167,11 @@
              fontSize: '14px'
             }
           },
+          subtitle: {
+            style: {
+             color: '#505050',
+            }
+          },
           xAxis: {
             title: {
               style: {
@@ -185,31 +190,6 @@
         makeTheLink();
         var chart_sparkline = setTimeout(function() { cf_sparkline({{ sparkline_data }}, 'sparkline')}, 1200);
 
-        ///
-        for(var state in feelings_percentages_for_states) {
-          if(feelings_percentages_for_states.hasOwnProperty(state)) {
-            var fpfs = feelings_percentages_for_states[state];
-            var categories = [];
-            var dataset = [];
-            for(var i=0; i<fpfs.length; i++) {
-              categories.push(fpfs[i][0]);
-              dataset.push(fpfs[i][1]);
-            }
-            var chart_id = 'states_charts_' + state;
-            $('<div/>', {
-              id: chart_id,
-              class: 'charts-border'
-            }).appendTo('#stats');
-            $('<div/>', {
-              id: chart_id + '_inner',
-              style: 'height:250px; margin-bottom: 1px;'
-            }).appendTo('#' + chart_id);
-            $('<div/>', {
-              style: 'height: 10px;'
-            }).appendTo('#stats');
-            var state_chart = cf_feelings_percentages_for_state(categories, dataset, getStateFromAbbreviation(state), chart_id + '_inner');
-          }
-        }
         ///
         var feelings_percentages_last_hours = {{ feelings_percentages_last_hours|tojson|safe }}
         var dataset = [];
@@ -248,6 +228,31 @@
           else
             var feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, 'Sentimentos mais frequentes nas últimas 24 horas', 'feelings_chart_inner');
 
+        }
+        ///
+        for(var state in feelings_percentages_for_states) {
+          if(feelings_percentages_for_states.hasOwnProperty(state)) {
+            var fpfs = feelings_percentages_for_states[state];
+            var categories = [];
+            var dataset = [];
+            for(var i=0; i<fpfs.length; i++) {
+              categories.push(fpfs[i][0]);
+              dataset.push(fpfs[i][1]);
+            }
+            var chart_id = 'states_charts_' + state;
+            $('<div/>', {
+              id: chart_id,
+              class: 'charts-border'
+            }).appendTo('#stats');
+            $('<div/>', {
+              id: chart_id + '_inner',
+              style: 'height:250px; margin-bottom: 1px;'
+            }).appendTo('#' + chart_id);
+            $('<div/>', {
+              style: 'height: 10px;'
+            }).appendTo('#stats');
+            var state_chart = cf_feelings_percentages_for_state(categories, dataset, getStateFromAbbreviation(state), chart_id + '_inner');
+          }
         }
         ///
       }

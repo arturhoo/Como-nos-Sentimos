@@ -243,7 +243,11 @@
           $('<div/>', {
               style: 'height: 10px;'
             }).appendTo('#stats');
-          var feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, 'feelings_chart_inner');
+          if (location.search.substring(1))
+            var feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, 'Sentimentos escolhidos nas últimas 24 horas', 'feelings_chart_inner');
+          else
+            var feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, 'Sentimentos mais frequentes nas últimas 24 horas', 'feelings_chart_inner');
+
         }
         ///
       }

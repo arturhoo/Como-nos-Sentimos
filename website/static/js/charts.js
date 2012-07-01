@@ -109,7 +109,7 @@ function cf_feelings_percentages_for_state(categories, dataset, state, container
     });
 }
 
-function cf_feelings_percentages_last_hours(categories, dataset, names, container) {
+function cf_feelings_percentages_last_hours(categories, dataset, names, title, container) {
     var new_series = [];
     for(var i=0; i<names.length; i++) {
         new_series.push({name: names[i], data: dataset[i]});
@@ -120,7 +120,7 @@ function cf_feelings_percentages_last_hours(categories, dataset, names, containe
             type: 'spline'
         },
         title: {
-            text: 'Sentimentos mais frequentes nas últimas 24 horas',
+            text: title,
             x: -20 //center
         },
         credits:{

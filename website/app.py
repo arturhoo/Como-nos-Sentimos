@@ -107,7 +107,10 @@ def hello():
             feelings_percentages_for_states[state] = get_feelings_percentages_for_state(db, state)
 
     feelings_percentages_last_hours = []
-    if not 'state' in request.args:
+    if 'feeling' in request.args:
+        for feeling in request.args.getlist('feeling'):
+            feelings_percentages_last_hours.append((feeling, get_feeling_percentage_last_hours(db, feeling)))
+    if not 'state' in request.args and not 'feeling' in request.args:
         today_top_feelings = get_today_top_feelings(db)
         for feeling in today_top_feelings[:5]:
             feelings_percentages_last_hours.append((feeling, get_feeling_percentage_last_hours(db, feeling)))

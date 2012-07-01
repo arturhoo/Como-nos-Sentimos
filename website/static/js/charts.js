@@ -154,7 +154,7 @@ function cf_feelings_percentages_last_hours(categories, dataset, names, containe
         tooltip: {
             formatter: function() {
                     return '<b>'+ this.series.name +'</b><br/>'+
-                        this.x +'h: '+ Math.round(this.y*10)/10 +'%';
+                        this.x + '-' + (this.x + 1) +'h: '+ Math.round(this.y*10)/10 +'%';
             }
         },
         legend: {

@@ -31,4 +31,7 @@ def request_args_filter(request_args, feelings, states_unique):
     if 'location-only' in request_args:
         if request_args['location-only'].lower() == 'yes':
             query_dict['location'] = {'$exists': True}
+    if 'weather-only' in request_args:
+        if request_args['weather-only'].lower() == 'yes':
+            query_dict['location.weather'] = {'$exists': True}
     return query_dict

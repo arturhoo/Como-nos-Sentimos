@@ -31,6 +31,7 @@ static final int MADNESS = 1;
 static final int FEELINGS = 2;
 static final int STATES = 3;
 static final int MAP = 4;
+static final int WEATHER = 5;
 static int VIEW = MADNESS;
 
 static boolean MOUSE_OUT = false;
@@ -126,6 +127,17 @@ void draw() {
         imgWidth = countryGrayMapImage.width;
         imgHeight = countryGrayMapImage.height;
         image(countryGrayMapImage, (width - imgWidth)/2, (height-imgHeight)/2);
+    }
+
+    // Draw states text
+    if(VIEW == 5) {
+        Iterator<Weather> itr = weatherList.iterator();
+        while(itr.hasNext()) {
+            Weather tempWeather = itr.next();
+            if(tempWeather.occurrence > 0) {
+                tempWeather.drawText();
+            }
+        }
     }
 
     for(int i=NUM_PARTICLES-1; i >= 0; i--) {

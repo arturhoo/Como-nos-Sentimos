@@ -61,35 +61,35 @@ void setListElementsLocation(ArrayList list) {
 
     Iterator<Object> itr = list.iterator();
     while(itr.hasNext()) {
-      Object temp = itr.next();
-      if(temp.occurrence == 0) break;
-      temp.loc.set(textX, y, 0);
-      temp.particlesLoc.set(textX+DIST_BTWN_TEXT_AND_PARTICLES, y-PARTICLE_RADIUS/2, 0);
+        Object temp = itr.next();
+        if(temp.occurrence == 0) break;
+        temp.loc.set(textX, y, 0);
+        temp.particlesLoc.set(textX+DIST_BTWN_TEXT_AND_PARTICLES, y-PARTICLE_RADIUS/2, 0);
 
-      // Defines the new Y for the next histogram entry
-      int numHistogramLines = parseInt((temp.occurrence - 1)/numParticlesInOneLine) + 1;
-      y += (DIST_BTWN_HISTOGRAM_ENTRIES + HISTOGRAM_FONT_SIZE)*numHistogramLines;
+        // Defines the new Y for the next histogram entry
+        int numHistogramLines = parseInt((temp.occurrence - 1)/numParticlesInOneLine) + 1;
+        y += (DIST_BTWN_HISTOGRAM_ENTRIES + HISTOGRAM_FONT_SIZE)*numHistogramLines;
 
-      // Identify if this histogram line spans less than half of the canvas
-      tempX = textX + DIST_BTWN_TEXT_AND_PARTICLES;
-      if((temp.occurrence*(PARTICLE_RADIUS + DIST_BTWN_PARTICLES) + tempX < width/2) &&
-         splittableY == -1) {
-        splittableY = y;
-      }
+        // Identify if this histogram line spans less than half of the canvas
+        tempX = textX + DIST_BTWN_TEXT_AND_PARTICLES;
+        if((temp.occurrence*(PARTICLE_RADIUS + DIST_BTWN_PARTICLES) + tempX < width/2) &&
+            splittableY == -1) {
+            splittableY = y;
+        }
 
-      // Identify if Y has gone below the imposed limits
-      if(y > (height - BOTTOM_BORDER_OFFSET)) {
-        if(!split) {
-          // If so, start using two columns
-          textX = width/2 + LEFT_BORDER_OFFSET + TEXT_WIDTH;
-          // Reset the Y
-          y = splittableY;
-          split = true;
-        } else {
-          temp.paginated = true;
+        // Identify if Y has gone below the imposed limits
+        if(y > (height - BOTTOM_BORDER_OFFSET)) {
+            if(!split) {
+                // If so, start using two columns
+                textX = width/2 + LEFT_BORDER_OFFSET + TEXT_WIDTH;
+                // Reset the Y
+                y = splittableY;
+                split = true;
+            } else {
+                temp.paginated = true;
+            }
         }
       }
-    }
 }
 
 /**
@@ -123,6 +123,7 @@ void setParticlesLocs() {
         particles[i].setFeelingLoc();
         particles[i].setStateLoc();
         particles[i].setMapLoc();
+        particles[i].setWeatherLoc();
     }
 }
 
@@ -133,9 +134,11 @@ void setParticlesLocs() {
 void postInitialLoading() {
     sortListThatHasTextAndOccurrenceFields(feelingList, feelingOccurrence);
     sortListThatHasTextAndOccurrenceFields(stateList, stateOccurrence);
+    sortListThatHasTextAndOccurrenceFields(weatherList, weatherOccurrence);
     dropDuplicateItemsFromList(stateList);
     setListElementsLocation(feelingList);
     setListElementsLocation(stateList);
+    setListElementsLocation(weatherList);
 }
 
 PVector getRandomLocationFromQuestionMark() {
@@ -162,3 +165,6 @@ void setMapView() {
     VIEW = MAP;
 }
 
+void setWeatherView() {
+    VIEW = 5;
+}

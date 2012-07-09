@@ -4,6 +4,7 @@ class Particle{
     PVector feelingLoc = null;
     PVector stateLoc = null;
     PVector mapLoc = null;
+    PVector weatherLoc = null;
     float r;
 
     Particle(PVector l) {
@@ -23,6 +24,7 @@ class Particle{
         else if(VIEW == FEELINGS) this.feelingsUpdate();
         else if(VIEW == STATES) this.statesUpdate();
         else if(VIEW == MAP) this.mapUpdate();
+        else if(VIEW == 5) this.weatherUpdate();
     }
 
     void madnessUpdate() {
@@ -136,6 +138,21 @@ class Particle{
         }
     }
 
+    void weatherUpdate() {
+        if(weatherLoc != null) {
+            this.goTo(weatherLoc);
+            // If mouse is over
+            if(this.isIn(mouseX, mouseY) && pFocusedTweet == null) {
+                r = 14.0;
+                pFocusedTweet = this;
+            } else {
+                r += random(-1.0, 1.0);
+                if (r > 14.0) r -= 2;
+                if (r < 6.0) r += 2;
+            }
+        }
+    }
+
     /**
     * Sets the PVector of this particle when the Feeling Histogram view
     * is displayed
@@ -176,6 +193,20 @@ class Particle{
             mapLoc.set(tempState.getARandomMapCoordinate());
         } else {
             mapLoc.set(getRandomLocationFromQuestionMark());
+        }
+    }
+
+    /**
+    * Sets the PVector of this particle when the Feeling Histogram view
+    * is displayed
+    */
+    void setWeatherLoc() {
+        State tempWeather = this.getWeather();
+        weatherLoc = new PVector();
+        if(tempWeather != null) {
+            weatherLoc.set(tempWeather.getAParticleLoc());
+        } else {
+            weatherLoc.set(getRandomLocationFromQuestionMark());
         }
     }
 
@@ -257,6 +288,26 @@ class Particle{
         }
         if(foundState) {
             return tempState;
+        } else {
+            return null;
+        }
+    }
+
+    Weather getWeather() {
+        Weather tempWeather = null;
+        boolean foundWeather = false;
+        Iterator<Weather> itr = weatherList.iterator();
+        while(itr.hasNext()) {
+            tempWeather = itr.next();
+            if(tweet.location != null && tweet.location.weather != null) {
+                if(tempWeather.condition.equals(tweet.location.weather)) {
+                    foundWeather = true;
+                    break;
+                }
+            }
+        }
+        if(foundWeather) {
+            return tempWeather;
         } else {
             return null;
         }

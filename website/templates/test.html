@@ -59,6 +59,7 @@
           <button onclick="setFeelingsView()">Sentimentos</button>
           <button onclick="setStatesView()">Estados</button>
           <button onclick="setMapView()">Mapa</button>
+          <button onclick="setWeatherView()">Clima</button>
         </div>
         <div style="float: right; padding-top: -20px;">
           <div id="sparkline" style="float: right; height:20px; width:120px; margin-top: -5px;"></div>
@@ -276,9 +277,6 @@
         if(pjs == undefined) {
           setTimeout(makeTheLink, 600);
         } else {
-          // Processing.logger = console;
-          // pjs.setInterfaceLink(this);
-          // initialLoad();
           try {
             // Comment the line below to make it work on IE9
             Processing.logger = console;

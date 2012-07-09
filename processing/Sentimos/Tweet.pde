@@ -13,6 +13,7 @@ class Location {
     String weather;
 
     Location() {
+        this.weather = null;
     }
 
     /**

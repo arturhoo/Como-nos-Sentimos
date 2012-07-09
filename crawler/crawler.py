@@ -2,7 +2,7 @@
 from tweepy import OAuthHandler, StreamListener
 from tweepy.streaming import Stream
 from sentiment_filter import identify_feelings
-from utils import load_query_terms
+from utils import load_terms
 from pymongo import Connection
 from datetime import timedelta
 import beanstalkc
@@ -122,6 +122,6 @@ class CustomStreamListener(StreamListener):
 
 
 if __name__ == '__main__':
-    query = load_query_terms('query_terms.txt')
+    query = load_terms('query_terms.txt')
     streaming_api = Stream(auth, CustomStreamListener(), timeout=60)
     streaming_api.filter(track=query)

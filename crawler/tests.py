@@ -57,6 +57,15 @@ class TestSentimentFilter(TestCase):
         result = identify_feelings(self.file_name, text)
         self.assertNotIn(u'cansado', result)
 
+    def testPreNegation(self):
+        text = 'eu nao estou feliz'
+        result = identify_feelings(self.file_name, text)
+        self.assertNotIn(u'feliz', result)
+
+    def testPostNegation(self):
+        text = 'eu estou nada feliz'
+        result = identify_feelings(self.file_name, text)
+        self.assertNotIn(u'feliz', result)
 
 if __name__ == '__main__':
     unittestMain()

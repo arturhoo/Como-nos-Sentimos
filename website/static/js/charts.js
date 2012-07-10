@@ -222,4 +222,3 @@ function cf_weather_conditions_for_feelings(categories, dataset, names, colors, 
         series: new_series
     });
 }
-

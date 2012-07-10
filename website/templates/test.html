@@ -152,7 +152,6 @@
       // GLOBAL variables
       var pjs = undefined;
       var countryStatesLoaded = 0;
-      var feelings_percentages_for_states = {{feelings_percentages_for_states|tojson|safe}};
 
       window.onload = function() {
         Highcharts.theme = {
@@ -201,7 +200,7 @@
           entry = feelings_percentages_last_hours[i];
           if(i==0) {
             for(var j=0; j<entry[1].length; j++) {
-              hours = entry[1][j];
+              var hours = entry[1][j];
               categories.push(hours[0]);
             }
           }
@@ -223,8 +222,8 @@
             style: 'height:250px; margin-bottom: 1px;',
           }).appendTo('#feelings_chart');
           $('<div/>', {
-              style: 'height: 10px;'
-            }).appendTo('#stats');
+            style: 'height: 10px;'
+          }).appendTo('#stats');
           if (location.search.substring(1))
             var feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, 'Sentimentos escolhidos nas últimas 24 horas', 'feelings_chart_inner');
           else
@@ -232,6 +231,7 @@
 
         }
         ///
+        var feelings_percentages_for_states = {{feelings_percentages_for_states|tojson|safe}};
         for(var state in feelings_percentages_for_states) {
           if(feelings_percentages_for_states.hasOwnProperty(state)) {
             var fpfs = feelings_percentages_for_states[state];
@@ -256,6 +256,34 @@
             var state_chart = cf_feelings_percentages_for_state(categories, dataset, getStateFromAbbreviation(state), chart_id + '_inner');
           }
         }
+        ///
+        var weather_conditions_count_for_feelings = {{weather_conditions_count_for_feelings|tojson|safe}};
+        var categories = [];
+        var dataset = [];
+        var names = [];
+        for(var i=0; i<weather_conditions_count_for_feelings.length; i++) {
+          entry = weather_conditions_count_for_feelings[i]
+          categories.push(entry[0]);
+          for(var j=0; j<entry[1].length; j++) {
+            if(i==0) {
+              dataset[j] = [];
+              names.push(entry[1][j][0]);
+            }
+            dataset[j].push(entry[1][j][1]);
+          }
+        }
+        $('<div/>', {
+          id: 'weather_conditions_chart',
+          class: 'charts-border'
+        }).appendTo('#stats');
+        $('<div/>', {
+          id: 'weather_conditions_chart_inner',
+          style: 'height:350px; margin-bottom: 1px;',
+        }).appendTo('#weather_conditions_chart');
+        $('<div/>', {
+            style: 'height: 10px;'
+        }).appendTo('#stats');
+        var wc_chart = cf_weather_conditions_for_feelings(categories, dataset, names, 'weather_conditions_chart_inner');
         ///
       }
 

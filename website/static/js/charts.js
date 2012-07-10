@@ -107,7 +107,7 @@ function cf_feelings_percentages_for_state(categories, dataset, state, container
             }
         },
             series: [{
-            data: dataset
+                data: dataset
         }]
     });
 }
@@ -171,3 +171,54 @@ function cf_feelings_percentages_last_hours(categories, dataset, names, title, c
         series: new_series
     });
 }
+
+function cf_weather_conditions_for_feelings(categories, dataset, names, container) {
+    var new_series = [];
+    for(var i=0; i<names.length; i++) {
+        new_series.push({name: names[i], data: dataset[i]});
+    }
+    dyn_rotation = categories.length > 10 ? -45 : 0;
+    return new Highcharts.Chart({
+        chart: {
+            renderTo: container,
+            type: 'column'
+        },
+        credits:{
+            enabled:false
+        },
+        title: {
+            text: 'Condições climáticas para sentimentos'
+        },
+        xAxis: {
+            categories: categories,
+            labels: {
+                rotation: dyn_rotation,
+                align: 'right'
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: null
+            },
+            labels: {
+                formatter: function() {
+                    return this.value + ' %';
+                }
+            }
+        },
+        tooltip: {
+            formatter: function() {
+                return '<b>'+ this.series.name +'</b><br/>'+
+                    this.x +': ' + Math.round(this.percentage*10)/10 +'%';
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: 'percent'
+            }
+        },
+        series: new_series
+    });
+}
+

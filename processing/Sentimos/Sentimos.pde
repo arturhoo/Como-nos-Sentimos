@@ -75,7 +75,6 @@ void setup() {
     questionMarkImage   = loadImage("static/images/question4.png");
     countryMapImage     = loadImage("static/images/brasil_color.png");
     countryGrayMapImage = loadImage("static/images/brasil_gray.png");
-    font2               = createFont("static/fonts/MavenPro-Bold.ttf", 24);
     font                = loadFont("Helvetica", 24);
     frameRate(30);
     textMode(SCREEN);

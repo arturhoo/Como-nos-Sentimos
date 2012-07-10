@@ -7,7 +7,8 @@ from web_analytics import last_hours_sparkline, \
                           get_feelings_percentages_for_state, \
                           get_last_hour_top_feelings, \
                           get_feeling_percentage_last_hours, \
-                          get_today_top_feelings
+                          get_today_top_feelings, \
+                          get_weather_conditions_count_for_feeling
 from tweet import tweet_from_dict_to_object
 from filters import request_args_filter
 import locale
@@ -107,13 +108,17 @@ def hello():
             feelings_percentages_for_states[state] = get_feelings_percentages_for_state(db, state)
 
     feelings_percentages_last_hours = []
+    weather_conditions_count_for_feelings = []
     if 'feeling' in request.args:
         for feeling in request.args.getlist('feeling'):
             feelings_percentages_last_hours.append((feeling, get_feeling_percentage_last_hours(db, feeling)))
+            weather_conditions_count_for_feelings.append((feeling, get_weather_conditions_count_for_feeling(db, feeling, weather_translations)))
     if not 'state' in request.args and not 'feeling' in request.args:
         today_top_feelings = get_today_top_feelings(db)
         for feeling in today_top_feelings[:5]:
             feelings_percentages_last_hours.append((feeling, get_feeling_percentage_last_hours(db, feeling)))
+            weather_conditions_count_for_feelings.append((feeling, get_weather_conditions_count_for_feeling(db, feeling, weather_translations)))
+
     return render_template('test.html',
                            tweets=tweets,
                            feelings=feelings,
@@ -123,7 +128,8 @@ def hello():
                            data_md5=data_md5,
                            sparkline_data=sparkline_data,
                            feelings_percentages_for_states=feelings_percentages_for_states,
-                           feelings_percentages_last_hours=feelings_percentages_last_hours)
+                           feelings_percentages_last_hours=feelings_percentages_last_hours,
+                           weather_conditions_count_for_feelings=weather_conditions_count_for_feelings)
 
 if __name__ == "__main__":
     app.run()

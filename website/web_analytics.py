@@ -102,13 +102,20 @@ def get_feeling_percentage_last_hours(mongo_db, feeling, hours=25):
             feeling_count = 0
 
         feeling_percentage_list.append((hour,
-                                        float(feeling_count / float(total) * 100.0)))
+                                        float(feeling_count / \
+                                              float(total) * 100.0)))
     del feeling_percentage_list[0]
     feeling_percentage_list.reverse()
     return feeling_percentage_list
 
 
 def get_feelings_percentages_for_state(mongo_db, state, num_feelings=10):
+    """returns the percetanges of the top X feelings for a given state
+    returned list example:
+        [(u'feliz', 15.743950348288271),
+         (u'triste', 7.48737248687729),
+         (u'saudade', 6.747878907926447)]
+    """
     coll = mongo_db[MONGO_COLLECTION_ANALYTICS_GENERAL]
     result = coll.find_one({'type': 'alltime'},
                             {'states.' + state: 1})
@@ -122,3 +129,32 @@ def get_feelings_percentages_for_state(mongo_db, state, num_feelings=10):
                            for (feeling, count) \
                            in feelings_count]
     return feelings_percentage[:num_feelings]
+
+
+def get_weather_conditions_count_for_feeling(mongo_db, feeling,
+                                                   weather_translations):
+    """returns the count of each weather translation for a given feling
+    returned list example:
+        [(u'com c\xe9u aberto', 26006),
+         (u'nublado', 15482),
+         (u'chovendo', 4010),
+         (u'com neblina', 915)]
+    """
+    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_GENERAL]
+    result_dic = {}
+    for (condition, translation) in weather_translations.items():
+        result = coll.find_one({'type': 'alltime'},
+                               {'weather_conditions.' + condition + \
+                                '.feelings.' + feeling: 1})
+        try:
+            fc = result['weather_conditions'][condition]['feelings'][feeling]
+        except KeyError:
+            fc = 0
+        if translation in result_dic:
+            result_dic[translation] += fc
+        else:
+            result_dic[translation] = fc
+    weather_conditions_count_list = sorted(result_dic.iteritems(),
+                                           key=itemgetter(0),
+                                           reverse=False)
+    return weather_conditions_count_list

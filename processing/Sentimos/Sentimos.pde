@@ -129,7 +129,7 @@ void draw() {
         image(countryGrayMapImage, (width - imgWidth)/2, (height-imgHeight)/2);
     }
 
-    // Draw states text
+    // Draw weather text
     if(VIEW == 5) {
         Iterator<Weather> itr = weatherList.iterator();
         while(itr.hasNext()) {

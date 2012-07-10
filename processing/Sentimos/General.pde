@@ -136,6 +136,7 @@ void postInitialLoading() {
     sortListThatHasTextAndOccurrenceFields(stateList, stateOccurrence);
     sortListThatHasTextAndOccurrenceFields(weatherList, weatherOccurrence);
     dropDuplicateItemsFromList(stateList);
+    dropDuplicateItemsFromList(weatherList);
     setListElementsLocation(feelingList);
     setListElementsLocation(stateList);
     setListElementsLocation(weatherList);

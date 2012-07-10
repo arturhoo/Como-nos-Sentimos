@@ -1,12 +1,14 @@
-Light rain;chuviscando
-Cloudy;nublado
-Drizzle;com garoa
-Mostly Cloudy;nublado
-Clear;com céu aberto
-Overcast;com tempo fechado
-Partly Cloudy;parcialmente nublado
+Drizzle;chovendo
+Heavy Rain;chovendo
+Light rain;chovendo
 Rain;chovendo
-Thunderstorm;trovejando
-Haze;com neblina
+Rain Showers;chovendo
+Thunderstorm;chovendo
+Cloudy;nublado
+Mostly Cloudy;nublado
+Overcast;nublado
+Partly Cloudy;nublado
+Clear;com céu aberto
 Fog;com neblina
-Heavy Rain;tendo uma tempestade
+Haze;com neblina
+Smoke;com neblina

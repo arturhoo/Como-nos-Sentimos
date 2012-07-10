@@ -1,10 +1,8 @@
 class Weather extends Attribute{
-    String condition;
     String translation;
 
-    Weather (String condition, String translation) {
-        super(condition);
-        this.condition = condition;
+    Weather (String textString, String translation) {
+        super(textString);
         this.translation = translation;
     }
 
@@ -12,7 +10,7 @@ class Weather extends Attribute{
     * Returns the object's attribute used as key in Map objects
     */
     String getKeyAttribute() {
-        return this.condition;
+        return this.translation;
     }
 
     /**
@@ -23,7 +21,7 @@ class Weather extends Attribute{
         textAlign(RIGHT);
         textFont(font, HISTOGRAM_FONT_SIZE);
         fill(255);
-        if(!paginated) text(condition + ": " + occurrence, loc.x, loc.y);
+        if(!paginated) text(translation + ": " + occurrence, loc.x, loc.y);
         textAlign(LEFT);
     }
 }

@@ -300,7 +300,8 @@ class Particle{
         while(itr.hasNext()) {
             tempWeather = itr.next();
             if(tweet.location != null && tweet.location.weather != null) {
-                if(tempWeather.condition.equals(tweet.location.weather)) {
+                String translation = weatherTranslations.get(tweet.location.weather);
+                if(tempWeather.translation.equals(translation)) {
                     foundWeather = true;
                     break;
                 }

@@ -5,8 +5,8 @@ void addFeeling(Feeling pFeeling) {
 }
 
 void addWeather(Weather pWeather) {
-    weatherOccurrence.put(pWeather.condition, 0);
-    weatherTranslations.put(pWeather.condition, pWeather.translation);
+    weatherOccurrence.put(pWeather.translation, 0);
+    weatherTranslations.put(pWeather.textString, pWeather.translation);
     weatherList.add(pWeather);
 }
 
@@ -30,8 +30,9 @@ void addTweet(Tweet tweet) {
         // Updating the occurrence of the weather, if present
         if(tweet.location.weather != null) {
             String sCondition = tweet.location.weather;
-            int occurrence = (Integer) weatherOccurrence.get(sCondition);
-            weatherOccurrence.put(sCondition, occurrence+1);
+            String sTranslation = weatherTranslations.get(sCondition);
+            int occurrence = (Integer) weatherOccurrence.get(sTranslation);
+            weatherOccurrence.put(sTranslation, occurrence+1);
         }
         // Updating the occurrence of the state
         String abbreviation = stateAbbreviation.get(tweet.location.state);

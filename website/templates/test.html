@@ -261,6 +261,7 @@
         var categories = [];
         var dataset = [];
         var names = [];
+        var colors = ['#2C476F', '#FCC047', '#AEAEAE', '#6B6B6B']
         for(var i=0; i<weather_conditions_count_for_feelings.length; i++) {
           entry = weather_conditions_count_for_feelings[i]
           categories.push(entry[0]);
@@ -283,7 +284,7 @@
         $('<div/>', {
             style: 'height: 10px;'
         }).appendTo('#stats');
-        var wc_chart = cf_weather_conditions_for_feelings(categories, dataset, names, 'weather_conditions_chart_inner');
+        var wc_chart = cf_weather_conditions_for_feelings(categories, dataset, names, colors, 'weather_conditions_chart_inner');
         ///
       }
 

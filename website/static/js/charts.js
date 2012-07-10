@@ -172,12 +172,13 @@ function cf_feelings_percentages_last_hours(categories, dataset, names, title, c
     });
 }
 
-function cf_weather_conditions_for_feelings(categories, dataset, names, container) {
+function cf_weather_conditions_for_feelings(categories, dataset, names, colors, container) {
     var new_series = [];
     for(var i=0; i<names.length; i++) {
-        new_series.push({name: names[i], data: dataset[i]});
+        new_series.push({name: names[i], data: dataset[i], color: colors[i]});
     }
     dyn_rotation = categories.length > 10 ? -45 : 0;
+    dyn_align = categories.length > 10 ? 'right' : 'center';
     return new Highcharts.Chart({
         chart: {
             renderTo: container,
@@ -193,7 +194,7 @@ function cf_weather_conditions_for_feelings(categories, dataset, names, containe
             categories: categories,
             labels: {
                 rotation: dyn_rotation,
-                align: 'right'
+                align: dyn_align
             }
         },
         yAxis: {

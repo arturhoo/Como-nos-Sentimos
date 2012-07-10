@@ -1,4 +1,3 @@
-/* @pjs font="static/fonts/MavenPro-Bold.ttf"; */
 /* @pjs preload="static/images/question4.png,static/images/brasil_color.png,static/images/brasil_gray.png" */
 
 static int WIDTH  = 800;

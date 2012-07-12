@@ -1,10 +1,25 @@
 # -*- coding: utf-8 -*-
 from operator import itemgetter
+from datetime import datetime, timedelta
 
 try:
     from local_settings import *
 except ImportError:
     sys.exit("No Flask Local Settings found!")
+
+
+def insert_zero_counts(l, FMT='%H'):
+    l.reverse()
+    current_time = l[0][0]
+    for i in range(1, len(l)):
+        td = datetime.strptime(str(current_time), FMT) - datetime.strptime(str(l[i][0]), FMT)
+        current_time_f = datetime.strptime(str(l[i][0]), FMT)
+        for j in range(1, td.seconds / 3600):
+            one_time = timedelta(hours=datetime.strptime(str(j), '%H').hour)
+            new_time = current_time_f + one_time
+            l.insert(i, (new_time.hour, 0))
+        current_time = l[i][0]
+    return l
 
 
 def last_hours_sparkline(mongo_db, hours=49):
@@ -16,6 +31,8 @@ def last_hours_sparkline(mongo_db, hours=49):
             "hour" : 0
         }
     and the objective is to give coordinates for a charting library
+    returned list example:
+        [1583, 850, 476, (...), 422]
     """
     coll = mongo_db[MONGO_COLLECTION_ANALYTICS_HISTORY]
     results = coll.find({'type': 'hourly'},

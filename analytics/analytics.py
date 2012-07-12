@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+from datetime import datetime, timedelta
 from ast import literal_eval
 from beanstalkc import Connection as BSConnection
 from pymongo import Connection as MongoConnection
@@ -47,9 +47,22 @@ def fix_history_hourly():
                       str(result[i]['day']) + ',' + \
                       str(result[i]['hour'])
         dt = datetime.strptime(date_string, '%Y,%m,%d,%H')
-        if (previous_dt - dt).seconds != 3600:
-            print previous_dt
-            print dt
+        hour_diff = (previous_dt - dt).seconds / 3600
+        if hour_diff > 1:
+            print '--' + str(previous_dt)
+        for j in range(1, hour_diff):
+            new_dt = previous_dt - timedelta(seconds=3600*j)
+            hourly_key = {
+                'type': 'hourly',
+                'year': int(datetime.strftime(new_dt, '%Y')),
+                'month': int(datetime.strftime(new_dt, '%m')),
+                'day': int(datetime.strftime(new_dt, '%d')),
+                'hour': int(datetime.strftime(new_dt, '%H')),
+                'count': 0
+            }
+            print hourly_key
+        if hour_diff > 1:
+            print '--' + str(dt)
         previous_dt = dt
 
 

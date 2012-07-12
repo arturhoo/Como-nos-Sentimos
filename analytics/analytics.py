@@ -66,6 +66,42 @@ def fix_history_hourly():
         previous_dt = dt
 
 
+def fix_history_daily():
+    result = coll_hist.find(
+            {'type': 'daily'},
+            {'year': 1, 'month': 1, 'day': 1, 'count': 1},
+            sort=[('year', -1),
+                  ('month', -1),
+                  ('day', -1)
+            ]
+    )
+    date_string = str(result[0]['year']) + ',' + \
+                  str(result[0]['month']) + ',' + \
+                  str(result[0]['day'])
+    previous_dt = datetime.strptime(date_string, '%Y,%m,%d')
+    for i in range(1, result.count()):
+        date_string = str(result[i]['year']) + ',' + \
+                      str(result[i]['month']) + ',' + \
+                      str(result[i]['day'])
+        dt = datetime.strptime(date_string, '%Y,%m,%d')
+        day_diff = (previous_dt - dt).days
+        if day_diff > 1:
+            print '--' + str(previous_dt)
+        for j in range(1, day_diff):
+            new_dt = previous_dt - timedelta(days=1*j)
+            daily_key = {
+                'type': 'daily',
+                'year': int(datetime.strftime(new_dt, '%Y')),
+                'month': int(datetime.strftime(new_dt, '%m')),
+                'day': int(datetime.strftime(new_dt, '%d')),
+                'count': 0
+            }
+            print daily_key
+        if day_diff > 1:
+            print '--' + str(dt)
+        previous_dt = dt
+
+
 def insert_history(feeling, date, state, weather):
     feeling_key = 'feelings.' + feeling
     inc_data = {feeling_key + '.count': 1, 'count': 1}

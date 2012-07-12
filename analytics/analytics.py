@@ -26,6 +26,33 @@ def load_states_abbreviations(file_name):
     return states_dic
 
 
+def fix_history_hourly():
+    result = coll_hist.find(
+            {'type': 'hourly'},
+            {'year': 1, 'month': 1, 'day': 1, 'hour': 1, 'count': 1},
+            sort=[('year', -1),
+                  ('month', -1),
+                  ('day', -1),
+                  ('hour', -1)
+            ]
+    )
+    date_string = str(result[0]['year']) + ',' + \
+                  str(result[0]['month']) + ',' + \
+                  str(result[0]['day']) + ',' + \
+                  str(result[0]['hour'])
+    previous_dt = datetime.strptime(date_string, '%Y,%m,%d,%H')
+    for i in range(1, result.count()):
+        date_string = str(result[i]['year']) + ',' + \
+                      str(result[i]['month']) + ',' + \
+                      str(result[i]['day']) + ',' + \
+                      str(result[i]['hour'])
+        dt = datetime.strptime(date_string, '%Y,%m,%d,%H')
+        if (previous_dt - dt).seconds != 3600:
+            print previous_dt
+            print dt
+        previous_dt = dt
+
+
 def insert_history(feeling, date, state, weather):
     feeling_key = 'feelings.' + feeling
     inc_data = {feeling_key + '.count': 1, 'count': 1}

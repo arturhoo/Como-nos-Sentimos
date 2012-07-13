@@ -41,6 +41,7 @@ def fix_history_hourly():
                   str(result[0]['day']) + ',' + \
                   str(result[0]['hour'])
     previous_dt = datetime.strptime(date_string, '%Y,%m,%d,%H')
+    insertions_list = []
     for i in range(1, result.count()):
         date_string = str(result[i]['year']) + ',' + \
                       str(result[i]['month']) + ',' + \
@@ -48,11 +49,9 @@ def fix_history_hourly():
                       str(result[i]['hour'])
         dt = datetime.strptime(date_string, '%Y,%m,%d,%H')
         hour_diff = (previous_dt - dt).seconds / 3600
-        if hour_diff > 1:
-            print '--' + str(previous_dt)
         for j in range(1, hour_diff):
-            new_dt = previous_dt - timedelta(seconds=3600*j)
-            hourly_key = {
+            new_dt = previous_dt - timedelta(seconds=3600 * j)
+            hourly_doc = {
                 'type': 'hourly',
                 'year': int(datetime.strftime(new_dt, '%Y')),
                 'month': int(datetime.strftime(new_dt, '%m')),
@@ -60,10 +59,10 @@ def fix_history_hourly():
                 'hour': int(datetime.strftime(new_dt, '%H')),
                 'count': 0
             }
-            print hourly_key
-        if hour_diff > 1:
-            print '--' + str(dt)
+            insertions_list.append(hourly_doc)
         previous_dt = dt
+    for doc in insertions_list:
+        coll_hist.insert(doc)
 
 
 def fix_history_daily():
@@ -79,27 +78,26 @@ def fix_history_daily():
                   str(result[0]['month']) + ',' + \
                   str(result[0]['day'])
     previous_dt = datetime.strptime(date_string, '%Y,%m,%d')
+    insertions_list = []
     for i in range(1, result.count()):
         date_string = str(result[i]['year']) + ',' + \
                       str(result[i]['month']) + ',' + \
                       str(result[i]['day'])
         dt = datetime.strptime(date_string, '%Y,%m,%d')
         day_diff = (previous_dt - dt).days
-        if day_diff > 1:
-            print '--' + str(previous_dt)
         for j in range(1, day_diff):
-            new_dt = previous_dt - timedelta(days=1*j)
-            daily_key = {
+            new_dt = previous_dt - timedelta(days=1 * j)
+            daily_doc = {
                 'type': 'daily',
                 'year': int(datetime.strftime(new_dt, '%Y')),
                 'month': int(datetime.strftime(new_dt, '%m')),
                 'day': int(datetime.strftime(new_dt, '%d')),
                 'count': 0
             }
-            print daily_key
-        if day_diff > 1:
-            print '--' + str(dt)
+            insertions_list.append(daily_doc)
         previous_dt = dt
+    for doc in insertions_list:
+        coll_hist.insert(doc)
 
 
 def insert_history(feeling, date, state, weather):
@@ -190,6 +188,8 @@ def insert_general(feeling, date, state, weather):
 
 if __name__ == '__main__':
     states_dic = load_states_abbreviations('../crawler/states.txt')
+    fix_history_daily()
+    fix_history_hourly()
     while(True):
         job = bs.reserve()
         job_object = literal_eval(job.body)

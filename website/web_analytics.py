@@ -118,9 +118,12 @@ def get_feeling_percentage_last_hours(mongo_db, feeling, hours=25):
         except KeyError:
             feeling_count = 0
 
-        feeling_percentage_list.append((hour,
-                                        float(feeling_count / \
-                                              float(total) * 100.0)))
+        try:
+            feeling_percentage_list.append((hour,
+                                            float(feeling_count / \
+                                                  float(total) * 100.0)))
+        except ZeroDivisionError:
+            feeling_percentage_list.append((hour, float(0)))
     del feeling_percentage_list[0]
     feeling_percentage_list.reverse()
     return feeling_percentage_list

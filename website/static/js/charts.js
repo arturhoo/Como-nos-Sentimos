@@ -150,7 +150,7 @@ function cf_feelings_percentages_last_hours(categories, dataset, names, title, c
             },
             labels: {
                 formatter: function() {
-                    return this.value + ' %';
+                    return this.value + '%';
                 }
             }
         },
@@ -204,7 +204,7 @@ function cf_weather_conditions_for_feelings(categories, dataset, names, colors, 
             },
             labels: {
                 formatter: function() {
-                    return this.value + ' %';
+                    return this.value + '%';
                 }
             }
         },

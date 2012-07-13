@@ -7,7 +7,7 @@
 *.egg
 *.egg-info
 dist
-build
+# build # ignored due to kalendae build folder
 eggs
 parts
 bin

@@ -89,17 +89,28 @@ def get_today_top_feelings(mongo_db):
     return today_top_feelings_list
 
 
-def get_feeling_percentages_last_hours(mongo_db, feeling, hours=25):
+def get_feeling_percentages_last_hours(mongo_db, feeling, hours=25, date=None):
     """returns the percetange of a given feeling, in the total of the feelings
     identified, in the last hours. The percentage for the current hour is
     not considered.
+    parameter date must be instance of datetime.datetime
     returned list example:
         [(12, 0.07079646017699115),
          (13, 0.0720679714762555),
          (14, 0.06841011430550745)]
     """
     coll = mongo_db[MONGO_COLLECTION_ANALYTICS_HISTORY]
-    results = coll.find({'type': 'hourly'},
+    where_dic = {'type': 'hourly'}
+    if date is not None:
+        hour = datetime.strftime(date, '%H')
+        where_dic['hour'] = {'$lte': int(hour)}
+        day = datetime.strftime(date, '%d')
+        where_dic['day'] = {'$lte': int(day)}
+        month = datetime.strftime(date, '%m')
+        where_dic['month'] = {'$lte': int(month)}
+        year = datetime.strftime(date, '%Y')
+        where_dic['year'] = {'$lte': int(year)}
+    results = coll.find(where_dic,
                         {'feelings.' + feeling: 1,
                          'hour': 1,
                          'count': 1},

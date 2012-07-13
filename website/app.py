@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 from pymongo import Connection
 from pylibmc import Client
 from hashlib import md5
+from datetime import datetime
 from web_analytics import last_hours_sparkline, \
                           get_feelings_percentages_for_state, \
                           get_last_hour_top_feelings, \
@@ -116,6 +117,7 @@ def hello():
     if not 'state' in request.args and not 'feeling' in request.args:
         today_top_feelings = get_today_top_feelings(db)
         for feeling in today_top_feelings[:5]:
+            # dt = datetime.strptime('2012-07-06 06', '%Y-%m-%d %H')
             feelings_percentages_last_hours.append((feeling, get_feeling_percentages_last_hours(db, feeling)))
         for feeling in today_top_feelings[:10]:
             weather_conditions_count_for_feelings.append((feeling, get_weather_conditions_count_for_feeling(db, feeling, weather_translations)))

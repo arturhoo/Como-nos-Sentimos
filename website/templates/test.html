@@ -158,7 +158,7 @@
         theme_highchart();
         makeTheLink();
         var chart_sparkline = setTimeout(function() { cf_sparkline({{ sparkline_data }}, 'sparkline')}, 1200);
-        do_feelings_percentages_last_hour({{ feelings_percentages_last_hours|tojson|safe }});
+        do_feelings_percentages_last_hours({{ feelings_percentages_last_hours|tojson|safe }});
         do_feelings_percentages_for_states({{feelings_percentages_for_states|tojson|safe}});
         do_weather_conditions_count_for_feelings({{weather_conditions_count_for_feelings|tojson|safe}});
 

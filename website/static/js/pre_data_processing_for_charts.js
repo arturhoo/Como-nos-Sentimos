@@ -35,7 +35,7 @@ function theme_highchart() {
 }
 
 
-function do_feelings_percentages_last_hour(feelings_percentages_last_hours) {
+function do_feelings_percentages_last_hours(feelings_percentages_last_hours) {
     var dataset = [];
     var names = [];
     var categories = [];

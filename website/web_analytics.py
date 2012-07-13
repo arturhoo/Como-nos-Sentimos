@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from operator import itemgetter
 from datetime import datetime, timedelta
+from collections import deque
 
 try:
     from local_settings import *
@@ -189,3 +190,40 @@ def get_weather_conditions_count_for_feeling(mongo_db, feeling,
                                            key=itemgetter(0),
                                            reverse=False)
     return weather_conditions_count_list
+
+
+def get_feeling_mean_percentage_for_hour(mongo_db, feeling, hour):
+    """returns the mean occurrence of a feeling in a given hour
+    returned value example:
+        27.216047709406343
+    """
+    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_GENERAL]
+    result = coll.find_one({'type': 'hour',
+                            'hour': hour},
+                           {'count': 1,
+                            'feelings.' + feeling + '.count': 1})
+    mean = float(result['feelings'][feeling]['count'] / \
+                float(result['count']) * 100.0)
+    return mean
+
+
+def get_feeling_mean_percentages_for_hours(mongo_db, feeling, base_hour=0):
+    """returns a list with the mean occurrences for each hour of the day for
+    a given feelings
+    the base_hour parameter is responsible for rotating the list to a given
+    hour
+    return list example, for base_hour=10:
+        [(11, 15.567399118225117),
+         (12, 15.0861101761472),
+         (...),
+         (9, 16.51805708236635),
+         (10, 16.832664261395397)]
+    """
+    mean_percentages_for_hours = []
+    for hour in range(24):
+        mean = get_feeling_mean_percentage_for_hour(mongo_db, feeling, hour)
+        mean_percentages_for_hours.append((hour, mean))
+    dq = deque(mean_percentages_for_hours)
+    dq.rotate(-base_hour - 1)
+    new_list = list(dq)
+    return new_list

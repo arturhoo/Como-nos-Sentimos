@@ -89,7 +89,7 @@ def get_today_top_feelings(mongo_db):
     return today_top_feelings_list
 
 
-def get_feeling_percentage_last_hours(mongo_db, feeling, hours=25):
+def get_feeling_percentages_last_hours(mongo_db, feeling, hours=25):
     """returns the percetange of a given feeling, in the total of the feelings
     identified, in the last hours. The percentage for the current hour is
     not considered.

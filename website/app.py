@@ -6,7 +6,7 @@ from hashlib import md5
 from web_analytics import last_hours_sparkline, \
                           get_feelings_percentages_for_state, \
                           get_last_hour_top_feelings, \
-                          get_feeling_percentage_last_hours, \
+                          get_feeling_percentages_last_hours, \
                           get_today_top_feelings, \
                           get_weather_conditions_count_for_feeling
 from tweet import tweet_from_dict_to_object
@@ -111,12 +111,13 @@ def hello():
     weather_conditions_count_for_feelings = []
     if 'feeling' in request.args:
         for feeling in request.args.getlist('feeling'):
-            feelings_percentages_last_hours.append((feeling, get_feeling_percentage_last_hours(db, feeling)))
+            feelings_percentages_last_hours.append((feeling, get_feeling_percentages_last_hours(db, feeling)))
             weather_conditions_count_for_feelings.append((feeling, get_weather_conditions_count_for_feeling(db, feeling, weather_translations)))
     if not 'state' in request.args and not 'feeling' in request.args:
         today_top_feelings = get_today_top_feelings(db)
         for feeling in today_top_feelings[:5]:
-            feelings_percentages_last_hours.append((feeling, get_feeling_percentage_last_hours(db, feeling)))
+            feelings_percentages_last_hours.append((feeling, get_feeling_percentages_last_hours(db, feeling)))
+        for feeling in today_top_feelings[:10]:
             weather_conditions_count_for_feelings.append((feeling, get_weather_conditions_count_for_feeling(db, feeling, weather_translations)))
 
     return render_template('test.html',

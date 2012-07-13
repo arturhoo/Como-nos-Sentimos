@@ -129,5 +129,10 @@ function do_weather_conditions_count_for_feelings(weather_conditions_count_for_f
     $('<div/>', {
         style: 'height: 10px;'
     }).appendTo('#stats');
-    var wc_chart = cf_weather_conditions_for_feelings(categories, dataset, names, colors, 'weather_conditions_chart_inner');
+    var wc_chart = null;
+    if (!location.search.substring(1))
+      wc_chart = cf_weather_conditions_for_feelings(categories, dataset, names, colors, 'Condições climáticas para os sentimentos mais frequentes', 'weather_conditions_chart_inner');
+    else
+      wc_chart = cf_weather_conditions_for_feelings(categories, dataset, names, colors, 'Condições climáticas para os sentimentos ecolhidos', 'weather_conditions_chart_inner');
+
 }

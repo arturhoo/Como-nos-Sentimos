@@ -172,7 +172,7 @@ function cf_feelings_percentages_last_hours(categories, dataset, names, title, c
     });
 }
 
-function cf_weather_conditions_for_feelings(categories, dataset, names, colors, container) {
+function cf_weather_conditions_for_feelings(categories, dataset, names, colors, title, container) {
     var new_series = [];
     for(var i=0; i<names.length; i++) {
         new_series.push({name: names[i], data: dataset[i], color: colors[i]});
@@ -188,7 +188,7 @@ function cf_weather_conditions_for_feelings(categories, dataset, names, colors, 
             enabled:false
         },
         title: {
-            text: 'Condições climáticas para sentimentos'
+            text: title
         },
         xAxis: {
             categories: categories,

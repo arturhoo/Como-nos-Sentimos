@@ -112,10 +112,10 @@ function cf_feelings_percentages_for_state(categories, dataset, state, container
   });
 }
 
-function cf_feelings_percentages_last_hours(categories, dataset, names, title, container) {
+function cf_feelings_percentages_last_hours(categories, dataset, names, colors, title, container) {
   var new_series = [];
   for(var i=0; i<names.length; i++) {
-    new_series.push({name: names[i], data: dataset[i]});
+    new_series.push({name: names[i], data: dataset[i], color: colors[i]});
   }
   return new Highcharts.Chart({
     chart: {

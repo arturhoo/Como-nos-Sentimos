@@ -39,6 +39,7 @@ function do_feelings_percentages_last_hours(feelings_percentages_last_hours) {
   var dataset = [];
   var names = [];
   var categories = [];
+  var feelings_colors = [];
   for(var i=0; i<feelings_percentages_last_hours.length; i++) {
     entry = feelings_percentages_last_hours[i];
     if(i === 0) {
@@ -48,6 +49,7 @@ function do_feelings_percentages_last_hours(feelings_percentages_last_hours) {
       }
     }
     names.push(entry[0]);
+    feelings_colors.push(entry[2]);
     data_entry = [];
     for(var k=0; k<entry[1].length; k++) {
       data = entry[1][k];
@@ -69,9 +71,9 @@ function do_feelings_percentages_last_hours(feelings_percentages_last_hours) {
     }).appendTo('#stats');
     var feelings_chart = null;
     if (location.search.substring(1))
-      feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, 'Sentimentos escolhidos nas últimas 24 horas', 'feelings_chart_inner');
+      feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, feelings_colors, 'Sentimentos escolhidos nas últimas 24 horas', 'feelings_chart_inner');
     else
-      feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, 'Sentimentos mais frequentes nas últimas 24 horas', 'feelings_chart_inner');
+      feelings_chart = cf_feelings_percentages_last_hours(categories, dataset, names, feelings_colors, 'Sentimentos mais frequentes nas últimas 24 horas', 'feelings_chart_inner');
   }
 }
 

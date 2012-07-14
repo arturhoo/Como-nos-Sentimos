@@ -120,22 +120,24 @@ function do_weather_conditions_count_for_feelings(weather_conditions_count_for_f
       dataset[j].push(entry[1][j][1]);
     }
   }
-  $('<div/>', {
-    id: 'weather_conditions_chart',
-    class: 'charts-border'
-  }).appendTo('#stats');
-  $('<div/>', {
-    id: 'weather_conditions_chart_inner',
-    style: 'height:350px; margin-bottom: 1px;'
-  }).appendTo('#weather_conditions_chart');
-  $('<div/>', {
-      style: 'height: 10px;'
-  }).appendTo('#stats');
-  var wc_chart = null;
-  if (!location.search.substring(1))
-    wc_chart = cf_weather_conditions_for_feelings(categories, dataset, names, colors, 'Condições climáticas para os sentimentos mais frequentes', 'weather_conditions_chart_inner');
-  else
-    wc_chart = cf_weather_conditions_for_feelings(categories, dataset, names, colors, 'Condições climáticas para os sentimentos ecolhidos', 'weather_conditions_chart_inner');
+  if(weather_conditions_count_for_feelings.length !== 0) {
+    $('<div/>', {
+      id: 'weather_conditions_chart',
+      class: 'charts-border'
+    }).appendTo('#stats');
+    $('<div/>', {
+      id: 'weather_conditions_chart_inner',
+      style: 'height:350px; margin-bottom: 1px;'
+    }).appendTo('#weather_conditions_chart');
+    $('<div/>', {
+        style: 'height: 10px;'
+    }).appendTo('#stats');
+    var wc_chart = null;
+    if (!location.search.substring(1))
+      wc_chart = cf_weather_conditions_for_feelings(categories, dataset, names, colors, 'Condições climáticas para os sentimentos mais frequentes', 'weather_conditions_chart_inner');
+    else
+      wc_chart = cf_weather_conditions_for_feelings(categories, dataset, names, colors, 'Condições climáticas para os sentimentos ecolhidos', 'weather_conditions_chart_inner');
+  }
 }
 
 function do_feelings_percentages_and_mean_last_hours(feelings_percentages_and_mean_last_hour) {

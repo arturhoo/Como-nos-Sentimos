@@ -159,18 +159,19 @@
         makeTheLink();
         var chart_sparkline = setTimeout(function() { cf_sparkline({{ sparkline_data }}, 'sparkline')}, 1200);
         do_feelings_percentages_last_hours({{ feelings_percentages_last_hours|tojson|safe }});
-        do_feelings_percentages_for_states({{feelings_percentages_for_states|tojson|safe}});
-        do_weather_conditions_count_for_feelings({{weather_conditions_count_for_feelings|tojson|safe}});
+        do_feelings_percentages_for_states({{ feelings_percentages_for_states|tojson|safe }});
+        do_feelings_percentages_and_mean_last_hours({{ feelings_percentages_and_mean_last_hours|tojson|safe }})
+        do_weather_conditions_count_for_feelings({{weather_conditions_count_for_feelings|tojson|safe }});
 
-        // Smooth Scrolling
+        // Smooth Scrolling Begin
         var locationPath = filterPath(location.pathname);
         var scrollElem = scrollableElement('html', 'body');
         $('a[href*=#]').each(function() {
           $(this).click(function(event) {
           var thisPath = filterPath(this.pathname) || locationPath;
-          if (  locationPath == thisPath
-          && (location.hostname == this.hostname || !this.hostname)
-          && this.hash.replace(/#/,'') ) {
+          if (locationPath == thisPath &&
+              (location.hostname == this.hostname || !this.hostname) &&
+              this.hash.replace(/#/,'') ) {
             var $target = $(this.hash), target = this.hash;
             if (target && $target.length != 0) {
               var targetOffset = $target.offset().top;

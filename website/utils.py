@@ -36,3 +36,21 @@ def prepare_string_for_javascript(string):
     new_string = new_string.replace('\\', '\\\\')
     new_string = unescape(new_string)
     return new_string
+
+
+def rgb_to_html_color(rgb_tuple):
+    """convert an (R, G, B) tuple to #RRGGBB
+    Source: http://code.activestate.com/recipes/266466/
+    """
+    hexcolor = '#%02x%02x%02x' % rgb_tuple
+    # that's it! '%02x' means zero-padded, 2-digit hex values
+    return hexcolor
+
+
+def get_feeling_color(feeling, feelings_list):
+    index = [x[0] for x in feelings_list].index(feeling)
+    rgb_string = feelings_list[index][1]
+    rgb_tuple = (int(rgb_string.split(',')[0]), \
+                 int(rgb_string.split(',')[1]), \
+                 int(rgb_string.split(',')[2]))
+    return rgb_to_html_color(rgb_tuple)

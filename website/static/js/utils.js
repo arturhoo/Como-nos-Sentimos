@@ -23,3 +23,7 @@ function filterPath(string) {
     .replace(/(index|default).[a-zA-Z]{3,4}$/,'')
     .replace(/\/$/,'');
 }
+
+function capitaliseFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}

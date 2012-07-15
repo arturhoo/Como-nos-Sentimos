@@ -94,7 +94,8 @@ def hello():
     tweets = None
     string_md5 = None
 
-    query_dict = request_args_filter(request.args, feelings, states_unique)
+    query_dict = request_args_filter(request.args, feelings, states)
+    print query_dict
     db_tweets = coll.find(query_dict, \
                           sort=[('created_at', -1)], \
                           limit=limit)

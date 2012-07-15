@@ -8,16 +8,17 @@ def feelings_filter(args, feelings):
     return feelings_query_list
 
 
-def states_filter(args, states_unique):
+def states_filter(args, states):
     states_query_list = []
     for state in args.getlist('state'):
-        states_full_names = [x[0] for x in states_unique]
-        state_full_name = states_unique[states_full_names.index(state)][1]
-        states_query_list.append(state_full_name)
+        indexes_full_names = [i for i, v in enumerate(states) if v[0] == state]
+        for index in indexes_full_names:
+            state_full_name = states[index][1]
+            states_query_list.append(state_full_name)
     return states_query_list
 
 
-def request_args_filter(request_args, feelings, states_unique):
+def request_args_filter(request_args, feelings, states):
     query_dict = {}
     if 'feeling' in request_args:
         query_dict['feelings'] = {
@@ -26,7 +27,7 @@ def request_args_filter(request_args, feelings, states_unique):
         query_dict['feelings_size'] = 1
     if 'state' in request_args:
         query_dict['location.state'] = {
-            '$in': states_filter(request_args, states_unique)
+            '$in': states_filter(request_args, states)
         }
     if 'location-only' in request_args:
         if request_args['location-only'].lower() == 'yes':

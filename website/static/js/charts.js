@@ -87,7 +87,7 @@ function cf_feelings_percentages_for_state(categories, dataset, state, container
       },
       labels: {
         formatter: function() {
-          return this.value + ' %';
+          return this.value + '%';
         }
       }
 

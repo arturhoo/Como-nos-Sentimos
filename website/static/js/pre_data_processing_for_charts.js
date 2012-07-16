@@ -64,7 +64,7 @@ function do_feelings_percentages_last_hours(feelings_percentages_last_hours) {
     }).appendTo('#stats');
     $('<div/>', {
       id: 'feelings_chart_inner',
-      style: 'height:250px; margin-bottom: 1px;'
+      style: 'height: 250px; margin-bottom: 1px;'
     }).appendTo('#feelings_chart');
     $('<div/>', {
       style: 'height: 10px;'
@@ -94,7 +94,7 @@ function do_feelings_percentages_for_states(feelings_percentages_for_states) {
       }).appendTo('#stats');
       $('<div/>', {
         id: chart_id + '_inner',
-        style: 'height:250px; margin-bottom: 1px;'
+        style: 'height: 250px; margin-bottom: 1px;'
       }).appendTo('#' + chart_id);
       $('<div/>', {
         style: 'height: 10px;'
@@ -127,7 +127,7 @@ function do_weather_conditions_count_for_feelings(weather_conditions_count_for_f
     }).appendTo('#stats');
     $('<div/>', {
       id: 'weather_conditions_chart_inner',
-      style: 'height:350px; margin-bottom: 1px;'
+      style: 'height: 350px; margin-bottom: 1px;'
     }).appendTo('#weather_conditions_chart');
     $('<div/>', {
         style: 'height: 10px;'
@@ -166,7 +166,7 @@ function do_feelings_percentages_and_mean_last_hours(feelings_percentages_and_me
     }).appendTo('#stats');
     $('<div/>', {
       id: chart_id + '_inner',
-      style: 'height:250px; margin-bottom: 1px;'
+      style: 'height: 250px; margin-bottom: 1px;'
     }).appendTo('#' + chart_id);
     $('<div/>', {
       style: 'height: 10px;'
@@ -176,7 +176,24 @@ function do_feelings_percentages_and_mean_last_hours(feelings_percentages_and_me
 }
 
 function do_feelings_mean_percentages_every_two_hours(feelings_mean_percentages_every_two_hours) {
+  $('<div/>', {
+    id: 'test1',
+    style: 'position:relative; display:table;'
+  }).appendTo('#stats');
+  var count = 0;
+  var current_row = null;
   for(var i=0; i<feelings_mean_percentages_every_two_hours.length; i++) {
+    if(i%5 === 0) {
+      $('<div/>', {
+        style: 'height: 10px;'
+      }).appendTo('#test1');
+      $('<div/>', {
+        id: 'row' + count.toString(),
+        style: 'display: table-row;'
+      }).appendTo('#test1');
+      current_row = '#row' + count.toString();
+      count++;
+    }
     var dataset = [];
     var categories = [];
     var fmpeth = feelings_mean_percentages_every_two_hours[i];
@@ -188,15 +205,22 @@ function do_feelings_mean_percentages_every_two_hours(feelings_mean_percentages_
     var chart_id = 'feeling_radial_' + fmpeth[0];
     $('<div/>', {
       id: chart_id,
-      class: 'charts-border'
-    }).appendTo('#stats');
+      // class: 'charts-border'
+      style: 'display: table-cell; border: 1px solid #B9B9B9; background-color: #F9F9F9;'
+    }).appendTo(current_row);
     $('<div/>', {
       id: chart_id + '_inner',
-      style: 'height:250px; margin-bottom: 1px;'
+      style: 'height: 152px; width: 152px; margin-bottom: 1px;'
     }).appendTo('#' + chart_id);
-    $('<div/>', {
-      style: 'height: 10px;'
-    }).appendTo('#stats');
+
+    if((i+1)%5 !== 0) {
+      $('<div/>', {
+        style: 'display: table-cell; width: 10px;'
+      }).appendTo(current_row);
+    }
     var feeling_radial_chart = cf_feelings_mean_percentages_every_two_hours(categories, dataset, fmpeth[0], chart_id + '_inner');
   }
+  $('<div/>', {
+    style: 'height: 10px;'
+  }).appendTo('#stats');
 }

@@ -311,7 +311,7 @@ function cf_feelings_mean_percentages_every_two_hours(categories, dataset, title
       tickmarkPlacement: 'on',
       gridLineWidth: 0,
       // gridLineWidth: 2, // tradional radial graph
-      lineWidth: 0,
+      lineWidth: 1,
       labels: {
           enabled: false
       }

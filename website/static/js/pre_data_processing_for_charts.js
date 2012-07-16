@@ -171,6 +171,32 @@ function do_feelings_percentages_and_mean_last_hours(feelings_percentages_and_me
     $('<div/>', {
       style: 'height: 10px;'
     }).appendTo('#stats');
-    var state_chart = cf_feelings_percentages_and_mean_last_hour(categories, dataset, names, fpmlh[3], chart_id + '_inner');
+    var feeling_mean_chart = cf_feelings_percentages_and_mean_last_hour(categories, dataset, names, fpmlh[3], chart_id + '_inner');
+  }
+}
+
+function do_feelings_mean_percentages_every_two_hours(feelings_mean_percentages_every_two_hours) {
+  for(var i=0; i<feelings_mean_percentages_every_two_hours.length; i++) {
+    var dataset = [];
+    var categories = [];
+    var fmpeth = feelings_mean_percentages_every_two_hours[i];
+    for(var j=0; j<fmpeth[1].length; j++) {
+      dataset.push(fmpeth[1][j]);
+      categories.push((j*2).toString() + '-' + ((j+1)*2).toString() + 'h');
+    }
+
+    var chart_id = 'feeling_radial_' + fmpeth[0];
+    $('<div/>', {
+      id: chart_id,
+      class: 'charts-border'
+    }).appendTo('#stats');
+    $('<div/>', {
+      id: chart_id + '_inner',
+      style: 'height:250px; margin-bottom: 1px;'
+    }).appendTo('#' + chart_id);
+    $('<div/>', {
+      style: 'height: 10px;'
+    }).appendTo('#stats');
+    var feeling_radial_chart = cf_feelings_mean_percentages_every_two_hours(categories, dataset, fmpeth[0], chart_id + '_inner');
   }
 }

@@ -227,3 +227,12 @@ def get_feeling_mean_percentages_for_hours(mongo_db, feeling, base_hour=0):
     dq.rotate(-base_hour - 1)
     new_list = list(dq)
     return new_list
+
+
+def get_feeling_mean_percentages_for_every_two_hours(mongo_db, feeling):
+    fmpfh = get_feeling_mean_percentages_for_hours(mongo_db, feeling, 23)
+    fmpfh_list = [x[1] for x in fmpfh]
+    new_list = []
+    for i, k in zip(fmpfh_list[0::2], fmpfh_list[1::2]):
+        new_list.append(float((i + k) / 2))
+    return new_list

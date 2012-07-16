@@ -10,7 +10,8 @@ from web_analytics import last_hours_sparkline, \
                           get_feeling_percentages_last_hours, \
                           get_today_top_feelings, \
                           get_weather_conditions_count_for_feeling, \
-                          get_feeling_mean_percentages_for_hours
+                          get_feeling_mean_percentages_for_hours, \
+                          get_feeling_mean_percentages_for_every_two_hours
 from tweet import tweet_from_dict_to_object
 from filters import request_args_filter
 from utils import get_feeling_color
@@ -114,6 +115,7 @@ def hello():
     feelings_percentages_last_hours = []
     weather_conditions_count_for_feelings = []
     feelings_percentages_and_mean_last_hours = []
+    feelings_mean_percentages_every_two_hours = []
     if 'feeling' in request.args:
         for feeling in request.args.getlist('feeling'):
             feeling_color = get_feeling_color(feeling, feelings)
@@ -134,6 +136,7 @@ def hello():
             feelings_percentages_last_hours.append((feeling, get_feeling_percentages_last_hours(db, feeling), feeling_color))
         for feeling in feelings:
             weather_conditions_count_for_feelings.append((feeling[0], get_weather_conditions_count_for_feeling(db, feeling[0], weather_translations)))
+            feelings_mean_percentages_every_two_hours.append((feeling[0], get_feeling_mean_percentages_for_every_two_hours(db, feeling[0])))
 
     return render_template('test.html',
                            tweets=tweets,
@@ -146,7 +149,8 @@ def hello():
                            feelings_percentages_for_states=feelings_percentages_for_states,
                            feelings_percentages_last_hours=feelings_percentages_last_hours,
                            weather_conditions_count_for_feelings=weather_conditions_count_for_feelings,
-                           feelings_percentages_and_mean_last_hours=feelings_percentages_and_mean_last_hours)
+                           feelings_percentages_and_mean_last_hours=feelings_percentages_and_mean_last_hours,
+                           feelings_mean_percentages_every_two_hours=feelings_mean_percentages_every_two_hours)
 
 if __name__ == "__main__":
     app.run()

@@ -284,3 +284,52 @@ function cf_feelings_percentages_and_mean_last_hour(categories, dataset, names, 
     series: new_series
   });
 }
+
+function cf_feelings_mean_percentages_every_two_hours(categories, dataset, title, container) {
+  return new Highcharts.Chart({
+    chart: {
+        renderTo: container,
+        polar: true
+    },
+    title: {
+        text: title
+    },
+    credits:{
+      enabled:false
+    },
+    pane: {
+        center: ['50%', '50%'],
+        size: '100%'
+    },
+    xAxis: {
+        categories: categories,
+        tickmarkPlacement: 'on',
+        gridLineWidth: 0,
+        // gridLineWidth: 2, // tradional radial graph
+        lineWidth: 0,
+        labels: {
+            enabled: false
+        }
+    },
+    yAxis: {
+        gridLineWidth: 0,
+        labels: {
+            enabled: false
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    series: [{
+        type: 'column',
+        // type: 'area', // tradional radial graph
+        data: dataset,
+        lineWidth: 0,
+        marker: {
+            enabled: false
+        },
+        shadow: true
+        // shadow: true // tradional radial graph
+    }]
+  });
+}

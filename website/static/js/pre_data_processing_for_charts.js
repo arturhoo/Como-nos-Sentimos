@@ -197,8 +197,9 @@ function do_feelings_mean_percentages_every_two_hours(feelings_mean_percentages_
     var dataset = [];
     var categories = [];
     var fmpeth = feelings_mean_percentages_every_two_hours[i];
+    var day_color = ['#000030', '#212146', '#3E3E53', '#7C7B6C', '#BAB986', '#F8F69F', '#FFE16A', '#F8F69F', '#BAB986', '#7C7B6C', '#3E3E53', '#212146'];
     for(var j=0; j<fmpeth[1].length; j++) {
-      dataset.push(fmpeth[1][j]);
+      dataset.push({y: fmpeth[1][j], color: day_color[j]});
       categories.push((j*2).toString() + '-' + ((j+1)*2).toString() + 'h');
     }
 

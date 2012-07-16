@@ -302,7 +302,9 @@ function cf_feelings_mean_percentages_every_two_hours(categories, dataset, title
     },
     pane: {
       center: ['50%', '50%'],
-      size: '100%'
+      size: '100%',
+      startAngle: -15,
+      endAngle: 345
     },
     xAxis: {
       categories: categories,

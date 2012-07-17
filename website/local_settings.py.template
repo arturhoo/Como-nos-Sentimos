@@ -1,5 +1,0 @@
-# MongoDB Settings
-MONGO_HOST = ''
-MONGO_DB = ''
-MONGO_COLLECTION = ''
-NUM_PARTICLES = 70

@@ -4,16 +4,29 @@ from ast import literal_eval
 from beanstalkc import Connection as BSConnection
 from pymongo import Connection as MongoConnection
 
+from os.path import realpath, abspath, split, join
+from inspect import getfile, currentframe as cf
+from sys import path, exit
+
+# realpath() with make your script run, even if you symlink it :)
+cmd_folder = realpath(abspath(split(getfile(cf()))[0]))
+if cmd_folder not in path:
+    path.insert(0, cmd_folder)
+
+# use this if you want to include modules from a subforder
+cmd_subfolder = realpath(abspath(join(split(getfile(cf()))[0], "../")))
+if cmd_subfolder not in path:
+    path.insert(0, cmd_subfolder)
 
 try:
     from local_settings import *
 except ImportError:
-    sys.exit("No Crawler Local Settings found!")
+    exit("No local settings found")
 
-coll_hist = MongoConnection(host=MONGO_HOST)[MONGO_DB][MONGO_COLLECTION_ANALYTICS_HISTORY]
-coll_general = MongoConnection(host=MONGO_HOST)[MONGO_DB][MONGO_COLLECTION_ANALYTICS_GENERAL]
+coll_hist = MongoConnection(host=MONGO_HOST)[MONGO_DB][MONGO_ANALYTICS_HISTORY_COLLECTION]
+coll_general = MongoConnection(host=MONGO_HOST)[MONGO_DB][MONGO_ANALYTICS_GENERAL_COLLECTION]
 bs = BSConnection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
-bs.watch(BEANSTALKD_TUBE)
+bs.watch(BEANSTALKD_ANALYTICS_TUBE)
 bs.ignore('default')
 
 

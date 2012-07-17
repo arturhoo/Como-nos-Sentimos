@@ -1,25 +1,37 @@
 # -*- coding: utf-8 -*-
 from tweepy import OAuthHandler, StreamListener
 from tweepy.streaming import Stream
+from pymongo import Connection
+from beanstalkc import Connection as BSConnection
+from datetime import timedelta
 from sentiment_filter import identify_feelings
 from utils import load_terms
-from pymongo import Connection
-from datetime import timedelta
-import beanstalkc
 import re
-import sys
 
+from os.path import realpath, abspath, split, join
+from inspect import getfile, currentframe as cf
+from sys import path, exit, stderr
+
+# realpath() with make your script run, even if you symlink it :)
+cmd_folder = realpath(abspath(split(getfile(cf()))[0]))
+if cmd_folder not in path:
+    path.insert(0, cmd_folder)
+
+# use this if you want to include modules from a subforder
+cmd_subfolder = realpath(abspath(join(split(getfile(cf()))[0], "../")))
+if cmd_subfolder not in path:
+    path.insert(0, cmd_subfolder)
 
 try:
     from local_settings import *
 except ImportError:
-    sys.exit("No Crawler Local Settings found!")
+    exit("No local settings found")
 
 auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(TOKEN_KEY, TOKEN_SECRET)
 
-collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_COLLECTION]
-beanstalk = beanstalkc.Connection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
+collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_CRAWLER_COLLECTION]
+beanstalk = BSConnection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
 
 
 def check_full_query(query, text):
@@ -77,7 +89,7 @@ def insert_tweet(collection, status, feelings):
         tweet_id = collection.insert(tweet)
 
     except Exception, e:
-        print >> sys.stderr, 'Encountered exception trying to insert tweet:', e
+        print >> stderr, 'Encountered exception trying to insert tweet:', e
 
     # If it is not geotagged but has the user location field
     if (status.author.location) and ('location' not in tweet):
@@ -85,7 +97,7 @@ def insert_tweet(collection, status, feelings):
             beanstalk.use(BEANSTALKD_GEO_TUBE)
             beanstalk.put(str(tweet_id))
         except Exception, e:
-            print >> sys.stderr, 'Encountered exception ' + \
+            print >> stderr, 'Encountered exception ' + \
                                  'trying to insert job:', e
     # If it is geotagged or has no location information at all
     else:
@@ -109,15 +121,15 @@ class CustomStreamListener(StreamListener):
                     insert_tweet(collection, status, feelings)
 
         except Exception, e:
-            print >> sys.stderr, 'Encountered Exception:', e
+            print >> stderr, 'Encountered Exception:', e
             pass
 
     def on_error(self, status_code):
-        print >> sys.stderr, 'Encountered error with status code:', status_code
+        print >> stderr, 'Encountered error with status code:', status_code
         return True  # Don't kill the stream
 
     def on_timeout(self):
-        print >> sys.stderr, 'Timeout...'
+        print >> stderr, 'Timeout...'
         return True  # Don't kill the stream
 
 

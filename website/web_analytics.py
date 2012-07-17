@@ -3,17 +3,32 @@ from operator import itemgetter
 from datetime import datetime, timedelta
 from collections import deque
 
+from os.path import realpath, abspath, split, join
+from inspect import getfile, currentframe as cf
+from sys import path, exit
+
+# realpath() with make your script run, even if you symlink it :)
+cmd_folder = realpath(abspath(split(getfile(cf()))[0]))
+if cmd_folder not in path:
+    path.insert(0, cmd_folder)
+
+# use this if you want to include modules from a subforder
+cmd_subfolder = realpath(abspath(join(split(getfile(cf()))[0], "../")))
+if cmd_subfolder not in path:
+    path.insert(0, cmd_subfolder)
+
 try:
     from local_settings import *
 except ImportError:
-    sys.exit("No Flask Local Settings found!")
+    exit("No local settings found")
 
 
 def insert_zero_counts(l, FMT='%H'):
     l.reverse()
     current_time = l[0][0]
     for i in range(1, len(l)):
-        td = datetime.strptime(str(current_time), FMT) - datetime.strptime(str(l[i][0]), FMT)
+        td = datetime.strptime(str(current_time), FMT) - \
+            datetime.strptime(str(l[i][0]), FMT)
         current_time_f = datetime.strptime(str(l[i][0]), FMT)
         for j in range(1, td.seconds / 3600):
             one_time = timedelta(hours=datetime.strptime(str(j), '%H').hour)
@@ -35,7 +50,7 @@ def last_hours_sparkline(mongo_db, hours=49):
     returned list example:
         [1583, 850, 476, (...), 422]
     """
-    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_HISTORY]
+    coll = mongo_db[MONGO_ANALYTICS_HISTORY_COLLECTION]
     results = coll.find({'type': 'hourly'},
                         {'count': 1, 'hour': 1},
                         sort=[('year', -1),
@@ -58,7 +73,7 @@ def get_last_hour_top_feelings(mongo_db):
 
         [u'feliz', u'saudade', u'triste', (...) u'realizado', u'est\xfapido']
     """
-    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_HISTORY]
+    coll = mongo_db[MONGO_ANALYTICS_HISTORY_COLLECTION]
     results = coll.find({'type': 'hourly'},
                         {'feelings': 1},
                         sort=[('year', -1),
@@ -75,7 +90,7 @@ def get_last_hour_top_feelings(mongo_db):
 
 
 def get_today_top_feelings(mongo_db):
-    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_HISTORY]
+    coll = mongo_db[MONGO_ANALYTICS_HISTORY_COLLECTION]
     results = coll.find_one({'type': 'daily'},
                             {'feelings': 1},
                             sort=[('year', -1),
@@ -100,7 +115,7 @@ def get_feeling_percentages_last_hours(mongo_db, feeling, hours=25, date=None):
          (13, 0.0720679714762555),
          (14, 0.06841011430550745)]
     """
-    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_HISTORY]
+    coll = mongo_db[MONGO_ANALYTICS_HISTORY_COLLECTION]
     where_dic = {'type': 'hourly'}
     if date is not None:
         hour = datetime.strftime(date, '%H')
@@ -148,7 +163,7 @@ def get_feelings_percentages_for_state(mongo_db, state, num_feelings=10):
          (u'triste', 7.48737248687729),
          (u'saudade', 6.747878907926447)]
     """
-    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_GENERAL]
+    coll = mongo_db[MONGO_ANALYTICS_GENERAL_COLLECTION]
     result = coll.find_one({'type': 'alltime'},
                             {'states.' + state: 1})
     total = result['states'][state]['count']
@@ -172,7 +187,7 @@ def get_weather_conditions_count_for_feeling(mongo_db, feeling,
          (u'chovendo', 4010),
          (u'com neblina', 915)]
     """
-    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_GENERAL]
+    coll = mongo_db[MONGO_ANALYTICS_GENERAL_COLLECTION]
     result_dic = {}
     for (condition, translation) in weather_translations.items():
         result = coll.find_one({'type': 'alltime'},
@@ -197,7 +212,7 @@ def get_feeling_mean_percentage_for_hour(mongo_db, feeling, hour):
     returned value example:
         27.216047709406343
     """
-    coll = mongo_db[MONGO_COLLECTION_ANALYTICS_GENERAL]
+    coll = mongo_db[MONGO_ANALYTICS_GENERAL_COLLECTION]
     result = coll.find_one({'type': 'hour',
                             'hour': hour},
                            {'count': 1,

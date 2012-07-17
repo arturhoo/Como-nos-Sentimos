@@ -4,20 +4,32 @@ from pymongo import Connection
 from utils import remove_accents
 from datetime import timedelta
 from pywapi import get_weather_from_google
-import beanstalkc
+from beanstalkc import Connection as BSConnection
 import re
-import sys
 
+from os.path import realpath, abspath, split, join
+from inspect import getfile, currentframe as cf
+from sys import path, exit, stderr
+
+# realpath() with make your script run, even if you symlink it :)
+cmd_folder = realpath(abspath(split(getfile(cf()))[0]))
+if cmd_folder not in path:
+    path.insert(0, cmd_folder)
+
+# use this if you want to include modules from a subforder
+cmd_subfolder = realpath(abspath(join(split(getfile(cf()))[0], "../")))
+if cmd_subfolder not in path:
+    path.insert(0, cmd_subfolder)
 
 try:
     from local_settings import *
 except ImportError:
-    sys.exit("No Crawler Local Settings found!")
+    exit("No local settings found")
 
 
 geo_collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_GEO_COLLECTION]
 crawler_collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_CRAWLER_COLLECTION]
-beanstalk = beanstalkc.Connection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
+beanstalk = BSConnection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
 beanstalk.watch(BEANSTALKD_GEO_TUBE)
 beanstalk.use(BEANSTALKD_ANALYTICS_TUBE)
 beanstalk.ignore('default')
@@ -32,7 +44,7 @@ def insert_into_db_hit(user_location, location_dic):
         geo_collection.insert(dic)
         return True
     except Exception, e:
-        print >> sys.stderr, 'Encountered Exception:', e
+        print >> stderr, 'Encountered Exception:', e
         return false
 
 
@@ -43,7 +55,7 @@ def insert_into_db_miss(user_location):
         geo_collection.insert(dic)
         return True
     except Exception, e:
-        print >> sys.stderr, 'Encountered Exception:', e
+        print >> stderr, 'Encountered Exception:', e
         return false
 
 
@@ -74,8 +86,7 @@ def search_geocoder(user_location):
 
     try:
         places = g.geocode(query, exactly_one=False)
-    except Exception, e:
-        # print >> sys.stderr, 'Encountered Exception:', e
+    except Exception:
         return None
 
     place = places[0][0]

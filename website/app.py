@@ -3,10 +3,9 @@ from flask import Flask, render_template, request
 from pymongo import Connection
 from pylibmc import Client
 from hashlib import md5
-from datetime import datetime
+from locale import setlocale, LC_ALL, strcoll
 from web_analytics import last_hours_sparkline, \
                           get_feelings_percentages_for_state, \
-                          get_last_hour_top_feelings, \
                           get_feeling_percentages_last_hours, \
                           get_today_top_feelings, \
                           get_weather_conditions_count_for_feeling, \
@@ -15,21 +14,33 @@ from web_analytics import last_hours_sparkline, \
 from tweet import tweet_from_dict_to_object
 from filters import request_args_filter
 from utils import get_feeling_color
-import locale
 
+from os.path import realpath, abspath, split, join
+from inspect import getfile, currentframe as cf
+from sys import path, exit
+
+# realpath() with make your script run, even if you symlink it :)
+cmd_folder = realpath(abspath(split(getfile(cf()))[0]))
+if cmd_folder not in path:
+    path.insert(0, cmd_folder)
+
+# use this if you want to include modules from a subforder
+cmd_subfolder = realpath(abspath(join(split(getfile(cf()))[0], "../")))
+if cmd_subfolder not in path:
+    path.insert(0, cmd_subfolder)
 
 try:
     from local_settings import *
 except ImportError:
-    sys.exit("No Flask Local Settings found!")
+    exit("No local settings found")
 
 app = Flask(__name__)
 app.debug = True
 mc = Client(["127.0.0.1"], binary=True, behaviors={"tcp_nodelay": True,
                                                    "ketama": True})
-locale.setlocale(locale.LC_ALL, "pt_BR.UTF-8")
+setlocale(LC_ALL, "pt_BR.UTF-8")
 db = Connection(MONGO_HOST)[MONGO_DB]
-coll = db[MONGO_COLLECTION_TWEETS]
+coll = db[MONGO_CRAWLER_COLLECTION]
 
 
 def tweet_list_from_cursor(db_tweets):
@@ -48,7 +59,7 @@ def load_feelings(file_name):
             line_list = line.split(';')
             feelings_dic[line_list[0].decode('utf-8')] = line_list[2].rstrip()
     feelings_list = []
-    for key in sorted(feelings_dic.iterkeys(), cmp=locale.strcoll):
+    for key in sorted(feelings_dic.iterkeys(), cmp=strcoll):
         feelings_list.append((key, feelings_dic[key]))
     return feelings_list
 

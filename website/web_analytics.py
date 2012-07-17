@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from operator import itemgetter
-from datetime import datetime, timedelta
+from datetime import datetime
 from collections import deque
 
 from os.path import realpath, abspath, split, join
@@ -21,21 +21,6 @@ try:
     from local_settings import *
 except ImportError:
     exit("No local settings found")
-
-
-def insert_zero_counts(l, FMT='%H'):
-    l.reverse()
-    current_time = l[0][0]
-    for i in range(1, len(l)):
-        td = datetime.strptime(str(current_time), FMT) - \
-            datetime.strptime(str(l[i][0]), FMT)
-        current_time_f = datetime.strptime(str(l[i][0]), FMT)
-        for j in range(1, td.seconds / 3600):
-            one_time = timedelta(hours=datetime.strptime(str(j), '%H').hour)
-            new_time = current_time_f + one_time
-            l.insert(i, (new_time.hour, 0))
-        current_time = l[i][0]
-    return l
 
 
 def last_hours_sparkline(mongo_db, hours=49):

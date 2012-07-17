@@ -61,7 +61,7 @@ def fix_history_hourly():
                       str(result[i]['day']) + ',' + \
                       str(result[i]['hour'])
         dt = datetime.strptime(date_string, '%Y,%m,%d,%H')
-        hour_diff = int((previous_dt - dt).total_seconds())/ 3600
+        hour_diff = int((previous_dt - dt).total_seconds()) / 3600
         for j in range(1, hour_diff):
             new_dt = previous_dt - timedelta(seconds=3600 * j)
             hourly_doc = {

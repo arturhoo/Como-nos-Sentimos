@@ -109,7 +109,7 @@ def hello():
     query_dict = request_args_filter(request.args, feelings, states)
     print query_dict
     db_tweets = coll.find(query_dict, \
-                          sort=[('created_at', -1)], \
+                          sort=[('_id', -1)], \
                           limit=limit)
     tweet_tuple = tweet_list_from_cursor(db_tweets)
     tweets = tweet_tuple[0]

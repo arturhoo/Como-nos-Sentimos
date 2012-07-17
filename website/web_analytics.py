@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from operator import itemgetter
 from datetime import datetime
+from pylibmc import Client
 from collections import deque
 
 from os.path import realpath, abspath, split, join
@@ -21,6 +22,9 @@ try:
     from local_settings import *
 except ImportError:
     exit("No local settings found")
+
+mc = Client(["127.0.0.1"], binary=True, behaviors={"tcp_nodelay": True,
+                                                   "ketama": True})
 
 
 def last_hours_sparkline(mongo_db, hours=49):
@@ -235,4 +239,6 @@ def get_feeling_mean_percentages_for_every_two_hours(mongo_db, feeling):
     new_list = []
     for i, k in zip(fmpfh_list[0::2], fmpfh_list[1::2]):
         new_list.append(float((i + k) / 2))
+    divide_factor = 0.09 / max(new_list)
+    new_list = [x * divide_factor for x in new_list]
     return new_list

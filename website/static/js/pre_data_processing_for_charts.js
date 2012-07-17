@@ -195,7 +195,7 @@ function do_feelings_mean_percentages_every_two_hours(feelings_mean_percentages_
       count++;
     }
     var dataset = [];
-    var categories = [];
+    var categories = []; // Day hours
     var fmpeth = feelings_mean_percentages_every_two_hours[i];
     var day_color = ['#212433', '#4b495e', '#948790', '#f5c26c', '#e1ae45', '#e78c39', '#e25621', '#e78c39', '#e1ae45', '#b3d2e4', '#4877d3', '#263a77'];
     for(var j=0; j<fmpeth[1].length; j++) {

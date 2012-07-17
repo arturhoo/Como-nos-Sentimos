@@ -285,7 +285,7 @@ function cf_feelings_percentages_and_mean_last_hour(categories, dataset, names, 
   });
 }
 
-function cf_feelings_mean_percentages_every_two_hours(categories, dataset, title, container) {
+function cf_feelings_mean_percentages_every_two_hours(categories, dataset, title, container, multiply_factor) {
   return new Highcharts.Chart({
     chart: {
       renderTo: container,
@@ -324,8 +324,8 @@ function cf_feelings_mean_percentages_every_two_hours(categories, dataset, title
     },
     tooltip: {
       formatter: function() {
-          return '<b>'+ title +'</b><br/>'+
-            this.x + ': ' + Math.round(this.y*10)/10 +'%';
+          return '<b>' + Math.round(this.y*100*multiply_factor)/100 +
+            '%</b> dos<br/>sentimentos<br/>entre <b>' + this.x + '</b>';
       }
     },
     legend: {

@@ -213,7 +213,7 @@ def get_feeling_mean_percentage_for_hour(mongo_db, feeling, hour):
 
 def get_feeling_mean_percentages_for_hours(mongo_db, feeling, base_hour=0):
     """returns a list with the mean occurrences for each hour of the day for
-    a given feelings
+    a given feeling
     the base_hour parameter is responsible for rotating the list to a given
     hour
     return list example, for base_hour=10:
@@ -234,11 +234,24 @@ def get_feeling_mean_percentages_for_hours(mongo_db, feeling, base_hour=0):
 
 
 def get_feeling_mean_percentages_for_every_two_hours(mongo_db, feeling):
+    """returns a tuple that contains a list of the normalized mean occurrences
+    for every two hour of the day for a given feeling and also a multiplying
+    factor that makes it possible to return to the original means
+    returned tuple example:
+        ([[0.04609013393542839,
+           (...)
+           0.034999999039912244],
+         4.5)
+    """
     fmpfh = get_feeling_mean_percentages_for_hours(mongo_db, feeling, 23)
     fmpfh_list = [x[1] for x in fmpfh]
     new_list = []
     for i, k in zip(fmpfh_list[0::2], fmpfh_list[1::2]):
         new_list.append(float((i + k) / 2))
-    divide_factor = 0.09 / max(new_list)
+    # The code below was inserted in order to make the radial graph fill the
+    # whole <div> it is exibithed on. Believed to be a bug in Highcharts
+    max_element = max(new_list)
+    divide_factor = 0.09 / max_element
     new_list = [x * divide_factor for x in new_list]
-    return new_list
+    multiply_factor = max_element / max(new_list)
+    return (new_list, multiply_factor)

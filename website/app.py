@@ -4,6 +4,7 @@ from pymongo import Connection
 from pylibmc import Client
 from hashlib import md5
 from locale import setlocale, LC_ALL, strcoll
+from Pycluster import kcluster
 from web_analytics import last_hours_sparkline, \
                           get_feelings_percentages_for_state, \
                           get_feeling_percentages_last_hours, \
@@ -150,6 +151,20 @@ def hello():
             weather_conditions_count_for_feelings.append((feeling[0], get_weather_conditions_count_for_feeling(db, feeling[0], weather_translations)))
             fmpfeth = get_feeling_mean_percentages_for_every_two_hours(db, feeling[0])
             feelings_mean_percentages_every_two_hours.append((feeling[0], fmpfeth[0], feeling_color, fmpfeth[1]))
+
+    # Applying k-means to the weather conditions
+    v = [[x[1][0][1], x[1][1][1], x[1][2][1], x[1][3][1]] for x in weather_conditions_count_for_feelings]
+    for (idx, entry) in enumerate(v):
+        max_element = max(entry)
+        divide_factor = 1.0 / max_element
+        v[idx] = [x * divide_factor for x in entry]
+    labels, error, nfounf = kcluster(v, nclusters=8, npass=10)
+    weather_conditions_count_for_feelings = [x for (y, x) in sorted(zip(labels, weather_conditions_count_for_feelings))]
+
+    # Applying k-means to the radial graphs
+    v = [x[1] for x in feelings_mean_percentages_every_two_hours]
+    labels, error, nfounf = kcluster(v, nclusters=6, npass=10)
+    feelings_mean_percentages_every_two_hours = [x for (y, x) in sorted(zip(labels, feelings_mean_percentages_every_two_hours))]
 
     return render_template('test.html',
                            tweets=tweets,

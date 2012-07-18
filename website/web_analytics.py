@@ -3,9 +3,10 @@ from operator import itemgetter
 from datetime import datetime
 from pylibmc import Client
 from collections import deque
+from utils import remove_accents
 
 from os.path import realpath, abspath, split, join
-from inspect import getfile, currentframe as cf
+from inspect import getfile, currentframe as cf, stack
 from sys import path, exit
 
 # realpath() with make your script run, even if you symlink it :)
@@ -78,7 +79,7 @@ def get_last_hour_top_feelings(mongo_db):
     return last_hour_top_feelings_list
 
 
-def get_today_top_feelings(mongo_db):
+def get_todays_top_feelings(mongo_db):
     coll = mongo_db[MONGO_ANALYTICS_HISTORY_COLLECTION]
     results = coll.find_one({'type': 'daily'},
                             {'feelings': 1},
@@ -90,8 +91,8 @@ def get_today_top_feelings(mongo_db):
     result_sorted = sorted(result_dic.iteritems(),
                            key=lambda x: x[1]['count'],
                            reverse=True)
-    today_top_feelings_list = [item[0] for item in result_sorted]
-    return today_top_feelings_list
+    todays_top_feelings_list = [item[0] for item in result_sorted]
+    return todays_top_feelings_list
 
 
 def get_feeling_percentages_last_hours(mongo_db, feeling, hours=25, date=None):
@@ -176,23 +177,27 @@ def get_weather_conditions_count_for_feeling(mongo_db, feeling,
          (u'chovendo', 4010),
          (u'com neblina', 915)]
     """
-    coll = mongo_db[MONGO_ANALYTICS_GENERAL_COLLECTION]
-    result_dic = {}
-    for (condition, translation) in weather_translations.items():
-        result = coll.find_one({'type': 'alltime'},
-                               {'weather_conditions.' + condition + \
-                                '.feelings.' + feeling: 1})
-        try:
-            fc = result['weather_conditions'][condition]['feelings'][feeling]
-        except KeyError:
-            fc = 0
-        if translation in result_dic:
-            result_dic[translation] += fc
-        else:
-            result_dic[translation] = fc
-    weather_conditions_count_list = sorted(result_dic.iteritems(),
-                                           key=itemgetter(0),
-                                           reverse=False)
+    identifier = str(stack()[0][3] + '_' + remove_accents(feeling))
+    weather_conditions_count_list = mc.get(identifier)
+    if not weather_conditions_count_list:
+        coll = mongo_db[MONGO_ANALYTICS_GENERAL_COLLECTION]
+        result_dic = {}
+        for (condition, translation) in weather_translations.items():
+            result = coll.find_one({'type': 'alltime'},
+                                   {'weather_conditions.' + condition + \
+                                    '.feelings.' + feeling: 1})
+            try:
+                fc = result['weather_conditions'][condition]['feelings'][feeling]
+            except KeyError:
+                fc = 0
+            if translation in result_dic:
+                result_dic[translation] += fc
+            else:
+                result_dic[translation] = fc
+        weather_conditions_count_list = sorted(result_dic.iteritems(),
+                                               key=itemgetter(0),
+                                               reverse=False)
+        mc.set(identifier, weather_conditions_count_list, 86400)
     return weather_conditions_count_list
 
 
@@ -243,15 +248,21 @@ def get_feeling_mean_percentages_for_every_two_hours(mongo_db, feeling):
            0.034999999039912244],
          4.5)
     """
-    fmpfh = get_feeling_mean_percentages_for_hours(mongo_db, feeling, 23)
-    fmpfh_list = [x[1] for x in fmpfh]
-    new_list = []
-    for i, k in zip(fmpfh_list[0::2], fmpfh_list[1::2]):
-        new_list.append(float((i + k) / 2))
-    # The code below was inserted in order to make the radial graph fill the
-    # whole <div> it is exibithed on. Believed to be a bug in Highcharts
-    max_element = max(new_list)
-    divide_factor = 0.09 / max_element
-    new_list = [x * divide_factor for x in new_list]
-    multiply_factor = max_element / max(new_list)
-    return (new_list, multiply_factor)
+    identifier = str(stack()[0][3] + '_' + remove_accents(feeling))
+    fmpfeth_tuple = mc.get(identifier)
+    if not fmpfeth_tuple:
+        fmpfh = get_feeling_mean_percentages_for_hours(mongo_db, feeling, 23)
+        fmpfh_list = [x[1] for x in fmpfh]
+        new_list = []
+        # Joining two consecutive hours
+        for i, k in zip(fmpfh_list[0::2], fmpfh_list[1::2]):
+            new_list.append(float((i + k) / 2))
+        # The code below was inserted in order to make the radial graph fill the
+        # whole <div> it is exibithed on. Believed to be a bug in Highcharts
+        max_element = max(new_list)
+        divide_factor = 0.09 / max_element
+        new_list = [x * divide_factor for x in new_list]
+        multiply_factor = max_element / max(new_list)
+        fmpfeth_tuple = (new_list, multiply_factor)
+        mc.set(identifier, fmpfeth_tuple, 86400)
+    return fmpfeth_tuple

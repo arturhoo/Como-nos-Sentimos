@@ -298,7 +298,7 @@ function cf_feelings_mean_percentages_every_two_hours(categories, dataset, title
       }
     },
     credits:{
-      enabled:false
+      enabled: false
     },
     pane: {
       center: ['50%', '50%'],

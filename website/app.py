@@ -7,7 +7,7 @@ from locale import setlocale, LC_ALL, strcoll
 from web_analytics import last_hours_sparkline, \
                           get_feelings_percentages_for_state, \
                           get_feeling_percentages_last_hours, \
-                          get_today_top_feelings, \
+                          get_todays_top_feelings, \
                           get_weather_conditions_count_for_feeling, \
                           get_feeling_mean_percentages_for_hours, \
                           get_feeling_mean_percentages_for_every_two_hours
@@ -140,8 +140,8 @@ def hello():
             feelings_percentages_and_mean_last_hours.append((feeling, fplh, get_feeling_mean_percentages_for_hours(db, feeling, fplh[len(fplh) - 1][0]), feeling_color))
 
     if not 'state' in request.args and not 'feeling' in request.args:
-        today_top_feelings = get_today_top_feelings(db)
-        for feeling in today_top_feelings[:5]:
+        todays_top_feelings = get_todays_top_feelings(db)
+        for feeling in todays_top_feelings[:5]:
             feeling_color = get_feeling_color(feeling, feelings)
             # dt = datetime.strptime('2012-07-06 06', '%Y-%m-%d %H')
             feelings_percentages_last_hours.append((feeling, get_feeling_percentages_last_hours(db, feeling), feeling_color))

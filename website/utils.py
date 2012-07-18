@@ -1,6 +1,12 @@
 # -*- coding: utf-8 -*-
 from htmlentitydefs import name2codepoint
 from re import sub
+from unicodedata import normalize, combining
+
+
+def remove_accents(input_str):
+    nkfd_form = normalize('NFKD', unicode(input_str))
+    return u"".join([c for c in nkfd_form if not combining(c)])
 
 
 def unescape(text):

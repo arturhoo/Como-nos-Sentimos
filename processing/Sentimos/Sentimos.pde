@@ -145,9 +145,9 @@ void draw() {
 
 
     // Draw Frame Rate
-    // textFont(font, 12);
-    // fill(255);
-    // textAlign(LEFT);
+    textFont(font, 12);
+    fill(255);
+    textAlign(LEFT);
     // text(frameRate, 20, 20);
 }
 

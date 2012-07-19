@@ -27,7 +27,7 @@ mc = Client(["127.0.0.1"], binary=True, behaviors={"tcp_nodelay": True,
                                                    "ketama": True})
 
 
-def last_hours_sparkline(mongo_db, hours=49):
+def last_hours_sparkline(mongo_db, hours=49, date=None):
     """executes a mongo query of the form and
     receives a series of documents of the form:
         {
@@ -39,8 +39,11 @@ def last_hours_sparkline(mongo_db, hours=49):
     returned list example:
         [1583, 850, 476, (...), 422]
     """
+    where_dic = {'type': 'hourly'}
+    if date is not None:
+        where_dic['date'] = {'$lte': date}
     coll = mongo_db[MONGO_ANALYTICS_HISTORY_COLLECTION]
-    results = coll.find({'type': 'hourly'},
+    results = coll.find(where_dic,
                         {'count': 1, 'hour': 1},
                         sort=[('date', -1)],
                         limit=hours)

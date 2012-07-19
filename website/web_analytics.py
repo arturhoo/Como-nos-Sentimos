@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from operator import itemgetter
-from datetime import datetime
 from pylibmc import Client
 from collections import deque
 from utils import remove_accents
@@ -43,10 +42,7 @@ def last_hours_sparkline(mongo_db, hours=49):
     coll = mongo_db[MONGO_ANALYTICS_HISTORY_COLLECTION]
     results = coll.find({'type': 'hourly'},
                         {'count': 1, 'hour': 1},
-                        sort=[('year', -1),
-                              ('month', -1),
-                              ('day', -1),
-                              ('hour', -1)],
+                        sort=[('date', -1)],
                         limit=hours)
     l = []
     for item in results:
@@ -66,10 +62,7 @@ def get_last_hour_top_feelings(mongo_db):
     coll = mongo_db[MONGO_ANALYTICS_HISTORY_COLLECTION]
     results = coll.find({'type': 'hourly'},
                         {'feelings': 1},
-                        sort=[('year', -1),
-                              ('month', -1),
-                              ('day', -1),
-                              ('hour', -1)],
+                        sort=[('date', -1)],
                         limit=2)
     result_dic = results[1]['feelings']
     result_sorted = sorted(result_dic.iteritems(),
@@ -83,10 +76,7 @@ def get_todays_top_feelings(mongo_db):
     coll = mongo_db[MONGO_ANALYTICS_HISTORY_COLLECTION]
     results = coll.find_one({'type': 'daily'},
                             {'feelings': 1},
-                            sort=[('year', -1),
-                                  ('month', -1),
-                                  ('day', -1),
-                                  ('hour', -1)])
+                            sort=[('date', -1)])
     result_dic = results['feelings']
     result_sorted = sorted(result_dic.iteritems(),
                            key=lambda x: x[1]['count'],
@@ -108,22 +98,12 @@ def get_feeling_percentages_last_hours(mongo_db, feeling, hours=25, date=None):
     coll = mongo_db[MONGO_ANALYTICS_HISTORY_COLLECTION]
     where_dic = {'type': 'hourly'}
     if date is not None:
-        hour = datetime.strftime(date, '%H')
-        where_dic['hour'] = {'$lte': int(hour)}
-        day = datetime.strftime(date, '%d')
-        where_dic['day'] = {'$lte': int(day)}
-        month = datetime.strftime(date, '%m')
-        where_dic['month'] = {'$lte': int(month)}
-        year = datetime.strftime(date, '%Y')
-        where_dic['year'] = {'$lte': int(year)}
+        where_dic['date'] = {'$lte': date}
     results = coll.find(where_dic,
                         {'feelings.' + feeling: 1,
                          'hour': 1,
                          'count': 1},
-                        sort=[('year', -1),
-                              ('month', -1),
-                              ('day', -1),
-                              ('hour', -1)],
+                        sort=[('date', -1)],
                         limit=hours)
     feeling_percentage_list = []
     for result in results:

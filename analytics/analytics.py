@@ -6,7 +6,7 @@ from pymongo import Connection as MongoConnection
 
 from os.path import realpath, abspath, split, join
 from inspect import getfile, currentframe as cf
-from sys import path, exit
+from sys import path, exit, stdout
 
 # realpath() with make your script run, even if you symlink it :)
 cmd_folder = realpath(abspath(split(getfile(cf()))[0]))
@@ -39,7 +39,41 @@ def load_states_abbreviations(file_name):
     return states_dic
 
 
+def fix_history_insert_date_field_when_missing():
+    """insert date field in legacy documents
+    """
+    result_hourly = coll_hist.find({'type': 'hourly',
+                                    'date': {'$exists': False}})
+    for e in result_hourly:
+        date = datetime.strptime(str(e['year']) + '-' + \
+                                 str(e['month']) + '-' + \
+                                 str(e['day']) + '-' + \
+                                 str(e['hour']), '%Y-%m-%d-%H')
+        e.update({'date': date})
+        coll_hist.save(e)
+
+    result_daily = coll_hist.find({'type': 'daily',
+                                   'date': {'$exists': False}})
+    for e in result_daily:
+        date = datetime.strptime(str(e['year']) + '-' + \
+                                 str(e['month']) + '-' + \
+                                 str(e['day']), '%Y-%m-%d')
+        e.update({'date': date})
+        coll_hist.save(e)
+
+    result_monthly = coll_hist.find({'type': 'monthly',
+                                     'date': {'$exists': False}})
+    for e in result_monthly:
+        date = datetime.strptime(str(e['year']) + '-' + \
+                                 str(e['month']), '%Y-%m')
+        e.update({'date': date})
+        coll_hist.save(e)
+    print >> stdout, 'Finished fixing missing date field in analytics history collection'
+
+
 def fix_history_hourly():
+    """this method insert zero counts in the hours that no data was collected
+    """
     result = coll_hist.find(
             {'type': 'hourly'},
             {'year': 1, 'month': 1, 'day': 1, 'hour': 1, 'count': 1},
@@ -76,9 +110,12 @@ def fix_history_hourly():
         previous_dt = dt
     for doc in insertions_list:
         coll_hist.insert(doc)
+    print >> stdout, 'Finished fixing history hourly'
 
 
 def fix_history_daily():
+    """this method insert zero counts in the days that no data was collected
+    """
     result = coll_hist.find(
             {'type': 'daily'},
             {'year': 1, 'month': 1, 'day': 1, 'count': 1},
@@ -111,6 +148,7 @@ def fix_history_daily():
         previous_dt = dt
     for doc in insertions_list:
         coll_hist.insert(doc)
+    print >> stdout, 'Finished fixing history hourly'
 
 
 def insert_history(feeling, date, state, weather):
@@ -124,7 +162,10 @@ def insert_history(feeling, date, state, weather):
     monthly_key = {
         'type': 'monthly',
         'year': int(datetime.strftime(date, '%Y')),
-        'month': int(datetime.strftime(date, '%m'))
+        'month': int(datetime.strftime(date, '%m')),
+        'date': datetime.strptime( \
+            str(date.year) + '-' + str(date.month), '%Y-%m' \
+        )
     }
     monthly_data = {'$inc': inc_data}
     coll_hist.update(monthly_key, monthly_data, True)
@@ -133,7 +174,11 @@ def insert_history(feeling, date, state, weather):
         'type': 'daily',
         'year': int(datetime.strftime(date, '%Y')),
         'month': int(datetime.strftime(date, '%m')),
-        'day': int(datetime.strftime(date, '%d'))
+        'day': int(datetime.strftime(date, '%d')),
+        'date': datetime.strptime( \
+            str(date.year) + '-' + str(date.month) + '-' + \
+            str(date.day), '%Y-%m-%d' \
+        )
     }
     daily_data = {'$inc': inc_data}
     coll_hist.update(daily_key, daily_data, True)
@@ -143,7 +188,11 @@ def insert_history(feeling, date, state, weather):
         'year': int(datetime.strftime(date, '%Y')),
         'month': int(datetime.strftime(date, '%m')),
         'day': int(datetime.strftime(date, '%d')),
-        'hour': int(datetime.strftime(date, '%H'))
+        'hour': int(datetime.strftime(date, '%H')),
+        'date': datetime.strptime( \
+            str(date.year) + '-' + str(date.month) + '-' + \
+            str(date.day) + '-' + str(date.hour), '%Y-%m-%d-%H' \
+        )
     }
     hourly_data = {'$inc': inc_data}
     coll_hist.update(hourly_key, hourly_data, True)
@@ -201,6 +250,7 @@ def insert_general(feeling, date, state, weather):
 
 if __name__ == '__main__':
     states_dic = load_states_abbreviations('../crawler/states.txt')
+    fix_history_insert_date_field_when_missing()
     fix_history_daily()
     fix_history_hourly()
     while(True):

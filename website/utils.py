@@ -39,6 +39,7 @@ def unescape(text):
 
 def prepare_string_for_javascript(string):
     new_string = string.replace('\n', '')
+    new_string = string.replace('\r', '')
     new_string = new_string.replace('\\', '\\\\')
     new_string = unescape(new_string)
     return new_string

@@ -132,9 +132,9 @@ def hello():
     if 'feeling' in request.args:
         for feeling in request.args.getlist('feeling'):
             feeling_color = get_feeling_color(feeling, feelings)
-            dt = datetime.strptime('2012-07-05 6', '%Y-%m-%d %H')
-            fplh = get_feeling_percentages_last_hours(db, feeling, date=dt)
-            # fplh = get_feeling_percentages_last_hours(db, feeling)
+            # dt = datetime.strptime('2012-07-05 6', '%Y-%m-%d %H')
+            # fplh = get_feeling_percentages_last_hours(db, feeling, date=dt)
+            fplh = get_feeling_percentages_last_hours(db, feeling)
             if len(request.args.getlist('feeling')) > 1:
                 feelings_percentages_last_hours.append((feeling, fplh, feeling_color))
             weather_conditions_count_for_feelings.append((feeling, get_weather_conditions_count_for_feeling(db, feeling, weather_translations)))
@@ -145,9 +145,9 @@ def hello():
         todays_top_feelings = get_todays_top_feelings(db)
         for feeling in todays_top_feelings[:5]:
             feeling_color = get_feeling_color(feeling, feelings)
-            dt = datetime.strptime('2012-07-05 06', '%Y-%m-%d %H')
-            fplh = get_feeling_percentages_last_hours(db, feeling, date=dt)
-            # fplh = get_feeling_percentages_last_hours(db, feeling)
+            # dt = datetime.strptime('2012-07-05 06', '%Y-%m-%d %H')
+            # fplh = get_feeling_percentages_last_hours(db, feeling, date=dt)
+            fplh = get_feeling_percentages_last_hours(db, feeling)
             feelings_percentages_last_hours.append((feeling, fplh, feeling_color))
         for feeling in feelings:
             feeling_color = get_feeling_color(feeling[0], feelings)

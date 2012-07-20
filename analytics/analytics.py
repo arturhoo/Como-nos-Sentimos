@@ -263,7 +263,7 @@ if __name__ == '__main__':
             try:
                 state = states_dic[job_object['state']]
             except KeyError, e:
-                print >> stderr, 'No state named ' + e
+                print >> stderr, 'No state named ', e
                 job.delete()
                 continue
         weather = None

@@ -6,7 +6,7 @@ from pymongo import Connection as MongoConnection
 
 from os.path import realpath, abspath, split, join
 from inspect import getfile, currentframe as cf
-from sys import path, exit, stdout
+from sys import path, exit, stdout, stderr
 
 # realpath() with make your script run, even if you symlink it :)
 cmd_folder = realpath(abspath(split(getfile(cf()))[0]))
@@ -260,7 +260,11 @@ if __name__ == '__main__':
         date = datetime.strptime(job_object['created_at'], '%Y-%m-%d %H:%M:%S')
         state = None
         if 'state' in job_object:
-            state = states_dic[job_object['state']]
+            try:
+                state = states_dic[job_object['state']]
+            except KeyError, e:
+                print >> stderr, 'No state named ' + e
+                continue
         weather = None
         if 'weather' in job_object:
             weather = job_object['weather']

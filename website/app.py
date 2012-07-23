@@ -124,7 +124,7 @@ def hello():
     feelings_percentages_for_states = {}
     if 'state' in request.args:
         for state in request.args.getlist('state'):
-            feelings_percentages_for_states[state] = get_feelings_percentages_for_state(db, state)
+            feelings_percentages_for_states[state] = get_feelings_percentages_for_state(db, state, feelings)
 
     feelings_percentages_last_hours = []
     weather_conditions_count_for_feelings = []

@@ -85,7 +85,7 @@ function do_feelings_percentages_for_states(feelings_percentages_for_states) {
       var dataset = [];
       for(var i=0; i<fpfs.length; i++) {
         categories.push(fpfs[i][0]);
-        dataset.push(fpfs[i][1]);
+        dataset.push({y: fpfs[i][1], color: fpfs[i][2]});
       }
       var chart_id = 'states_charts_' + state;
       $('<div/>', {

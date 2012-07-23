@@ -2,7 +2,7 @@
 from operator import itemgetter
 from pylibmc import Client
 from collections import deque
-from utils import remove_accents
+from utils import remove_accents, get_feeling_color
 
 from os.path import realpath, abspath, split, join
 from inspect import getfile, currentframe as cf, stack
@@ -129,7 +129,8 @@ def get_feeling_percentages_last_hours(mongo_db, feeling, hours=25, date=None):
     return feeling_percentage_list
 
 
-def get_feelings_percentages_for_state(mongo_db, state, num_feelings=10):
+def get_feelings_percentages_for_state(mongo_db, state, feelings_list,
+                                            num_feelings=10):
     """returns the percetanges of the top X feelings for a given state
     returned list example:
         [(u'feliz', 15.743950348288271),
@@ -145,7 +146,9 @@ def get_feelings_percentages_for_state(mongo_db, state, num_feelings=10):
     feelings_count = sorted(feelings_count.iteritems(),
                             key=itemgetter(1),
                             reverse=True)
-    feelings_percentage = [(feeling, float(count / float(total) * 100.0)) \
+    feelings_percentage = [(feeling, \
+                            float(count / float(total) * 100.0), \
+                            get_feeling_color(feeling, feelings_list)) \
                            for (feeling, count) \
                            in feelings_count]
     return feelings_percentage[:num_feelings]

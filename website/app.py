@@ -117,7 +117,8 @@ def hello():
     tweets = tweet_tuple[0]
     string_md5 = tweet_tuple[1]
 
-    date = datetime.strptime('2012-07-05 15', '%Y-%m-%d %H')
+    date = None
+    # date = datetime.strptime('2012-07-05 15', '%Y-%m-%d %H')
     data_md5 = md5(string_md5).hexdigest()
     sparkline_data = last_hours_sparkline(db, date=date)
 

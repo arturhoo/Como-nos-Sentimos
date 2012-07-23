@@ -107,9 +107,24 @@ function cf_feelings_percentages_for_state(categories, dataset, state, container
       }
     },
       series: [{
-        data: dataset
-    }]
-  });
+        data: dataset,
+        dataLabels: {
+          enabled: true,
+          rotation: -90,
+          color: '#737373',
+          align: 'right',
+          x: -10,
+          y: -45,
+          formatter: function() {
+              return Math.round(this.y*10)/10 +'%';
+          },
+          style: {
+              fontSize: '11px'
+          }
+        }
+      }]
+    }
+  );
 }
 
 function cf_feelings_percentages_last_hours(categories, dataset, names, colors, title, container) {

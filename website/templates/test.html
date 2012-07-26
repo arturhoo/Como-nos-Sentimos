@@ -76,22 +76,23 @@
 
       <div>
         <form action="{{url_for('hello')}}" method="get">
-          <div style="display: inline-block;">
-            <select name="feeling" data-placeholder="Escolha sentimentos..." class="chzn-select" multiple style="width: 350px; " tabindex="4">
-              {% for feeling in feelings %}
-                <option value="{{ feeling[0] }}">{{ feeling[0] }}</option>;
-              {% endfor %}
-            </select>
+          <div class="clearfix">
+            <div style="display: inline-block;">
+              <select name="feeling" data-placeholder="Escolha sentimentos..." class="chzn-select" multiple style="width: 350px; " tabindex="4">
+                {% for feeling in feelings %}
+                  <option value="{{ feeling[0] }}">{{ feeling[0] }}</option>;
+                {% endfor %}
+              </select>
+            </div>
+            <div style="float: right;">
+              <select name="state" data-placeholder="Escolha estados..." class="chzn-select" multiple style="width: 350px; " tabindex="4">
+                {% for state in states_unique %}
+                  <option value="{{ state[0] }}">{{ state[1] }}</option>;
+                {% endfor %}
+              </select>
+            </div>
           </div>
           <div style="float: right;">
-            <select name="state" data-placeholder="Escolha estados..." class="chzn-select" multiple style="width: 350px; " tabindex="4">
-              {% for state in states_unique %}
-                <option value="{{ state[0] }}">{{ state[1] }}</option>;
-              {% endfor %}
-            </select>
-          </div>
-          <br>
-          <div style="position: relative; float: right;">
             <input type="checkbox" name="location-only" value="yes"> <div style="display: inline; font-size: 12px;">Somente tweets com localização</div>
             <input type="checkbox" name="weather-only" value="yes"> <div style="display: inline; font-size: 12px;">Somente tweets com clima</div>
           </div>

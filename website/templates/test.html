@@ -13,7 +13,6 @@
     <!-- <link href="static/build/kalendae.css" rel="stylesheet" type="text/css"> -->
 
     <script type="text/javascript">
-
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-141363-7']);
       _gaq.push(['_trackPageview']);
@@ -23,20 +22,25 @@
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
       })();
-
     </script>
   </head>
   <body>
-    <header class="boxShadow">
+    <header>
       <div class="centered-header">
-        <div class="logo-header" style="float: left">
-          <span class="screen_nameLink"><a href="{{url_for('hello')}}">Como nos Sentimos</a></span>
+        <div class="logo-header">
+          <a href="{{url_for('hello')}}">Como nos Sentimos</a>
         </div>
-        <div class="links-header">
-          <span ><a href="#filters">Filtros</a>&nbsp;&nbsp;&nbsp;</span>
-          <span ><a href="#stats-heading">Estatísticas</a>&nbsp;&nbsp;&nbsp;</span>
-          <span ><a href="#about">Sobre</a></span>
-        </div>
+        <ul class="links-header">
+          <li class="link-header">
+            <a href="#filters">Filtros</a>
+          </li>
+          <li class="link-header">
+            <a href="#stats-heading">Estatística</a>
+          </li>
+          <li class="link-header">
+            <a href="#about">Sobre</a>
+          </li>
+        </ul>
       </div>
     </header>
 
@@ -44,13 +48,13 @@
 
     <div class="centered-content">
       <div id="tweet">
-        <div id="tweetMeta" class="boxShadow">
+        <div id="tweetMeta">
           <div style="text-align: center; margin-top: 25px;">Clique em uma partícula</div>
         </div>
       </div>
       <div style="height: 10px"></div>
       <div id="pjsdiv">
-        <canvas id="Sentimos" class="boxShadow" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Attribute.pde processing/Sentimos/Feeling.pde processing/Sentimos/Weather.pde processing/Sentimos/State.pde processing/Sentimos/General.pde"></canvas>
+        <canvas id="Sentimos" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Attribute.pde processing/Sentimos/Feeling.pde processing/Sentimos/Weather.pde processing/Sentimos/State.pde processing/Sentimos/General.pde"></canvas>
       </div>
 
       <div class="clearfix">
@@ -114,7 +118,7 @@
 
     </div>
 
-    <footer class="boxShadow">
+    <footer>
       <div class="centered-content">
         Como nos Sentimos - Artur Rodrigues
       </div>

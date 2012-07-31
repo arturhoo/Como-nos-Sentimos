@@ -5,7 +5,8 @@ body {
   /*background: #474747 url(static/images/bg.png);*/
   background: #F3F3F3;
   color: #000000;
-  font-family: Helvetica, Arial, Sans-Serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 400;
   border-width: 0;
   margin: 0;
   width: 100%;
@@ -21,26 +22,26 @@ header {
 
 footer {
   background: #282828;
-  color: #fff;
+  color: #FFFFFF;
   min-width: 100%;
   min-height: 200px;
   padding: 20px 0 0 0;
 }
 
 h4 {
-    border-bottom: 1px solid #000;
-    color: #505050;
-    /*font-size: 18px;*/
-    margin-bottom: 30px;
-    position: relative;
-    text-align: center;
+  border-bottom: 1px solid #000;
+  color: #505050;
+  /*font-size: 18px;*/
+  margin-bottom: 30px;
+  position: relative;
+  text-align: center;
 }
 
 h4 span {
-    background: #f3f3f3;
-    padding: 0 15px;
-    position: relative;
-    top: 10px;
+  background: #f3f3f3;
+  padding: 0 15px;
+  position: relative;
+  top: 10px;
 }
 
 .clearfix:after {
@@ -60,8 +61,50 @@ a:visited {text-decoration: none; color:inherit}
 a:hover {text-decoration: underline; color:inherit}
 a:active {text-decoration: underline; color:inherit}
 
-.screen_nameLink a:hover {
+.centered-header {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.logo-header {
+  font-family: 'Amatic SC', cursive;
+  font-size: 40px;
+  float: left;
+  padding: 8px 0;
+}
+
+.logo-header a:hover {
   text-decoration: none;
+}
+
+.links-header {
+  float: right;
+  margin: 0 0 0 20px;
+  list-style: none;
+  padding: 23px 0 0 20px;
+}
+
+.links-header a {
+  display: block;
+  padding: 6px 10px 7px 10px;
+  text-decoration: none;
+}
+
+.links-header a:hover {
+  text-decoration: none;
+  color: #FFFFFF;
+  background: #282828;
+  background: rgba(40, 40, 40, 0.75) url(/static/images/tab-underlay.png) repeat-x 0 0;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+
+.link-header {
+  float: left;
+  font-size: 14px;
+  line-height: 1;
+  margin: 0 0 0 25px;
 }
 
 .centered-content {
@@ -71,37 +114,13 @@ a:active {text-decoration: underline; color:inherit}
   padding-top: 20px;
 }
 
-/*.boxShadow {
-  -moz-box-shadow: 0 0 15px #8B8B8B;
-  -webkit-box-shadow: 0 0 15px #8B8B8B;
-  box-shadow: 0 0 15px #8B8B8B;
-}*/
-
-
-.centered-header {
-  max-width: 800px;
-  margin: auto;
-}
-
-.logo-header {
-  font-family: 'Amatic SC', cursive;
-  font-size: 40px;
-  padding-top: 10px;
-}
-
-.links-header {
-  float: right;
-  font-size: 16px;
-  padding-top: 40px;
+.filters-heading {
+  margin-top: -10px;
 }
 
 .charts-border {
   border: 1px solid #B9B9B9;
   background-color: #F9F9F9;
-}
-
-.filters-heading {
-  margin-top: -10px;
 }
 
 #tweetMeta {

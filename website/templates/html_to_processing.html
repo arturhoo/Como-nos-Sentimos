@@ -78,23 +78,33 @@
     {% endfor %}
   }
 
-  function setFeelingsView() {
-    pjs.setFeelingsView();
-  }
-
   function setMadnessView() {
+    deactivateViewButtons();
+    $('#madness-button').toggleClass('button-active');
     pjs.setMadnessView();
   }
 
+  function setFeelingsView() {
+    deactivateViewButtons();
+    $('#feelings-button').toggleClass('button-active');
+    pjs.setFeelingsView();
+  }
+
   function setStatesView() {
+    deactivateViewButtons();
+    $('#states-button').toggleClass('button-active');
     pjs.setStatesView();
   }
 
   function setMapView() {
+    deactivateViewButtons();
+    $('#map-button').toggleClass('button-active');
     pjs.setMapView();
   }
 
   function setWeatherView() {
+    deactivateViewButtons();
+    $('#weather-button').toggleClass('button-active');
     pjs.setWeatherView();
   }
 

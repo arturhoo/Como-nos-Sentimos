@@ -60,11 +60,11 @@
       <div class="clearfix">
         <br>
         <div style="float: left; margin: -10px 0 0 -6px;">
-          <button id="madness-button"class="button button-active" onclick="setMadnessView()">Anarquia</button>
-          <button id="feelings-button"class="button" onclick="setFeelingsView()">Sentimentos</button>
-          <button id="states-button"class="button" onclick="setStatesView()">Estados</button>
-          <button id="map-button"class="button" onclick="setMapView()">Mapa</button>
-          <button id="weather-button"class="button" onclick="setWeatherView()">Clima</button>
+          <button id="madness-button"class="btn btn-mini btn-active" onclick="setMadnessView()">Anarquia</button>
+          <button id="feelings-button"class="btn btn-mini" onclick="setFeelingsView()">Sentimentos</button>
+          <button id="states-button"class="btn btn-mini" onclick="setStatesView()">Estados</button>
+          <button id="map-button"class="btn btn-mini" onclick="setMapView()">Mapa</button>
+          <button id="weather-button"class="btn btn-mini" onclick="setWeatherView()">Clima</button>
         </div>
         <div style="float: right; margin-top: -3px;">
           <div id="sparkline" style="float: right; height:20px; width:120px; margin-top: -5px;"></div>
@@ -96,18 +96,17 @@
               </select>
             </div>
           </div>
-          <div style="float: right;">
+          <div style="margin-top: 2px; float: right;">
             <input type="checkbox" name="location-only" value="yes"> <div style="display: inline; font-size: 12px;">Somente tweets com localização</div>
             <input type="checkbox" name="weather-only" value="yes"> <div style="display: inline; font-size: 12px;">Somente tweets com clima</div>
           </div>
           <br/><br>
           <div>
-            <input type="submit" value="Carregar" style="float: right;">
+            <input type="submit" class="btn btn-small" value="Carregar" style="font-size: 12px; margin-top: -10px; float: right;">
           </div>
         </form>
       </div>
 
-      <div style="height: 30px; text-align: center;"></div>
 
       <h4 id="stats-heading"><span>Estatísticas</span></h4>
 
@@ -233,11 +232,11 @@
       }
 
       function deactivateViewButtons() {
-        $('#madness-button').removeClass('button-active');
-        $('#feelings-button').removeClass('button-active');
-        $('#states-button').removeClass('button-active');
-        $('#map-button').removeClass('button-active');
-        $('#weather-button').removeClass('button-active');
+        $('#madness-button').removeClass('btn-active');
+        $('#feelings-button').removeClass('btn-active');
+        $('#states-button').removeClass('btn-active');
+        $('#map-button').removeClass('btn-active');
+        $('#weather-button').removeClass('btn-active');
       }
     </script>
     <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>

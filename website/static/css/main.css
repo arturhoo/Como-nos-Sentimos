@@ -141,6 +141,10 @@ a:active {text-decoration: underline; color:inherit}
   outline: 0;
 }
 
+.buttons {
+  float: left;
+  margin: -10px 0 0 -2px;
+}
 /*!
  * Bootstrap v2.0.4
  *

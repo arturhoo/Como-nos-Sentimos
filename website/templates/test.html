@@ -47,15 +47,10 @@
     <a href="https://github.com/arturhoo/Como-nos-Sentimos/tree/v2"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
 
     <div class="centered-content">
-      <div id="tweet">
-        <div id="tweetMeta">
-          <div style="text-align: center; margin-top: 25px;">Clique em uma partícula</div>
-        </div>
+      <div id="tweetMeta" class="tweet-meta">
+        <p class="tweet-meta-pre">Clique em uma partícula</p>
       </div>
-      <div style="height: 10px"></div>
-      <div id="pjsdiv">
-        <canvas id="Sentimos" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Attribute.pde processing/Sentimos/Feeling.pde processing/Sentimos/Weather.pde processing/Sentimos/State.pde processing/Sentimos/General.pde"></canvas>
-      </div>
+      <canvas id="Sentimos" class="pjsdiv" data-processing-sources="processing/Sentimos/Sentimos.pde processing/Sentimos/Particle.pde processing/Sentimos/Tweet.pde processing/Sentimos/IO.pde processing/Sentimos/Attribute.pde processing/Sentimos/Feeling.pde processing/Sentimos/Weather.pde processing/Sentimos/State.pde processing/Sentimos/General.pde"></canvas>
 
       <div class="clearfix">
         <br>
@@ -128,26 +123,29 @@
     <!-- Processing to HTML -->
     <script type="text/javascript">
       function setTweetMeta(id, textString, name, screen_name, location, created_at_bsb) {
-        var html_str = '<span style="font-weight: bolder;">' +
-          '<a target="_blank" href="http://twitter.com/' + screen_name + '">' + name + '</a> - ' +
-          '</span>' +
-          '<span class="screen_nameLink" style="font-size: 12px; color: inherit;">' +
-          '<a target="_blank" href="http://twitter.com/' + screen_name + '">@' + screen_name + '</a>' +
-          '</span>' +
-          '<p style="margin: 2px; font-size: 13px;">' +
-          textString +
+        var html_str =
+          '<p style="margin: 0;">' +
+            '<span style="font-weight: bolder;">' +
+              '<a target="_blank" href="http://twitter.com/' + screen_name + '">' + name + '</a> - ' +
+            '</span>' +
+              '<span style="font-size: 13px">' +
+                '<a target="_blank" href="http://twitter.com/' + screen_name + '">@' + screen_name + '</a>' +
+              '</span>' +
           '</p>' +
-          '<span style="font-size: 11px; position: absolute; bottom: 5px;">' +
-          '<span class="screen_nameLink">' +
-          '<a target="_blank" href="http://twitter.com/' + screen_name + '/status/' + id + '">' +
-          created_at_bsb +
-          ', de ' +
-          location +
-          '</a>' +
-          '</span> - ' +
-          '<a target="_blank" href="http://twitter.com/' + screen_name + '/status/' + id + '">' +
-          'veja no twitter' +
-          '</a>'
+          '<p style="margin-top: 2px; font-size: 13px; word-wrap: break-word;">' +
+            textString +
+          '</p>' +
+          '<span style="font-size: 11px; position: absolute; bottom: 10px;">' +
+            '<span>' +
+              '<a target="_blank" href="http://twitter.com/' + screen_name + '/status/' + id + '">' +
+                created_at_bsb +
+                ', de ' +
+                location +
+              '</a>' +
+            '</span> - ' +
+            '<a target="_blank" href="http://twitter.com/' + screen_name + '/status/' + id + '">' +
+              'veja no twitter' +
+            '</a>'
           '</span>'
         $("#tweetMeta").html(html_str);
       }

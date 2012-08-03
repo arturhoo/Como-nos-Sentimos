@@ -113,32 +113,33 @@ a:active {text-decoration: underline; color:inherit}
   background-color: #F9F9F9;
 }
 
-#tweetMeta {
-  height: 80px;
+.tweet-meta {
+  height: 90px;
+  width: inherit;
   background: #282828;
   color: #FFFFFF;
-  padding-top: 10px;
+  margin-top: -10px;
   padding-left: 10px;
+  padding-top: 10px;
   position: relative;
 }
 
-#Sentimos {
-  outline: 0;
+.tweet-meta-pre {
+  text-align: center;
+  line-height: 90px;
+  margin: 0;
+}
+
+.pjsdiv {
   background: #282828;
   height: 460px;
   width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-top: 10px;
 }
 
-#feelings {
-  margin-top: 20px;
+.pjsdiv:focus {
+  outline: 0;
 }
-
-#tweetsText {
-  margin-top: 20px;
-}
-
 
 /*!
  * Bootstrap v2.0.4

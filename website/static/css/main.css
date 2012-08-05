@@ -63,7 +63,8 @@ a:active {text-decoration: underline; color:inherit}
   padding: 8px 0;
 }
 
-.logo-header a:hover {
+.logo-header a:hover,
+.tweet-meta-no-underline a:hover {
   text-decoration: none;
 }
 

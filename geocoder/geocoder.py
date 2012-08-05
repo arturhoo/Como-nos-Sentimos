@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from geopy import geocoders
 from pymongo import Connection
+from pylibmc import Client
 from utils import remove_accents
 from datetime import timedelta
 from pywapi import get_weather_from_google
@@ -21,11 +22,11 @@ cmd_subfolder = realpath(abspath(join(split(getfile(cf()))[0], "../")))
 if cmd_subfolder not in path:
     path.insert(0, cmd_subfolder)
 
+
 try:
     from local_settings import *
 except ImportError:
     exit("No local settings found")
-
 
 geo_collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_GEO_COLLECTION]
 crawler_collection = Connection(host=MONGO_HOST)[MONGO_DB][MONGO_CRAWLER_COLLECTION]
@@ -33,6 +34,8 @@ beanstalk = BSConnection(host=BEANSTALKD_HOST, port=BEANSTALKD_PORT)
 beanstalk.watch(BEANSTALKD_GEO_TUBE)
 beanstalk.use(BEANSTALKD_ANALYTICS_TUBE)
 beanstalk.ignore('default')
+mc = Client(["127.0.0.1"], binary=True, behaviors={"tcp_nodelay": True,
+                                                   "ketama": True})
 
 
 def insert_into_db_hit(user_location, location_dic):
@@ -142,7 +145,11 @@ if __name__ == '__main__':
         if 'city' in location:
             query = location['city'] + ' - ' + location['state'] + ', brasil'
             query = query.encode('utf-8')
-            google_result = get_weather_from_google(query)
+            identifier = 'weather_' + query
+            google_result = mc.get(identifier)
+            if not google_result:
+                google_result = get_weather_from_google(query)
+                mc.set(identifier, google_result, 1800)
             if google_result['current_conditions'] and \
                google_result['current_conditions']['condition'] and \
                google_result['current_conditions']['temp_c']:

@@ -44,12 +44,11 @@ void dropDuplicateItemsFromList(ArrayList list) {
     for(int i=indexesToBeRemoved.size()-1; i>=0; i--) {
         list.remove(indexesToBeRemoved.get(i));
     }
-
 }
 
 /**
 * Given a list of viewable elements, such as Feeling and State, the method
-* provides sets the location of these objects, according to the size of the
+* sets the location of these objects, according to the size of the
 * canvas and global constraints
 */
 void setListElementsLocation(ArrayList list) {

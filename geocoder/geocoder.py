@@ -4,6 +4,7 @@ from pymongo import Connection
 from pylibmc import Client
 from utils import remove_accents
 from datetime import timedelta
+from hashlib import md5
 from pywapi import get_weather_from_google
 from beanstalkc import Connection as BSConnection
 import re
@@ -144,8 +145,10 @@ if __name__ == '__main__':
 
         if 'city' in location:
             query = location['city'] + ' - ' + location['state'] + ', brasil'
+            m = md5()
+            m.update(remove_accents(query))
             query = query.encode('utf-8')
-            identifier = 'weather_' + query
+            identifier = 'weather_' + m.hexdigest()
             google_result = mc.get(identifier)
             if not google_result:
                 google_result = get_weather_from_google(query)

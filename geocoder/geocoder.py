@@ -4,6 +4,7 @@ from pymongo import Connection
 from pylibmc import Client
 from utils import remove_accents
 from datetime import timedelta
+from time import sleep
 from hashlib import md5
 from pywapi import get_weather_from_google
 from beanstalkc import Connection as BSConnection
@@ -151,7 +152,13 @@ if __name__ == '__main__':
             identifier = 'weather_' + m.hexdigest()
             google_result = mc.get(identifier)
             if not google_result:
-                google_result = get_weather_from_google(query)
+                while True:
+                    try:
+                        google_result = get_weather_from_google(query)
+                    except:
+                        sleep(1)
+                        continue
+                    break
                 mc.set(identifier, google_result, 1800)
             if google_result['current_conditions'] and \
                google_result['current_conditions']['condition'] and \

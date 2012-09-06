@@ -268,6 +268,7 @@ if __name__ == '__main__':
                 continue
         weather = None
         if 'weather' in job_object:
+            # This will be the weather condition
             weather = job_object['weather']
 
         for feeling in feelings:

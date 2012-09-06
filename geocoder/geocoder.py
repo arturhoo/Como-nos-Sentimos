@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
+from utils import remove_accents, get_weather_from_yahoo
 from geopy import geocoders
 from pymongo import Connection
 from pylibmc import Client
-from utils import remove_accents
 from datetime import timedelta
-from time import sleep
 from hashlib import md5
-from pywapi import get_weather_from_google
 from beanstalkc import Connection as BSConnection
 import re
 
@@ -121,7 +119,8 @@ if __name__ == '__main__':
         }
 
         user_location = item['author']['location']
-        search_db_result = search_db(user_location)
+        clean_user_location = remove_accents(user_location).lower()
+        search_db_result = search_db(clean_user_location)
         if search_db_result:
             if 'miss' in search_db_result:
                 job.delete()
@@ -129,7 +128,8 @@ if __name__ == '__main__':
                 continue
             else:
                 crawler_collection.update({'_id': int(job.body)},
-                                          {'$set': {'location': search_db_result}})
+                                          {'$set': {'location': \
+                                                search_db_result}})
                 location = search_db_result
         else:
             result_dic = search_geocoder(user_location)
@@ -145,30 +145,28 @@ if __name__ == '__main__':
             analytics_dic['state'] = location['state']
 
         if 'city' in location:
-            query = location['city'] + ' - ' + location['state'] + ', brasil'
+            city = location['city']
+            state = location['state']
             m = md5()
-            m.update(remove_accents(query))
-            query = query.encode('utf-8')
+            m.update(remove_accents(city + state))
             identifier = 'weather_' + m.hexdigest()
-            google_result = mc.get(identifier)
-            if not google_result:
-                while True:
-                    try:
-                        google_result = get_weather_from_google(query)
-                    except:
-                        sleep(1)
-                        continue
-                    break
-                mc.set(identifier, google_result, 1800)
-            if google_result['current_conditions'] and \
-               google_result['current_conditions']['condition'] and \
-               google_result['current_conditions']['temp_c']:
-                condition = google_result['current_conditions']['condition']
-                temp = int(google_result['current_conditions']['temp_c'])
-                weather = {'condition': condition, 'temp': temp}
+
+            city = city.encode('utf-8')
+            state = state.encode('utf-8')
+            yahoo_result = mc.get(identifier)
+            if not yahoo_result:
+                try:
+                    yahoo_result = get_weather_from_yahoo(city, state)
+                    mc.set(identifier, yahoo_result, 1800)
+                except Exception:
+                    pass
+            if yahoo_result:
+                weather = {'condition': yahoo_result[0],
+                           'temp': yahoo_result[1]}
                 crawler_collection.update({'_id': int(job.body)},
-                                          {'$set': {'location.weather': weather}})
-                analytics_dic['weather'] = condition
+                                          {'$set':
+                                                {'location.weather': weather}})
+                analytics_dic['weather'] = yahoo_result[0]
 
         job.delete()
         beanstalk.put(str(analytics_dic))

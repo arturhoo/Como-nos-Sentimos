@@ -1,14 +1,23 @@
-Drizzle;chovendo
-Heavy Rain;chovendo
-Light rain;chovendo
-Rain;chovendo
-Rain Showers;chovendo
-Thunderstorm;chovendo
+Clear;com céu aberto
 Cloudy;nublado
+Drizzle;chovendo
+Fair;com céu aberto
+Fog;com neblina
+Haze;com neblina
+Heavy Rain;chovendo
+Light Drizzle;chovendo
+Light rain;chovendo
+Light Rain;chovendo
+Mist;com neblina
+Mostly Cloudy/Windy;nublado
 Mostly Cloudy;nublado
 Overcast;nublado
 Partly Cloudy;nublado
-Clear;com céu aberto
-Fog;com neblina
-Haze;com neblina
+Rain Showers;chovendo
+Rain;chovendo
+Showers in the Vicinity;chovendo
 Smoke;com neblina
+Sunny;com céu aberto
+Thunder in the Vicinity;chovendo
+Thunder;chovendo
+Thunderstorm;chovendo

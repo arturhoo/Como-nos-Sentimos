@@ -19,7 +19,7 @@ Rain Showers;chovendo
 Rain;chovendo
 Showers in the Vicinity;chovendo
 Smoke;com neblina
-Storm:chovendo
+Storm;chovendo
 Sunny;com céu aberto
 Thunder in the Vicinity;chovendo
 Thunder;chovendo

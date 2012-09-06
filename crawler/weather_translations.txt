@@ -2,6 +2,7 @@ Clear;com céu aberto
 Cloudy;nublado
 Drizzle;chovendo
 Fair;com céu aberto
+Fair/Windy;com céu aberto
 Fog;com neblina
 Freezing Drizzle;chovendo
 Haze;com neblina
@@ -15,6 +16,7 @@ Mostly Cloudy/Windy;nublado
 Mostly Cloudy;nublado
 Overcast;nublado
 Partly Cloudy;nublado
+Partly Cloudy/Windy;nublado
 Rain Showers;chovendo
 Rain;chovendo
 Showers in the Vicinity;chovendo

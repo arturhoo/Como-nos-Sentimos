@@ -3,9 +3,11 @@ Cloudy;nublado
 Drizzle;chovendo
 Fair;com céu aberto
 Fog;com neblina
+Freezing Drizzle;chovendo
 Haze;com neblina
 Heavy Rain;chovendo
 Light Drizzle;chovendo
+Light Rain with Thunder;chovendo
 Light rain;chovendo
 Light Rain;chovendo
 Mist;com neblina
@@ -17,6 +19,7 @@ Rain Showers;chovendo
 Rain;chovendo
 Showers in the Vicinity;chovendo
 Smoke;com neblina
+Storm:chovendo
 Sunny;com céu aberto
 Thunder in the Vicinity;chovendo
 Thunder;chovendo

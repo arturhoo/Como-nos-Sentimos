@@ -120,7 +120,7 @@ def get_feeling_percentages_last_hours(mongo_db, feeling, hours=25, date=None):
 
         try:
             feeling_percentage_list.append((hour,
-                                            float(feeling_count / \
+                                            float(feeling_count /
                                                   float(total) * 100.0)))
         except ZeroDivisionError:
             feeling_percentage_list.append((hour, float(0)))
@@ -129,8 +129,10 @@ def get_feeling_percentages_last_hours(mongo_db, feeling, hours=25, date=None):
     return feeling_percentage_list
 
 
-def get_feelings_percentages_for_state(mongo_db, state, feelings_list,
-                                            num_feelings=10):
+def get_feelings_percentages_for_state(mongo_db,
+                                       state,
+                                       feelings_list,
+                                       num_feelings=10):
     """returns the percetanges of the top X feelings for a given state
     returned list example:
         [(u'feliz', 15.743950348288271),
@@ -139,23 +141,24 @@ def get_feelings_percentages_for_state(mongo_db, state, feelings_list,
     """
     coll = mongo_db[MONGO_ANALYTICS_GENERAL_COLLECTION]
     result = coll.find_one({'type': 'alltime'},
-                            {'states.' + state: 1})
+                           {'states.' + state: 1})
     total = result['states'][state]['count']
     feelings_count = result['states'][state]['feelings']
     # Sort the dict by value, the result is a list of tuples
     feelings_count = sorted(feelings_count.iteritems(),
                             key=itemgetter(1),
                             reverse=True)
-    feelings_percentage = [(feeling, \
-                            float(count / float(total) * 100.0), \
-                            get_feeling_color(feeling, feelings_list)) \
-                           for (feeling, count) \
+    feelings_percentage = [(feeling,
+                            float(count / float(total) * 100.0),
+                            get_feeling_color(feeling, feelings_list))
+                           for (feeling, count)
                            in feelings_count]
     return feelings_percentage[:num_feelings]
 
 
-def get_weather_conditions_count_for_feeling(mongo_db, feeling,
-                                                   weather_translations):
+def get_weather_conditions_count_for_feeling(mongo_db,
+                                             feeling,
+                                             weather_translations):
     """returns the count of each weather translation for a given feling
     returned list example:
         [(u'com c\xe9u aberto', 26006),
@@ -170,10 +173,11 @@ def get_weather_conditions_count_for_feeling(mongo_db, feeling,
         result_dic = {}
         for (condition, translation) in weather_translations.items():
             result = coll.find_one({'type': 'alltime'},
-                                   {'weather_conditions.' + condition + \
+                                   {'weather_conditions.' + condition +
                                     '.feelings.' + feeling: 1})
             try:
-                fc = result['weather_conditions'][condition]['feelings'][feeling]
+                fc = result['weather_conditions'][condition
+                                                  ]['feelings'][feeling]
             except KeyError:
                 fc = 0
             if translation in result_dic:
@@ -197,8 +201,9 @@ def get_feeling_mean_percentage_for_hour(mongo_db, feeling, hour):
                             'hour': hour},
                            {'count': 1,
                             'feelings.' + feeling + '.count': 1})
-    mean = float(result['feelings'][feeling]['count'] / \
-                float(result['count']) * 100.0)
+    mean = float(
+        result['feelings'][feeling]['count'] /
+        float(result['count']) * 100.0)
     return mean
 
 
@@ -243,8 +248,8 @@ def get_feeling_mean_percentages_for_every_two_hours(mongo_db, feeling):
         # Joining two consecutive hours
         for i, k in zip(fmpfh_list[0::2], fmpfh_list[1::2]):
             new_list.append(float((i + k) / 2))
-        # The code below was inserted in order to make the radial graph fill the
-        # whole <div> it is exibithed on. Believed to be a bug in Highcharts
+        # The code below was inserted in order to make the radial graph fill
+        # the whole <div> it's exibithed on. Believed to be a bug in Highcharts
         max_element = max(new_list)
         divide_factor = 0.09 / max_element
         new_list = [x * divide_factor for x in new_list]

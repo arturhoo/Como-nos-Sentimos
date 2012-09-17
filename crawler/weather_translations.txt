@@ -1,5 +1,6 @@
 Clear;com céu aberto
 Cloudy;nublado
+Cloudy/Wind;nublado
 Drizzle;chovendo
 Fair/Windy;com céu aberto
 Fair;com céu aberto

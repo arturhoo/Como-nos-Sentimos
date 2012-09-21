@@ -1,4 +1,6 @@
+Blowing Dust;nublado
 Clear;com céu aberto
+Clear/Wind;com céu aberto
 Cloudy;nublado
 Cloudy/Wind;nublado
 Drizzle;chovendo
@@ -29,6 +31,7 @@ Rain Showers;chovendo
 Rain;chovendo
 Showers in the Vicinity;chovendo
 Smoke;com neblina
+Smoke/Windy;com neblina
 Storm;chovendo
 Sunny;com céu aberto
 Sunny/Windy;com céu aberto

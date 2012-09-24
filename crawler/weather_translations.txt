@@ -1,10 +1,10 @@
 Blowing Dust;nublado
-Clear;com céu aberto
 Clear/Wind;com céu aberto
-Cloudy;nublado
+Clear;com céu aberto
 Cloudy/Wind;nublado
-Drizzle;chovendo
+Cloudy;nublado
 Drizzle/Windy;chovendo
+Drizzle;chovendo
 Duststorm;nublado
 Fair/Windy;com céu aberto
 Fair;com céu aberto
@@ -12,9 +12,10 @@ Fog;com neblina
 Freezing Drizzle;chovendo
 Haze;com neblina
 Heavy Rain;chovendo
+Heavy Thunderstorm/Windy;chovendo
 Heavy Thunderstorm;chovendo
-Light Drizzle;chovendo
 Light Drizzle/Wind;chovendo
+Light Drizzle;chovendo
 Light Rain Shower;chovendo
 Light Rain with Thunder;chovendo
 Light Rain/Fog;chovendo
@@ -30,11 +31,11 @@ Partly Cloudy;nublado
 Rain Showers;chovendo
 Rain;chovendo
 Showers in the Vicinity;chovendo
-Smoke;com neblina
 Smoke/Windy;com neblina
+Smoke;com neblina
 Storm;chovendo
-Sunny;com céu aberto
 Sunny/Windy;com céu aberto
+Sunny;com céu aberto
 Thunder in the Vicinity;chovendo
 Thunder;chovendo
 Thunderstorm/Fog;chovendo

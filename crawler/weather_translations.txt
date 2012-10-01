@@ -29,6 +29,7 @@ Overcast;nublado
 Partly Cloudy/Windy;nublado
 Partly Cloudy;nublado
 Rain Showers;chovendo
+Rain/Windy;chovendo
 Rain;chovendo
 Showers in the Vicinity;chovendo
 Smoke/Windy;com neblina
@@ -36,6 +37,7 @@ Smoke;com neblina
 Storm;chovendo
 Sunny/Windy;com céu aberto
 Sunny;com céu aberto
+Thunder and Hail;chovendo
 Thunder in the Vicinity;chovendo
 Thunder;chovendo
 Thunderstorm/Fog;chovendo

@@ -43,8 +43,8 @@ def search_db_woeid(city, state):
     if result:
         if 'woeid_miss' in result:
             raise Exception
-        if 'woeoid' in result:
-            return woeid
+        if 'woeid' in result:
+            return result['woeid']
 
 
 def insert_woeid_into_db(city, state, woeid):
@@ -64,14 +64,15 @@ def get_location_woeid(city, state):
     Gets the woeoid for a given location, based on Yahoo!'s information.
     This id will be used to fetch the weather condition
     """
-    woeid = search_db_woeid(city, state)
-    if not woeid:
+    try:
+        woeid = search_db_woeid(city, state)
+    except:
         url = 'http://where.yahooapis.com/geocode?city=%s&state=%s&country=brazil&appid=PTOH375e&flags=J' % (city, state)
         json = json_load(urlopen(url))
         if 'Error' in json:
             raise Exception
         result_set = json['ResultSet']
-        result = result_set['Results'][0]
+        result = result_set['Result']
         if int(result['woetype']) == 8:
             # Inserting woeid miss
             insert_woeid_into_db(city, state, None)

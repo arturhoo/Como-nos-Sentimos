@@ -20,7 +20,7 @@ def git_pull():
 
 def reload_all():
     jobs = check_if_beanstalk_tubes_are_empty()
-    if jobs < 10:
+    if int(jobs) < 10:
         sudo('service memcached restart')
         sudo('supervisorctl restart all')
         sudo('service nginx restart')

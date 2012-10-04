@@ -39,6 +39,7 @@ Sunny/Windy;com céu aberto
 Sunny;com céu aberto
 Thunder and Hail;chovendo
 Thunder in the Vicinity;chovendo
+Thunder/Windy;chovendo
 Thunder;chovendo
 Thunderstorm/Fog;chovendo
 Thunderstorm/Windy;chovendo

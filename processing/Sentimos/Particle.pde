@@ -170,7 +170,7 @@ class Particle{
     }
 
     /**
-    * Sets the PVector of this particle when the Feeling Histogram view
+    * Sets the PVector of this particle when the State Histogram view
     * is displayed
     */
     void setStateLoc() {
@@ -197,7 +197,7 @@ class Particle{
     }
 
     /**
-    * Sets the PVector of this particle when the Feeling Histogram view
+    * Sets the PVector of this particle when the Weather Histogram view
     * is displayed
     */
     void setWeatherLoc() {

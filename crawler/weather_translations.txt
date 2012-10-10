@@ -11,6 +11,7 @@ Fair;com céu aberto
 Fog;com neblina
 Freezing Drizzle;chovendo
 Haze;com neblina
+Heavy Rain Shower;chovendo
 Heavy Rain;chovendo
 Heavy Thunderstorm/Windy;chovendo
 Heavy Thunderstorm;chovendo
@@ -28,6 +29,7 @@ Mostly Cloudy;nublado
 Overcast;nublado
 Partly Cloudy/Windy;nublado
 Partly Cloudy;nublado
+Rain Shower;chovendo
 Rain Showers;chovendo
 Rain/Windy;chovendo
 Rain;chovendo

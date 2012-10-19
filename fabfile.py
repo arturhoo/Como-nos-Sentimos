@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import with_statement
 from fabric.api import run, cd, env, sudo, execute
 from fabric.context_managers import prefix

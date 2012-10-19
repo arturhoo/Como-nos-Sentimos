@@ -29,6 +29,7 @@ Mostly Cloudy;nublado
 Overcast;nublado
 Partly Cloudy/Windy;nublado
 Partly Cloudy;nublado
+Patches of Fog;com neblina
 Rain Shower;chovendo
 Rain Showers;chovendo
 Rain/Windy;chovendo

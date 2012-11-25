@@ -32,6 +32,7 @@ Partly Cloudy;nublado
 Patches of Fog;com neblina
 Rain Shower;chovendo
 Rain Showers;chovendo
+Rain/Fog;chovendo
 Rain/Windy;chovendo
 Rain;chovendo
 Showers in the Vicinity;chovendo

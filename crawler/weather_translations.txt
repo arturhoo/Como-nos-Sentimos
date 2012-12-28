@@ -1,3 +1,4 @@
+Blowing Dust/Windy;nublado
 Blowing Dust;nublado
 Clear/Wind;com céu aberto
 Clear;com céu aberto
@@ -12,6 +13,7 @@ Fog;com neblina
 Freezing Drizzle;chovendo
 Haze;com neblina
 Heavy Rain Shower;chovendo
+Heavy Rain/Windy;chovendo
 Heavy Rain;chovendo
 Heavy Thunderstorm/Windy;chovendo
 Heavy Thunderstorm;chovendo
@@ -44,6 +46,7 @@ Sunny;com céu aberto
 Thunder and Hail;chovendo
 Thunder in the Vicinity;chovendo
 Thunder/Windy;chovendo
+Thunder/Wintry Mix;chovendo
 Thunder;chovendo
 Thunderstorm/Fog;chovendo
 Thunderstorm/Windy;chovendo

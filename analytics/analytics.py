@@ -148,7 +148,7 @@ def fix_history_daily():
         previous_dt = dt
     for doc in insertions_list:
         coll_hist.insert(doc)
-    print >> stdout, 'Finished fixing history hourly'
+    print >> stdout, 'Finished fixing history daily'
 
 
 def insert_history(feeling, date, state, weather):

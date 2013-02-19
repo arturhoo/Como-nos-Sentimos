@@ -12,6 +12,7 @@ Fair;com céu aberto
 Fog;com neblina
 Freezing Drizzle;chovendo
 Haze;com neblina
+Heavy Rain Shower/Windy;chovendo
 Heavy Rain Shower;chovendo
 Heavy Rain/Windy;chovendo
 Heavy Rain;chovendo

@@ -84,7 +84,7 @@ def validate_returned_location(place):
 
 
 def search_geocoder(user_location):
-    g = geocoders.Google()
+    g = geocoders.GoogleV3()
     query = user_location.encode('utf-8') + ' brasil'
 
     try:
@@ -132,8 +132,8 @@ if __name__ == '__main__':
                 continue
             else:
                 crawler_collection.update({'_id': int(job.body)},
-                                          {'$set': {'location': \
-                                                search_db_result}})
+                                          {'$set': {'location':
+                                                    search_db_result}})
                 location = search_db_result
         else:
             result_dic = search_geocoder(user_location)
@@ -169,7 +169,7 @@ if __name__ == '__main__':
                            'temp': yahoo_result[1]}
                 crawler_collection.update({'_id': int(job.body)},
                                           {'$set':
-                                                {'location.weather': weather}})
+                                          {'location.weather': weather}})
                 analytics_dic['weather'] = yahoo_result[0]
 
         job.delete()

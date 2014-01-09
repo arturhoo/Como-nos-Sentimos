@@ -47,14 +47,14 @@ def check_full_query(query, text):
 
 
 def structure_location(place):
-    if place['country_code'] == 'BR':
+    if place.country_code == 'BR':
         regex = re.compile(r'^(.+), (.+)$')
-        match = regex.match(place['full_name'])
+        match = regex.match(place.full_name)
         dic = {}
-        if place['place_type'] == 'admin':
+        if place.place_type == 'admin':
             dic['state'] = match.groups()[0]
             return dic
-        elif place['place_type'] == 'city':
+        elif place.place_type == 'city':
             dic['city'] = match.groups()[0]
             dic['state'] = match.groups()[1]
             return dic
@@ -64,14 +64,16 @@ def structure_location(place):
 
 def insert_tweet(collection, status, feelings):
     tweet_id = 0
-    tweet = {'feelings': feelings,
-             '_id': status.id,
-             'feelings_size': len(feelings),
-             'author': {
-                'screen_name': status.author.screen_name
-             },
-             'text': status.text,
-             'created_at': status.created_at}
+    tweet = {
+        'feelings': feelings,
+        '_id': status.id,
+        'feelings_size': len(feelings),
+        'author': {
+            'screen_name': status.author.screen_name
+        },
+        'text': status.text,
+        'created_at': status.created_at
+    }
     if status.author.utc_offset:
         offset = timedelta(seconds=status.author.utc_offset)
         tweet['created_at_local'] = status.created_at + offset
@@ -82,9 +84,10 @@ def insert_tweet(collection, status, feelings):
         tweet['author']['name'] = status.author.name
     if status.author.location:
         tweet['author']['location'] = status.author.location
-    if status.place and status.place['full_name']:
-        if status.place['country_code'] == u'BR':
-            tweet['location'] = structure_location(status.place)
+    if (status.place and status.place.full_name and
+       status.place.country_code == u'BR'):
+        tweet['location'] = structure_location(status.place)
+
     try:
         tweet_id = collection.insert(tweet)
 
@@ -98,7 +101,8 @@ def insert_tweet(collection, status, feelings):
             beanstalk.put(str(tweet_id))
         except Exception, e:
             print >> stderr, 'Encountered exception ' + \
-                                 'trying to insert job:', e
+                             'trying to insert job:', e
+
     # If it is geotagged or has no location information at all
     else:
         analytics_dic = {
@@ -119,7 +123,6 @@ class CustomStreamListener(StreamListener):
                 feelings = identify_feelings('feelings.txt', status.text)
                 if feelings:
                     insert_tweet(collection, status, feelings)
-
         except Exception, e:
             print >> stderr, 'Encountered Exception:', e
             pass

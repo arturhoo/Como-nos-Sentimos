@@ -93,7 +93,7 @@ def search_geocoder(user_location):
         return None
 
     # Sometimes google returns no result, an empty list
-    if len(places) == 0:
+    if places is None or len(places) == 0:
         return None
 
     place = places[0][0]

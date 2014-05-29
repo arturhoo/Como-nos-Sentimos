@@ -250,9 +250,10 @@ def insert_general(feeling, date, state, weather):
 
 if __name__ == '__main__':
     states_dic = load_states_abbreviations('../crawler/states.txt')
-    fix_history_insert_date_field_when_missing()
-    fix_history_daily()
-    fix_history_hourly()
+    if coll_hist.count() > 0:
+        fix_history_insert_date_field_when_missing()
+        fix_history_daily()
+        fix_history_hourly()
     while(True):
         job = bs.reserve()
         job_object = literal_eval(job.body)

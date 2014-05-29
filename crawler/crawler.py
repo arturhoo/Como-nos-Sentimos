@@ -38,9 +38,9 @@ def check_full_query(query, text):
     regex_str = r'.*' + '('
     for (idx, value) in enumerate(query):
         if idx + 1 != len(query):
-            regex_str += value.decode('utf-8') + '|'
+            regex_str += value + '|'
         else:
-            regex_str += value.decode('utf-8')
+            regex_str += value
     regex_str += ')' + r'.*'
     regex = re.compile(regex_str, re.UNICODE | re.IGNORECASE)
     return regex.match(text)
@@ -118,14 +118,14 @@ def insert_tweet(collection, status, feelings):
 
 class CustomStreamListener(StreamListener):
     def on_status(self, status):
-        try:
+        #try:
             if check_full_query(query, status.text):
                 feelings = identify_feelings('feelings.txt', status.text)
                 if feelings:
                     insert_tweet(collection, status, feelings)
-        except Exception, e:
-            print >> stderr, 'Encountered Exception:', e
-            pass
+        #except Exception, e:
+        #    print >> stderr, 'Encountered Exception:', e
+        #    pass
 
     def on_error(self, status_code):
         print >> stderr, 'Encountered error with status code:', status_code

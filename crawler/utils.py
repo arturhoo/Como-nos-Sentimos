@@ -11,6 +11,6 @@ def load_terms(file_name):
     terms_list = []
     with open(file_name) as f:
         for line in f.readlines():
-            terms_list.append(line.rstrip())
+            terms_list.append(line.rstrip().decode('utf-8'))
 
     return terms_list

@@ -50,7 +50,7 @@ def identify_feelings(file_name, text):
                        regex_query_group + \
                        r'.* ' + \
                        regex_post_negation + \
-                       feeling_dic['re'] + \
+                       feeling_dic['re'].decode('utf-8') + \
                        r'.*'
         regex = re.compile(regex_string, re.UNICODE | re.IGNORECASE)
         if regex.match(clean_text):

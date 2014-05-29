@@ -4,18 +4,17 @@ from fabric.api import run, cd, env, sudo, execute
 from fabric.context_managers import prefix
 
 
-env.hosts = ['sentimos.com.br']
+env.hosts = ['ubuntu@sentimos.com.br']
 
 
 def check_if_beanstalk_tubes_are_empty():
-    with cd('/home/artur/Como-nos-Sentimos'):
-        with prefix('source /home/artur/.virtualenvs/cns/bin/activate'):
-            jobs = run('python check_beanstalk_tubes.py')
-            return jobs
+    with cd('/home/ubuntu/Como-nos-Sentimos'):
+        jobs = run('python check_beanstalk_tubes.py')
+        return jobs
 
 
 def git_pull():
-    with cd('/home/artur/Como-nos-Sentimos'):
+    with cd('/home/ubuntu/Como-nos-Sentimos'):
         run('git pull')
 
 

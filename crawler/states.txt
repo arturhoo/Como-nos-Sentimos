@@ -1,11 +1,12 @@
 Acre;ac;0,255,0
 Alagoas;al;242,103,34
 Amapá;ap;0,255,255
+Amapa;ap;0,255,255
 Amazonas;am;255,255,0
 Bahia;ba;142,76,33
 Barra Sul;sc;255,211,0
 Brazilian Federal District;df;255,255,255
-Ceará;ce;0,170,169
+Ceara;ce;0,170,169
 Distrito Federal;df;255,255,255
 ES;es;254,220,189
 Espírito Santo;es;254,220,189
@@ -17,6 +18,7 @@ Mato Grosso do Sul;ms;0,173,104
 Mato Grosso;mt;130,0,255
 Minas Gerais;mg;0,75,106
 Paraná;pr;52,44,116
+Parana;pr;52,44,116
 Paraíba;pb;211,32,40
 Pará;pa;0,0,255
 Pernambuco;pe;0,120,94
@@ -24,9 +26,11 @@ Piauí;pi;0,138,0
 Rio Grande do Norte;rn;195,121,179
 Rio Grande do Sul;rs;0,110,185
 Rio de Janeiro;rj;236,0,135
+Río de Janeiro;rj;236,0,135
 Rondônia;ro;255,0,255
 Roraima;rr;255,0,0
 Santa Catarina;sc;255,211,0
 Sergipe;se;204,222,105
 São Paulo;sp;127,160,211
+Sao Paulo;sp;127,160,211
 Tocantins;to;255,138,79
